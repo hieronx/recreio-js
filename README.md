@@ -24,7 +24,7 @@ Include fortytwo.js in your application.
 <script src="components/fortytwo-js/fortytwo.js"></script>
 ```
 
-Then initialize the user object:
+Then initialize the object with the basic configuration:
 
 ```js
 var FortyTwo = new FortyTwo (
@@ -35,18 +35,23 @@ var FortyTwo = new FortyTwo (
     redirect_uri: null
   }
 );
+```
 
-FortyTwo.account; // return object with account status and/or details
-FortyTwo.account.signup(params); // sign up for a new account
-FortyTwo.account.login(username, password); // log in to an existing account
-FortyTwo.account.logout(); // log out of account
+Now you can start using the library:
 
-FortyTwo.units.get(params, function(units) {}); // find units
-FortyTwo.units.getAssigned(, function(units) {}); // find units that are assigned to this user
-FortyTwo.unit.get(id, function(unit) {}); // find a specific unit by id
+```js
+FortyTwo.getAccount(); // return object with account status and/or details
+FortyTwo.signup(params); // sign up for a new account
+FortyTwo.login(username, password); // log in to an existing account
+FortyTwo.logout(); // log out of account
 
-FortyTwo.statements.send(params); // send a statement
-FortyTwo.statements.get(params, , function(statements) {}); // find statements
+FortyTwo.Unit.getAssigned(function(units) {}); // find units that are assigned to this user
+FortyTwo.Unit.find(params, function(units) {}); // find units
+FortyTwo.Unit.findOne(params, function(unit) {}); // find a unit
+FortyTwo.Unit.findById(id, function(unit) {}); // find a specific unit by id
+
+FortyTwo.Statement.send(action, object_id); // send a statement
+FortyTwo.Statement.get(params, function(statements) {}); // find statements
 ```
 
 License
