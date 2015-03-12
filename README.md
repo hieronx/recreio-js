@@ -30,8 +30,8 @@ Then initialize the user object:
 var FortyTwo = new FortyTwo (
   {
     url: "http://0.0.0.0:3000/",
-    client_id: "FaQg1U6Krm",
-    client_secret: "914acd359adc4dc968aa433cbc4ac6c5a3a48b7bade6b4512550a77df5fac651c4d0d272d2a08d03ce9088cb18265ba1",
+    client_id: "",
+    client_secret: "",
     redirect_uri: null
   }
 );
