@@ -3,7 +3,7 @@ fortytwo-js
 
 Javascript package for the API provided by [42 Education](https://42education.com).
 
-Copyright (C) 2015, 42 Education.
+*Copyright &copy; 2015, 42 Education.*
 
 Installation
 ------------
@@ -14,7 +14,7 @@ You can install the package using Bower:
 bower install fortytwo-js --save
 ```
 
-Or download from Github: [fortytwo.js](https://raw.github.com/42education/fortytwo-js/master/fortytwo.js)
+Or download *fortytwo.js* from Github.
 
 Usage
 -----
