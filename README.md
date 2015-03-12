@@ -27,7 +27,26 @@ Include fortytwo.js in your application.
 Then initialize the user object:
 
 ```js
-var user = new FortyTwo.user();
+var FortyTwo = new FortyTwo (
+  {
+    url: "http://0.0.0.0:3000/",
+    client_id: "FaQg1U6Krm",
+    client_secret: "914acd359adc4dc968aa433cbc4ac6c5a3a48b7bade6b4512550a77df5fac651c4d0d272d2a08d03ce9088cb18265ba1",
+    redirect_uri: null
+  }
+);
+
+FortyTwo.account; // return object with account status and/or details
+FortyTwo.account.signup(params); // sign up for a new account
+FortyTwo.account.login(username, password); // log in to an existing account
+FortyTwo.account.logout(); // log out of account
+
+FortyTwo.units.get(params, function(units) {}); // find units
+FortyTwo.units.getAssigned(, function(units) {}); // find units that are assigned to this user
+FortyTwo.unit.get(id, function(unit) {}); // find a specific unit by id
+
+FortyTwo.statements.send(params); // send a statement
+FortyTwo.statements.get(params, , function(statements) {}); // find statements
 ```
 
 License
