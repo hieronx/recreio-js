@@ -1,20 +1,20 @@
 {
   "name": "fortytwo-js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/42education/fortytwo-js",
   "description": "Javascript package for the API provided by 42 Education",
+  "main": "./fortytwo.js",
   "moduleType": [
     "es6"
   ],
   "authors": [
     "42 Education"
   ],
-  "license": "MIT License",
+  "license": "MIT",
   "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/42education/fortytwo-js.git"
+  }
 }
