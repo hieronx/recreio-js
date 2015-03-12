@@ -16,5 +16,8 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/42education/fortytwo-js.git"
+  },
+  "dependencies": {
+    "pouchdb": "~3.3.1"
   }
 }
