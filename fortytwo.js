@@ -1,21 +1,20 @@
 var FortyTwo = {
 
-    // config
+    // Configuration of the plugin
     url: "http://0.0.0.0:3000/",
-    db_name: 'db-42education',
-    client_id: 'FaQg1U6Krm',
-    client_secret: '914acd359adc4dc968aa433cbc4ac6c5a3a48b7bade6b4512550a77df5fac651c4d0d272d2a08d03ce9088cb18265ba1',
+    db_name: "db-42education",
+    client_id: "FaQg1U6Krm",
+    client_secret: "914acd359adc4dc968aa433cbc4ac6c5a3a48b7bade6b4512550a77df5fac651c4d0d272d2a08d03ce9088cb18265ba1",
     redirect_uri: null,
 
-
     // Globals functions
-    globals:function() {
+    globals: function() {
 
         var self = this;
 
         /* Create a error object */
         this.errorResponse = function(title, message, code) {
-            return {title: title, message: message, code: code};
+            return { title: title, message: message, code: code };
         }
 
         this.request = function(type, path, callback, error, data) {
@@ -51,14 +50,14 @@ var FortyTwo = {
         }
 
         this.get = function(id, callback) {
-            db.get(id).then(function (doc) {
+            self.db.get(id).then(function (doc) {
               callback(doc);
             });
         }
     },
 
     /* User management */
-    user:function() {
+    user: function() {
 
         var globals = new FortyTwo.globals();
 
@@ -70,15 +69,11 @@ var FortyTwo = {
 
         }
 
-
         var login = function(error) {
-
             globals.request("PUT", "login", function(data) {
-
-                if(data.status = 'success') {
+                if (data.status = 'success') {
                     window.location = this.url + 'dialog/authorize?client_id=' + this.client_id + '&redirect_uri='+ this.redirect_uri + '&response_type=code';
                 }
-
             }, function(status) {
                error(status);
             });
@@ -86,8 +81,7 @@ var FortyTwo = {
 
         /* method for verifying user login based on session */
         var verifyCode = function(success, error, data) {
-            if(globals.queryString("code") != undefined) {
-
+            if (globals.queryString("code") != undefined) {
                 globals.request("PUT", "oauth/token", success, error, data);
 
             } else {
@@ -95,18 +89,16 @@ var FortyTwo = {
             }
         }
 
-
-
     },
 
     /* Group management */
-    groups:function() {
+    groups: function() {
 
     },
 
 
     /* Statements  */
-    statement:function() {
+    statement: function() {
 
     }
 
