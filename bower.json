@@ -3,18 +3,16 @@
   "description": "Javascript package for the API provided by 42 Education",
   "main": "./fortytwo.js",
   "license": "MIT",
-
   "authors": [
     "42 Education"
   ],
-
   "homepage": "https://github.com/42education/fortytwo-js",
   "repository": {
     "type": "git",
     "url": "git://github.com/42education/fortytwo-js.git"
   },
-  
   "dependencies": {
-    "pouchdb": "~3.3.1"
+    "orbit.js": "~0.6.0",
+    "rsvp": "~3.0.17"
   }
 }

@@ -40,18 +40,23 @@ var FortyTwo = new FortyTwo (
 Now you can start using the library:
 
 ```js
-FortyTwo.getAccount(); // return object with account status and/or details
-FortyTwo.signup(params); // sign up for a new account
-FortyTwo.login(username, password); // log in to an existing account
-FortyTwo.logout(); // log out of account
+FortyTwo.Account; // return object with account status and/or details
+FortyTwo.Account.signUp(params); // sign up for a new account
+FortyTwo.Account.signIn(username, password); // log in to an existing account
+FortyTwo.Account.signOut(); // log out of account
+FortyTwo.Account.update(params); // remove account
+FortyTwo.Account.remove(); // remove account
 
 FortyTwo.Unit.getAssigned(function(units) {}); // find units that are assigned to this user
 FortyTwo.Unit.find(params, function(units) {}); // find units
 FortyTwo.Unit.findOne(params, function(unit) {}); // find a unit
 FortyTwo.Unit.findById(id, function(unit) {}); // find a specific unit by id
+FortyTwo.Unit.add(params); // add a unit
+FortyTwo.Unit.update(params); // edit a unit
+FortyTwo.Unit.remove(params); // remove a unit
 
 FortyTwo.Statement.send(action, object_id); // send a statement
-FortyTwo.Statement.get(params, function(statements) {}); // find statements
+FortyTwo.Statement.find(params, function(statements) {}); // find statements
 ```
 
 License
