@@ -30,7 +30,7 @@
         this.request = function(type, path, callback, error, data) {
 
             var req = new XMLHttpRequest();
-            req.open(type, this.url + version + "/" + path, true);
+            req.open(type, this.url + this.version + "/" + path, true);
             req.send(data);
 
             req.onreadystatechange = function() {
