@@ -98,19 +98,21 @@
 
         // Retrieve all units
         this.all = function() {
-            globals.request('GET', 'units').then(function(body) {
-                var data = JSON.parse(body);
-                var units = []
-                
-                for (key in data.rows) {
-                    var unit = data.rows[key];
-                    units.push(unit['value']);
-                }
+            return new Promise(function(resolve, reject) {
+                globals.request('GET', 'units').then(function(body) {
+                    var data = JSON.parse(body);
+                    var units = []
+                    
+                    for (key in data.rows) {
+                        var unit = data.rows[key];
+                        units.push(unit['value']);
+                    }
 
-                return Promise.resolve(units);
+                    resolve(units);
 
-            }).catch(function(e) {
-                console.error(e);
+                }).catch(function(error) {
+                    reject(error);
+                });
             });
         }
     };
