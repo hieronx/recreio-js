@@ -1,0 +1,24 @@
+{
+  "name": "fortytwo-js",
+  "version": "1.0.0",
+  "description": "Javascript package for the API provided by 42 Education",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/42education/fortytwo-js.git"
+  },
+  "author": "42 Education",
+  "license": "proprietary",
+  "bugs": {
+    "url": "https://github.com/42education/fortytwo-js/issues"
+  },
+  "homepage": "https://github.com/42education/fortytwo-js",
+  "dependencies": {
+    "bluebird": "^2.9.14",
+    "browserify": "^9.0.3",
+    "watchify": "^2.4.0"
+  }
+}
