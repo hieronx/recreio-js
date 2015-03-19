@@ -105,19 +105,18 @@
     FortyTwo.Unit = function() {
 
         var globals = new FortyTwo.globals();
-        var methods;
 
-        // Unit methods
-
-        /* simple method for registering a user */
-        methods.all = function(success, error) {
+        // Retrieve all units
+        function all(success, error) {
             globals.request("GET", "units", function(data) {
                 console.log(data.rows);
                 success(data.rows);
             }, error);
         }
 
-        return methods;
+        this.all = all;
+
+        return this;
 
     };
 
