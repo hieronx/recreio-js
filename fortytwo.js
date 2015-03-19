@@ -1,4 +1,12 @@
-var FortyTwo = {
+/**
+ * FortyTwo JavaScript Library
+ * Copyright 2015, 42 Education
+ * Released under the MIT license.
+ */
+(function() {
+
+    window.FortyTwo = window.FortyTwo || {};
+    var FortyTwo = window.FortyTwo;
 
     // Configuration of the plugin
     url: "http://api.42education.com/",
@@ -10,7 +18,7 @@ var FortyTwo = {
     db_name: "db-42education",
 
     // Globals functions
-    globals: function() {
+    FortyTwo.globals = function() {
 
         var self = this;
 
@@ -56,10 +64,10 @@ var FortyTwo = {
               callback(doc);
             });
         }
-    },
+    };
 
     /* User management */
-    user: function() {
+    FortyTwo.user = function() {
 
         var globals = new FortyTwo.globals();
 
@@ -91,10 +99,10 @@ var FortyTwo = {
             }
         }
 
-    },
+    };
 
     /* Unit */
-    Unit: function() {
+    FortyTwo.Unit = function() {
 
         var globals = new FortyTwo.globals();
 
@@ -108,17 +116,16 @@ var FortyTwo = {
             }, error);
         }
 
-    },
+    };
 
     /* Group management */
-    groups: function() {
+    FortyTwo.Group = function() {
 
-    },
-
+    };
 
     /* Statements  */
-    statement: function() {
+    FortyTwo.Statement = function() {
 
-    }
+    };
 
-};
+})();
