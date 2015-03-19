@@ -109,7 +109,7 @@
         // Unit methods
 
         /* simple method for registering a user */
-        this.all = function(success, error) {
+        all: function(success, error) {
             globals.request("GET", "units", function(data) {
                 console.log(data.rows);
                 success(data.rows);
