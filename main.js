@@ -108,7 +108,7 @@
         var globals = new FortyTwo.globals();
 
         // Retrieve all units
-        this.all = function(success, error) {
+        this.all = function() {
             globals.request("GET", "units", function(body) {
                 var data = JSON.parse(body);
                 var units = []
@@ -118,8 +118,11 @@
                     units.push(unit['value']);
                 }
 
-                success(units);
-            }, error);
+                return Promise.resolve(units);
+                
+            }, function(error) {
+                return Promise.reject(error);
+            });
         }
     };
 
