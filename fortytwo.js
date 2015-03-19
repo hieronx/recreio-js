@@ -37,7 +37,6 @@
                 if (req.readyState === 4) {
                     if (req.status === 200) {
                         callback(req.responseText);
-                        console.log(req.responseText)
                     } else {
                         error(self.errorResponse("", req.statusText, -1));
                     }
@@ -110,7 +109,13 @@
         this.all = function(success, error) {
             globals.request("GET", "units", function(body) {
                 var data = JSON.parse(body);
-                success(data.rows);
+
+                var units = []
+                for (unit in data.rows) {
+                    units.push(unit['value']);
+                }
+
+                success(units);
             }, error);
         }
     };
