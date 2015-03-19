@@ -1,7 +1,8 @@
 var FortyTwo = {
 
     // Configuration of the plugin
-    url: "http://0.0.0.0:3000/",
+    url: "http://api.42education.com/",
+    version: "v1",
     client_id: "FaQg1U6Krm",
     client_secret: "914acd359adc4dc968aa433cbc4ac6c5a3a48b7bade6b4512550a77df5fac651c4d0d272d2a08d03ce9088cb18265ba1",
     redirect_uri: null,
@@ -21,7 +22,7 @@ var FortyTwo = {
         this.request = function(type, path, callback, error, data) {
 
             var req = new XMLHttpRequest();
-            req.open(type, this.url + path, true);
+            req.open(type, this.url + version + "/" + path, true);
             req.send(data);
 
             req.onreadystatechange = function() {
@@ -88,6 +89,23 @@ var FortyTwo = {
             } else {
                 error(globals.errorResponse("No code", "No code in querystring", 1));
             }
+        }
+
+    },
+
+    /* Unit */
+    Unit: function() {
+
+        var globals = new FortyTwo.globals();
+
+        // Unit methods
+
+        /* simple method for registering a user */
+        this.all = function(success, error) {
+            globals.request("GET", "units", function(data) {
+                console.log(data.rows);
+                success(data.rows);
+            }, error);
         }
 
     },
