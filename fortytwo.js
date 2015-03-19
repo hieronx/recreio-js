@@ -14,13 +14,13 @@
         var self = this;
 
         // Configuration of the plugin
-        this.url: "http://api.42education.com/";
-        this.version: "v1";
-        this.client_id: "FaQg1U6Krm";
-        this.client_secret: "914acd359adc4dc968aa433cbc4ac6c5a3a48b7bade6b4512550a77df5fac651c4d0d272d2a08d03ce9088cb18265ba1";
-        this.redirect_uri: null;
+        self.url: "http://api.42education.com/";
+        self.version: "v1";
+        self.client_id: "FaQg1U6Krm";
+        self.client_secret: "914acd359adc4dc968aa433cbc4ac6c5a3a48b7bade6b4512550a77df5fac651c4d0d272d2a08d03ce9088cb18265ba1";
+        self.redirect_uri: null;
 
-        this.db_name: "db-42education";
+        self.db_name: "db-42education";
 
         /* Create an error object */
         this.errorResponse = function(title, message, code) {
@@ -30,7 +30,7 @@
         this.request = function(type, path, callback, error, data) {
 
             var req = new XMLHttpRequest();
-            req.open(type, this.url + this.version + "/" + path, true);
+            req.open(type, self.url + self.version + "/" + path, true);
             req.send(data);
 
             req.onreadystatechange = function() {
