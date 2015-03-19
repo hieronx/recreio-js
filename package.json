@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify main.js -o fortytwo.js",
+    "build": "browserify main.js -o fortytwo.js && browserify main.js -d --plugin [minifyify --map fortytwo.min.map.json --output bundle.map.json] > fortytwo.min.js",
     "prepublish": "npm run build"
   },
   "repository": {
@@ -21,6 +21,7 @@
   "dependencies": {
     "bluebird": "^2.9.14",
     "browserify": "^9.0.3",
+    "minifyify": "^6.3.2",
     "watchify": "^2.4.0"
   }
 }
