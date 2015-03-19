@@ -9,13 +9,13 @@
     var FortyTwo = window.FortyTwo;
 
     // Configuration of the plugin
-    url: "http://api.42education.com/",
-    version: "v1",
-    client_id: "FaQg1U6Krm",
-    client_secret: "914acd359adc4dc968aa433cbc4ac6c5a3a48b7bade6b4512550a77df5fac651c4d0d272d2a08d03ce9088cb18265ba1",
-    redirect_uri: null,
+    url: "http://api.42education.com/";
+    version: "v1";
+    client_id: "FaQg1U6Krm";
+    client_secret: "914acd359adc4dc968aa433cbc4ac6c5a3a48b7bade6b4512550a77df5fac651c4d0d272d2a08d03ce9088cb18265ba1";
+    redirect_uri: null;
 
-    db_name: "db-42education",
+    db_name: "db-42education";
 
     // Globals functions
     FortyTwo.globals = function() {
