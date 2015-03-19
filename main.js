@@ -29,21 +29,22 @@
             return { title: title, message: message, code: code };
         }
 
-        this.request = function(type, path, callback, error, data) {
+        this.request = function(type, path, data) {
+            return new Promise(function(resolve, reject) {
+                var httpRequest = new XMLHttpRequest();
+                httpRequest.open(type, self.url + self.version + "/" + path, true);
+                httpRequest.send(data);
 
-            var req = new XMLHttpRequest();
-            req.open(type, self.url + self.version + "/" + path, true);
-            req.send(data);
-
-            req.onreadystatechange = function() {
-                if (req.readyState === 4) {
-                    if (req.status === 200) {
-                        callback(req.responseText);
-                    } else {
-                        error(self.errorResponse("", req.statusText, -1));
+                httpRequest.onreadystatechange = function() {
+                    if (httpRequest.readyState === 4) {
+                        if (httpRequest.status === 200) {
+                            resolve(httpRequest.responseText);
+                        } else {
+                            reject(httpRequest.status);
+                        }
                     }
                 }
-            }
+            });
         }
 
         /* Gets value from querystring */
@@ -53,18 +54,6 @@
                 results = regex.exec(location.search);
             return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         }
-
-        // var db = new PouchDB(this.db_name);
-
-        // this.put = function(document) {
-        //     self.db.put(document);
-        // }
-
-        // this.get = function(id, callback) {
-        //     self.db.get(id).then(function (doc) {
-        //       callback(doc);
-        //     });
-        // }
     };
 
     /* User management */
@@ -109,7 +98,7 @@
 
         // Retrieve all units
         this.all = function() {
-            globals.request("GET", "units", function(body) {
+            globals.request('GET', 'units').then(function(body) {
                 var data = JSON.parse(body);
                 var units = []
                 
@@ -119,9 +108,9 @@
                 }
 
                 return Promise.resolve(units);
-                
-            }, function(error) {
-                return Promise.reject(error);
+
+            }).catch(function(e) {
+                console.error(e);
             });
         }
     };
