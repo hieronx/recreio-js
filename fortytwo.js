@@ -107,17 +107,12 @@
         var globals = new FortyTwo.globals();
 
         // Retrieve all units
-        function all(success, error) {
+        FortyTwo.Unit.all = function(success, error) {
             globals.request("GET", "units", function(data) {
                 console.log(data.rows);
                 success(data.rows);
             }, error);
         }
-
-        this.all = all;
-
-        return this;
-
     };
 
     /* Group management */
