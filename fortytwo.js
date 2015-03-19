@@ -53,17 +53,17 @@
             return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         }
 
-        var db = new PouchDB(this.db_name);
+        // var db = new PouchDB(this.db_name);
 
-        this.put = function(document) {
-            self.db.put(document);
-        }
+        // this.put = function(document) {
+        //     self.db.put(document);
+        // }
 
-        this.get = function(id, callback) {
-            self.db.get(id).then(function (doc) {
-              callback(doc);
-            });
-        }
+        // this.get = function(id, callback) {
+        //     self.db.get(id).then(function (doc) {
+        //       callback(doc);
+        //     });
+        // }
     };
 
     /* User management */
@@ -103,11 +103,11 @@
 
     /* Unit */
     FortyTwo.Unit = function() {
-
+        var self = this;
         var globals = new FortyTwo.globals();
 
         // Retrieve all units
-        FortyTwo.Unit.all = function(success, error) {
+        this.all = function(success, error) {
             globals.request("GET", "units", function(data) {
                 console.log(data.rows);
                 success(data.rows);
