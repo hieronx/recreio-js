@@ -10,8 +10,14 @@ Installation
 
 You can install the package using Bower:
 
-```
+```shell
 bower install fortytwo-js --save
+```
+
+Or using npm:
+
+```shell
+npm install fortytwo-js --save
 ```
 
 Or download *fortytwo.js* from Github.
@@ -58,6 +64,11 @@ FortyTwo.Unit.remove(params); // remove a unit
 FortyTwo.Statement.send(action, object_id); // send a statement
 FortyTwo.Statement.find(params, function(statements) {}); // find statements
 ```
+
+Feedback
+------
+
+For any questions, bug reports, feature requests or anything else, do reach out to us! We're available at [support@42education.com](mailto:support@42education.com).
 
 License
 ----
