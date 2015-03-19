@@ -67,7 +67,7 @@
     };
 
     /* User management */
-    FortyTwo.user = function() {
+    FortyTwo.User = function() {
 
         var globals = new FortyTwo.globals();
 
@@ -124,5 +124,10 @@
     FortyTwo.Statement = function() {
 
     };
+
+    window.FortyTwo.User = new FortyTwo.User();
+    window.FortyTwo.Unit = new FortyTwo.Unit();
+    window.FortyTwo.Group = new FortyTwo.Group();
+    window.FortyTwo.Statement = new FortyTwo.Statement();
 
 })();
