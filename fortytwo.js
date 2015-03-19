@@ -108,8 +108,8 @@
 
         // Retrieve all units
         this.all = function(success, error) {
-            globals.request("GET", "units", function(data) {
-                console.log(data.rows);
+            globals.request("GET", "units", function(body) {
+                var data = JSON.parse(body);
                 success(data.rows);
             }, error);
         }
