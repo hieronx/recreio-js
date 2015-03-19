@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify main.js -o fortytwo.js && browserify main.js -d --plugin [minifyify --map fortytwo.min.map.json --output fortytwo.map.json] > fortytwo.min.js",
+    "build": "browserify main.js -o fortytwo.js && browserify main.js -d --plugin [minifyify --map fortytwo.min.map.json --output fortytwo.min.map.json] > fortytwo.min.js",
     "prepublish": "npm run build"
   },
   "repository": {
