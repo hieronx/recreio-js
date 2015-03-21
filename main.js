@@ -101,8 +101,7 @@
             return new Promise(function(resolve, reject) {
                 globals.request('GET', 'units').then(function(body) {
                     var data = JSON.parse(body);
-                    console.log(data);
-                    resolve(data.rows);
+                    resolve(data);
 
                 }).catch(function(error) {
                     console.log(error);
@@ -116,8 +115,7 @@
             return new Promise(function(resolve, reject) {
                 globals.request('GET', 'units/' + id).then(function(body) {
                     var data = JSON.parse(body);
-                    console.log(data);
-                    resolve(data.rows);
+                    resolve(data);
 
                 }).catch(function(error) {
                     console.log(error);
@@ -131,8 +129,7 @@
             return new Promise(function(resolve, reject) {
                 globals.request('PUT', 'units/' + id, updatedParams).then(function(body) {
                     var data = JSON.parse(body);
-                    console.log(data);
-                    resolve(data.rows);
+                    resolve(data);
 
                 }).catch(function(error) {
                     console.log(error);
