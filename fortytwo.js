@@ -126,7 +126,7 @@
         }
 
         // Update a unit
-        this.find = function(id, updatedParams) {
+        this.update = function(id, updatedParams) {
             return new Promise(function(resolve, reject) {
                 globals.request('PUT', 'units/' + id, updatedParams).then(function(body) {
                     var data = JSON.parse(body);
