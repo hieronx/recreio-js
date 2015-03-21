@@ -101,14 +101,33 @@
             return new Promise(function(resolve, reject) {
                 globals.request('GET', 'units').then(function(body) {
                     var data = JSON.parse(body);
-                    var units = []
-                    
-                    for (key in data.rows) {
-                        var unit = data.rows[key];
-                        units.push(unit['value']);
-                    }
+                    resolve(data.rows);
 
-                    resolve(units);
+                }).catch(function(error) {
+                    reject(error);
+                });
+            });
+        }
+
+        // Find a unit
+        this.find = function(id) {
+            return new Promise(function(resolve, reject) {
+                globals.request('GET', 'units/' + id).then(function(body) {
+                    var data = JSON.parse(body);
+                    resolve(data.rows);
+
+                }).catch(function(error) {
+                    reject(error);
+                });
+            });
+        }
+
+        // Update a unit
+        this.find = function(id, updatedParams) {
+            return new Promise(function(resolve, reject) {
+                globals.request('PUT', 'units/' + id, updatedParams).then(function(body) {
+                    var data = JSON.parse(body);
+                    resolve(data.rows);
 
                 }).catch(function(error) {
                     reject(error);
