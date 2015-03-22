@@ -3,6 +3,7 @@
   "description": "Javascript package for the API provided by 42 Education",
   "main": "./fortytwo.js",
   "license": "MIT",
+  "ignore": [],
   "authors": [
     "42 Education"
   ],

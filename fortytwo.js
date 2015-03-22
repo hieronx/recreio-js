@@ -153,6 +153,20 @@
                 });
             });
         }
+
+        // Remove a unit
+        this.remove = function(id) {
+            return new Promise(function(resolve, reject) {
+                globals.request('DELETE', 'units/' + id).then(function(body) {
+                    var data = JSON.parse(body);
+                    resolve(data);
+
+                }).catch(function(error) {
+                    console.log(error);
+                    reject(error);
+                });
+            });
+        }
     };
 
     /* Group management */
