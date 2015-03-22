@@ -34,7 +34,7 @@
             return new Promise(function(resolve, reject) {
                 var httpRequest = new XMLHttpRequest();
                 httpRequest.open(type, self.url + self.version + "/" + path, true);
-                httpRequest.send(data);
+                httpRequest.send(JSON.stringify(data));
 
                 httpRequest.onreadystatechange = function() {
                     if (httpRequest.readyState === 4) {
@@ -115,6 +115,20 @@
         this.find = function(id) {
             return new Promise(function(resolve, reject) {
                 globals.request('GET', 'units/' + id).then(function(body) {
+                    var data = JSON.parse(body);
+                    resolve(data);
+
+                }).catch(function(error) {
+                    console.log(error);
+                    reject(error);
+                });
+            });
+        }
+
+        // Add a unit
+        this.add = function(params) {
+            return new Promise(function(resolve, reject) {
+                globals.request('POST', 'units', params).then(function(body) {
                     var data = JSON.parse(body);
                     resolve(data);
 
