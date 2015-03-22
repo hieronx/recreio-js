@@ -33,6 +33,7 @@
             return new Promise(function(resolve, reject) {
                 var httpRequest = new XMLHttpRequest();
                 httpRequest.open(type, self.url + self.version + "/" + path, true);
+                httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 httpRequest.send(JSON.stringify(data));
 
                 httpRequest.onreadystatechange = function() {
