@@ -35,10 +35,10 @@ Then initialize the object with the basic configuration:
 ```js
 var FortyTwo = new FortyTwo (
   {
-    url: "http://0.0.0.0:3000/",
+    url: "https://api.42education.com/v1/",
     client_id: "",
     client_secret: "",
-    redirect_uri: null
+    redirect_uri: "http://yourapp.domain.com/callback/"
   }
 );
 ```

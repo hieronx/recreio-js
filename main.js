@@ -17,7 +17,6 @@
 
         // Configuration of the plugin
         self.url = "http://api.42education.com/";
-        self.version = "v1";
         self.client_id = "FaQg1U6Krm";
         self.client_secret = "914acd359adc4dc968aa433cbc4ac6c5a3a48b7bade6b4512550a77df5fac651c4d0d272d2a08d03ce9088cb18265ba1";
         self.redirect_uri = null;
@@ -32,7 +31,7 @@
         this.request = function(type, path, data) {
             return new Promise(function(resolve, reject) {
                 var httpRequest = new XMLHttpRequest();
-                httpRequest.open(type, self.url + self.version + "/" + path, true);
+                httpRequest.open(type, self.url + path, true);
                 httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 httpRequest.send(JSON.stringify(data));
 
