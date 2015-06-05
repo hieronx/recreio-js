@@ -33,8 +33,8 @@
                 var httpRequest = new XMLHttpRequest();
                 httpRequest.open(type, self.url + path, true);
                 httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                httpRequest.send(JSON.stringify(data));
                 httpRequest.withCredentials = true;
+                httpRequest.send(JSON.stringify(data));
 
                 httpRequest.onreadystatechange = function() {
                     if (httpRequest.readyState === 4) {
