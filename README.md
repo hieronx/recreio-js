@@ -35,10 +35,8 @@ Then initialize the object with the basic configuration:
 ```js
 var FortyTwo = new FortyTwo (
   {
-    url: "https://api.42education.com/v1/",
-    client_id: "",
-    client_secret: "",
-    redirect_uri: "http://yourapp.domain.com/callback/"
+    url: "https://api.42education.com/",
+    api_key: ""
   }
 );
 ```
@@ -46,23 +44,21 @@ var FortyTwo = new FortyTwo (
 Now you can start using the library:
 
 ```js
-FortyTwo.Account; // return object with account status and/or details
-FortyTwo.Account.signUp(params); // sign up for a new account
-FortyTwo.Account.signIn(username, password); // log in to an existing account
-FortyTwo.Account.signOut(); // log out of account
-FortyTwo.Account.update(params); // remove account
-FortyTwo.Account.remove(); // remove account
+FortyTwo.signIn(provider); // redirect to the sign in page of a SSO provider (e.g. Google, Facebook)
+FortyTwo.signIn(username, password); // sign in using a username and password combination
+FortyTwo.signOut(); // sign out of account
 
-FortyTwo.Unit.getAssigned(function(units) {}); // find units that are assigned to this user
-FortyTwo.Unit.find(params, function(units) {}); // find units
-FortyTwo.Unit.findOne(params, function(unit) {}); // find a unit
-FortyTwo.Unit.findById(id, function(unit) {}); // find a specific unit by id
-FortyTwo.Unit.add(params); // add a unit
-FortyTwo.Unit.update(params); // edit a unit
-FortyTwo.Unit.remove(params); // remove a unit
+FortyTwo.settings[key]; // retrieve a user setting
+FortyTwo.settings[key] = value; // create or update a user setting
 
-FortyTwo.Statement.send(action, object_id); // send a statement
-FortyTwo.Statement.find(params, function(statements) {}); // find statements
+FortyTwo.getNextUnit(); // get the next unit assigned to this user
+FortyTwo.getAssignedUnits(); // get a list of all assigned units
+FortyTwo.getUnitByID(unitId); // get a specific unit by its index
+
+FortyTwo.beginUnit(unitId); // begin a specific unit
+FortyTwo.saveObject(results); // save the results of this object and return the next object
+FortyTwo.saveUnit(results); // save the results of this unit and return the next unit
+FortyTwo.beginNextUnit(); // begin the next unit
 ```
 
 Feedback
