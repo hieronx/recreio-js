@@ -18,11 +18,7 @@
 
         // Configuration of the plugin
         self.url = "http://api.42education.com/";
-        self.client_id = "FaQg1U6Krm";
-        self.client_secret = "914acd359adc4dc968aa433cbc4ac6c5a3a48b7bade6b4512550a77df5fac651c4d0d272d2a08d03ce9088cb18265ba1";
-        self.redirect_uri = null;
-
-        self.db_name = "db-42education";
+        self.api_key = "abcdef";
 
         /* Create an error object */
         this.errorResponse = function(title, message, code) {
@@ -32,9 +28,11 @@
         this.request = function(type, path, data) {
             return new Promise(function(resolve, reject) {
                 var httpRequest = new XMLHttpRequest();
+
                 httpRequest.open(type, self.url + path, true);
                 httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 httpRequest.withCredentials = true;
+
                 httpRequest.send(JSON.stringify(data));
 
                 httpRequest.onreadystatechange = function() {
@@ -58,131 +56,104 @@
         }
     };
 
-    /* User management */
-    FortyTwo.User = function() {
+    var globals = new FortyTwo.globals();
 
-        var globals = new FortyTwo.globals();
+    FortyTwo.getAccount = function() {
+        return new Promise(function(resolve, reject) {
+            globals.request('GET', 'users/me').then(function(body) {
+                var data = JSON.parse(body);
+                resolve(data);
 
-        // Users methods
+            }).catch(function(error) {
+                console.log(error);
+                reject(error);
+            });
+        });
+    }
 
-        /* simple method for registering a user */
-        this.register = function(success, error) {
-            globals.request("PUT", "register", success, error);
+    FortyTwo.signIn = function(provider) {
+        return new Promise(function(resolve, reject) {
+            globals.request('GET', 'auth/providers').then(function(url) {
+                window.location.href = url;
 
-        }
+            }).catch(function(error) {
+                console.log(error);
+                reject(error);
+            });
+        });
+    }
 
-        var login = function(error) {
-            globals.request("PUT", "login", function(data) {
-                if (data.status = 'success') {
-                    window.location = this.url + 'dialog/authorize?client_id=' + this.client_id + '&redirect_uri='+ this.redirect_uri + '&response_type=code';
+    FortyTwo.getNextUnit = function() {
+        return new Promise(function(resolve, reject) {
+            globals.request('GET', 'units').then(function(body) {
+                var data = JSON.parse(body);
+                resolve(data[0]);
+
+            }).catch(function(error) {
+                console.log(error);
+                reject(error);
+            });
+        });
+    }
+
+    FortyTwo.getAssignedUnits = function() {
+        return new Promise(function(resolve, reject) {
+            globals.request('GET', '/users/me/assignments?status=open').then(function(body) {
+                var data = JSON.parse(body);
+                resolve(data);
+
+            }).catch(function(error) {
+                console.log(error);
+                reject(error);
+            });
+        });
+    }
+
+    FortyTwo.findUnit = function(id) {
+        return new Promise(function(resolve, reject) {
+            globals.request('GET', 'units/' + id).then(function(data) {
+                resolve(JSON.parse(data));
+
+            }).catch(function(error) {
+                console.log(error);
+                reject(error);
+            });
+        });
+    }
+
+
+    FortyTwo.get = function(key) {
+        return new Promise(function(resolve, reject) {
+            globals.request('GET', 'settings/me/apps/5bb424af3a8f20607ab384db88ea9ec0').then(function(data) {
+                var settings = JSON.parse(data);
+                
+                if (settings[key]) {
+                    resolve(settings[key]);
+                } else {
+                    reject("Unable to find a value for this key");
                 }
-            }, function(status) {
-               error(status);
+
+            }).catch(function(error) {
+                console.log(error);
+                reject(error);
             });
-        }
+        });
+    }
 
-        /* method for verifying user login based on session */
-        var verifyCode = function(success, error, data) {
-            if (globals.queryString("code") != undefined) {
-                globals.request("PUT", "oauth/token", success, error, data);
+    FortyTwo.set = function(key, value) {
+        return new Promise(function(resolve, reject) {
+            var settings = {};
+            settings[key] = value;
 
-            } else {
-                error(globals.errorResponse("No code", "No code in querystring", 1));
-            }
-        }
+            globals.request('PUT', 'settings/me/apps/5bb424af3a8f20607ab384db88ea9ec0', settings).then(function(data) {
+                resolve(data);
 
-    };
-
-    /* Unit */
-    FortyTwo.Unit = function() {
-        var self = this;
-        var globals = new FortyTwo.globals();
-
-        // Retrieve all units
-        this.all = function() {
-            return new Promise(function(resolve, reject) {
-                globals.request('GET', 'units').then(function(body) {
-                    var data = JSON.parse(body);
-                    resolve(data);
-
-                }).catch(function(error) {
-                    console.log(error);
-                    reject(error);
-                });
+            }).catch(function(error) {
+                console.log(error);
+                reject(error);
             });
-        }
-
-        // Find a unit
-        this.find = function(id) {
-            return new Promise(function(resolve, reject) {
-                globals.request('GET', 'units/' + id).then(function(body) {
-                    var data = JSON.parse(body);
-                    resolve(data);
-
-                }).catch(function(error) {
-                    console.log(error);
-                    reject(error);
-                });
-            });
-        }
-
-        // Add a unit
-        this.add = function(params) {
-            return new Promise(function(resolve, reject) {
-                globals.request('POST', 'units', params).then(function(body) {
-                    var data = JSON.parse(body);
-                    resolve(data);
-
-                }).catch(function(error) {
-                    console.log(error);
-                    reject(error);
-                });
-            });
-        }
-
-        // Update a unit
-        this.update = function(id, updatedParams) {
-            return new Promise(function(resolve, reject) {
-                globals.request('PUT', 'units/' + id, updatedParams).then(function(body) {
-                    var data = JSON.parse(body);
-                    resolve(data);
-
-                }).catch(function(error) {
-                    console.log(error);
-                    reject(error);
-                });
-            });
-        }
-
-        // Remove a unit
-        this.remove = function(id) {
-            return new Promise(function(resolve, reject) {
-                globals.request('DELETE', 'units/' + id).then(function(body) {
-                    var data = JSON.parse(body);
-                    resolve(data);
-
-                }).catch(function(error) {
-                    console.log(error);
-                    reject(error);
-                });
-            });
-        }
-    };
-
-    /* Group management */
-    FortyTwo.Group = function() {
-
-    };
-
-    /* Statements  */
-    FortyTwo.Statement = function() {
-
-    };
-
-    window.FortyTwo.User = new FortyTwo.User();
-    window.FortyTwo.Unit = new FortyTwo.Unit();
-    window.FortyTwo.Group = new FortyTwo.Group();
-    window.FortyTwo.Statement = new FortyTwo.Statement();
+        });
+    }
 
 })();
 },{"bluebird":2}],2:[function(require,module,exports){
