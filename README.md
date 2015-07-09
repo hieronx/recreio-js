@@ -1,7 +1,7 @@
 fortytwo-js
 ==============
 
-Javascript package for the API provided by [42 Education](https://42education.com).
+JS package for the API provided by [42 Education](https://42education.com).
 
 Installation
 ------------
@@ -18,7 +18,7 @@ Or using npm:
 npm install fortytwo-js --save
 ```
 
-Or download *fortytwo.js* from Github.
+Or you can download *fortytwo.js* from Github.
 
 Usage
 -----
@@ -44,10 +44,11 @@ Now you can start using the library:
 ```js
 FortyTwo.signIn(provider); // redirect to the sign in page of a SSO provider (e.g. Google, Facebook)
 FortyTwo.signIn(username, password); // sign in using a username and password combination
+FortyTwo.getAccount(); // return your account profile
 FortyTwo.signOut(); // sign out of account
 
-FortyTwo.settings[key]; // retrieve a user setting
-FortyTwo.settings[key] = value; // create or update a user setting
+FortyTwo.get(key); // retrieve a user setting
+FortyTwo.set(key, value); // create or update a user setting
 
 FortyTwo.getNextUnit(); // get the next unit assigned to this user
 FortyTwo.getAssignedUnits(); // get a list of all assigned units
