@@ -19,11 +19,7 @@
         // Configuration of the plugin
         self.url = "http://api.42education.com/";
         self.api_key = "abcdef";
-
-        /* Create an error object */
-        this.errorResponse = function(title, message, code) {
-            return { title: title, message: message, code: code };
-        }
+        self.appId = "5bb424af3a8f20607ab384db88ea9ec0";
 
         this.request = function(type, path, data) {
             return new Promise(function(resolve, reject) {
@@ -31,7 +27,8 @@
 
                 httpRequest.open(type, self.url + path, true);
                 httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                httpRequest.withCredentials = true;
+                httpRequest.setRequestHeader("X-42-Key", self.api_key);
+                httpRequest.withCredentials = true; // Send cookies with CORS requests
 
                 httpRequest.send(JSON.stringify(data));
 
@@ -45,14 +42,6 @@
                     }
                 }
             });
-        }
-
-        /* Gets value from querystring */
-        this.queryString = function(name) {
-            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-                results = regex.exec(location.search);
-            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         }
     };
 
@@ -98,7 +87,7 @@
 
     FortyTwo.getAssignedUnits = function() {
         return new Promise(function(resolve, reject) {
-            globals.request('GET', '/users/me/assignments?status=open').then(function(body) {
+            globals.request('GET', 'users/me/assignments?status=open').then(function(body) {
                 var data = JSON.parse(body);
                 resolve(data);
 
@@ -124,7 +113,7 @@
 
     FortyTwo.get = function(key) {
         return new Promise(function(resolve, reject) {
-            globals.request('GET', 'settings/me/apps/5bb424af3a8f20607ab384db88ea9ec0').then(function(data) {
+            globals.request('GET', 'settings/me/apps/' + globals.appId).then(function(data) {
                 var settings = JSON.parse(data);
                 
                 if (settings[key]) {
@@ -145,7 +134,7 @@
             var settings = {};
             settings[key] = value;
 
-            globals.request('PUT', 'settings/me/apps/5bb424af3a8f20607ab384db88ea9ec0', settings).then(function(data) {
+            globals.request('PUT', 'settings/me/apps/' + globals.appId, settings).then(function(data) {
                 resolve(data);
 
             }).catch(function(error) {
