@@ -3,8 +3,6 @@ fortytwo-js
 
 Javascript package for the API provided by [42 Education](https://42education.com).
 
-*Copyright &copy; 2015, 42 Education.*
-
 Installation
 ------------
 
@@ -33,10 +31,10 @@ Include fortytwo.js in your application.
 Then initialize the object with the basic configuration:
 
 ```js
-var FortyTwo = new FortyTwo (
+var FortyTwo = new FortyTwo(
   {
     url: "https://api.42education.com/",
-    api_key: ""
+    api_key: "abcdef"
   }
 );
 ```
@@ -89,4 +87,3 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
