@@ -47,6 +47,10 @@
 
     var globals = new FortyTwo.globals();
 
+    /**
+     * [getAccount description]
+     * @return {[type]} [description]
+     */
     FortyTwo.getAccount = function() {
         return new Promise(function(resolve, reject) {
             globals.request('GET', 'users/me').then(function(body) {
@@ -60,6 +64,11 @@
         });
     }
 
+    /**
+     * [signIn description]
+     * @param  {[type]} provider [description]
+     * @return {[type]}          [description]
+     */
     FortyTwo.signIn = function(provider) {
         return new Promise(function(resolve, reject) {
             globals.request('GET', 'auth/providers').then(function(url) {
@@ -72,11 +81,17 @@
         });
     }
 
+    /**
+     * Get the next assigned unit that hasn't been completed
+     * @return Unit
+     */
     FortyTwo.getNextUnit = function() {
         return new Promise(function(resolve, reject) {
+            // TODO: change path to users/me/assignments?status=open
             globals.request('GET', 'units').then(function(body) {
                 var data = JSON.parse(body);
-                resolve(data[0]);
+
+                resolve(new Unit(data[0]));
 
             }).catch(function(error) {
                 console.log(error);
@@ -85,57 +100,59 @@
         });
     }
 
-    FortyTwo.getAssignedUnits = function() {
-        return new Promise(function(resolve, reject) {
-            globals.request('GET', 'users/me/assignments?status=open').then(function(body) {
-                var data = JSON.parse(body);
-                resolve(data);
-
-            }).catch(function(error) {
-                console.log(error);
-                reject(error);
-            });
-        });
+    function Unit(data) {
+        this.name = data.name;
+        this.objects = data.objects;
     }
 
-    FortyTwo.findUnit = function(id) {
-        return new Promise(function(resolve, reject) {
-            globals.request('GET', 'units/' + id).then(function(data) {
-                resolve(JSON.parse(data));
-
-            }).catch(function(error) {
-                console.log(error);
-                reject(error);
-            });
-        });
+    function LearningObject() {
+        this.length = 0;
+        this.first = null;
     }
 
+    LearningObject.prototype = {
 
-    FortyTwo.get = function(key) {
-        return new Promise(function(resolve, reject) {
-            globals.request('GET', 'settings/me/apps/' + globals.appId).then(function(data) {
-                var settings = JSON.parse(data);
-                
-                if (settings[key]) {
-                    resolve(settings[key]);
-                } else {
-                    reject("Unable to find a value for this key");
+        add: function (data){
+
+            //create a new node, place data in
+            var node = {
+                data: data,
+                next: null
+            }
+
+            //used to traverse the structure
+            var current;
+
+            //special case: no items in the list yet
+            if (this.first === null){
+                this.first = node;
+
+            } else {
+                current = this.first;
+
+                while (current.next) {
+                    current = current.next;
                 }
 
-            }).catch(function(error) {
-                console.log(error);
-                reject(error);
-            });
-        });
-    }
+                current.next = node;
+            }
 
-    FortyTwo.set = function(key, value) {
+            //don't forget to update the count
+            this.length++;
+
+        }
+
+    };
+
+    /**
+     * [findUnit description]
+     * @param  Integer id 
+     * @return Unit
+     */
+    FortyTwo.getUnit = function(id) {
         return new Promise(function(resolve, reject) {
-            var settings = {};
-            settings[key] = value;
-
-            globals.request('PUT', 'settings/me/apps/' + globals.appId, settings).then(function(data) {
-                resolve(data);
+            globals.request('GET', 'units/' + id).then(function(data) {
+                resolve(new Unit(JSON.parse(data)));
 
             }).catch(function(error) {
                 console.log(error);
@@ -143,6 +160,56 @@
             });
         });
     }
+
+    FortyTwo.userStorage = function() {
+        var self = this;
+        var globals = new FortyTwo.globals();
+
+        /**
+         * [get description]
+         * @param  {[type]} key [description]
+         * @return {[type]}     [description]
+         */
+        this.get = function(key) {
+            return new Promise(function(resolve, reject) {
+                globals.request('GET', 'settings/me/apps/' + globals.appId).then(function(data) {
+                    var settings = JSON.parse(data);
+                    
+                    if (settings[key]) {
+                        resolve(settings[key]);
+                    } else {
+                        reject("Unable to find a value for this key");
+                    }
+
+                }).catch(function(error) {
+                    console.log(error);
+                    reject(error);
+                });
+            });
+        }
+
+        /**
+         * [set description]
+         * @param {[type]} key   [description]
+         * @param {[type]} value [description]
+         */
+        this.set = function(key, value) {
+            return new Promise(function(resolve, reject) {
+                var settings = {};
+                settings[key] = value;
+
+                globals.request('PUT', 'settings/me/apps/' + globals.appId, settings).then(function(data) {
+                    resolve(data);
+
+                }).catch(function(error) {
+                    console.log(error);
+                    reject(error);
+                });
+            });
+        }
+    };
+
+    window.FortyTwo.userStorage = new FortyTwo.userStorage();
 
 })();
 },{"bluebird":2}],2:[function(require,module,exports){
