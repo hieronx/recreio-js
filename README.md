@@ -44,20 +44,30 @@ Now you can start using the library:
 ```js
 FortyTwo.signIn(provider); // redirect to the sign in page of a SSO provider (e.g. Google, Facebook)
 FortyTwo.signIn(username, password); // sign in using a username and password combination
-FortyTwo.getAccount(); // return your account profile
+FortyTwo.getUserProfile(); // return your account profile
 FortyTwo.signOut(); // sign out of account
 
-FortyTwo.get(key); // retrieve a user setting
-FortyTwo.set(key, value); // create or update a user setting
+FortyTwo.appStorage.get(key); // retrieve an app setting
+FortyTwo.appStorage.set(key, value); // create or update an app setting
 
-FortyTwo.getNextUnit(); // get the next unit assigned to this user
-FortyTwo.getAssignedUnits(); // get a list of all assigned units
-FortyTwo.getUnitByID(unitId); // get a specific unit by its index
+FortyTwo.userStorage.get(key); // retrieve a user setting
+FortyTwo.userStorage.set(key, value); // create or update a user setting
 
-FortyTwo.beginUnit(unitId); // begin a specific unit
-FortyTwo.saveObject(results); // save the results of this object and return the next object
-FortyTwo.saveUnit(results); // save the results of this unit and return the next unit
-FortyTwo.beginNextUnit(); // begin the next unit
+var unitPromise = FortyTwo.getNextUnit(); // get the next unit assigned to this user
+var unitPromise = FortyTwo.getUnit(unitId); // get a specific unit by its index
+
+unitPromise.then(function(unit) {
+  unit.begin();
+
+  var learningObject = unit.first;
+  do {
+    learningObject.save(result);
+    learningObject = learningObject.next;
+  } while (learningObject.next !== null)
+
+  unit.end();
+});
+
 ```
 
 Feedback

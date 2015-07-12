@@ -46,6 +46,10 @@
 
     var globals = new FortyTwo.globals();
 
+    /**
+     * [getAccount description]
+     * @return {[type]} [description]
+     */
     FortyTwo.getAccount = function() {
         return new Promise(function(resolve, reject) {
             globals.request('GET', 'users/me').then(function(body) {
@@ -59,6 +63,11 @@
         });
     }
 
+    /**
+     * [signIn description]
+     * @param  {[type]} provider [description]
+     * @return {[type]}          [description]
+     */
     FortyTwo.signIn = function(provider) {
         return new Promise(function(resolve, reject) {
             globals.request('GET', 'auth/providers').then(function(url) {
@@ -71,6 +80,10 @@
         });
     }
 
+    /**
+     * Get the next assigned unit that hasn't been completed
+     * @return Unit
+     */
     FortyTwo.getNextUnit = function() {
         return new Promise(function(resolve, reject) {
             globals.request('GET', 'units').then(function(body) {
@@ -84,6 +97,11 @@
         });
     }
 
+
+    /**
+     * Get a list of assigned units that haven't been completed
+     * @return List[Unit]
+     */
     FortyTwo.getAssignedUnits = function() {
         return new Promise(function(resolve, reject) {
             globals.request('GET', 'users/me/assignments?status=open').then(function(body) {
@@ -97,6 +115,11 @@
         });
     }
 
+    /**
+     * [findUnit description]
+     * @param  Integer id 
+     * @return Unit
+     */
     FortyTwo.findUnit = function(id) {
         return new Promise(function(resolve, reject) {
             globals.request('GET', 'units/' + id).then(function(data) {
@@ -109,7 +132,43 @@
         });
     }
 
+    /**
+     * [beginUnit description]
+     * @param  Integer id
+     * @return LearningObject
+     */
+    FortyTwo.beginUnit = function(id) {
+        return new Promise(function(resolve, reject) {
+            reject("Not yet implemented.");
+        });
+    }
 
+    /**
+     * [saveObject description]
+     * @param  Object result
+     * @return LearningObject
+     */
+    FortyTwo.saveObject = function(result) {
+        return new Promise(function(resolve, reject) {
+            reject("Not yet implemented.");
+        });
+    }
+
+    /**
+     * [beginNextUnit description]
+     * @return LearningObject
+     */
+    FortyTwo.beginNextUnit = function() {
+        return new Promise(function(resolve, reject) {
+            reject("Not yet implemented.");
+        });
+    }
+
+    /**
+     * [get description]
+     * @param  {[type]} key [description]
+     * @return {[type]}     [description]
+     */
     FortyTwo.get = function(key) {
         return new Promise(function(resolve, reject) {
             globals.request('GET', 'settings/me/apps/' + globals.appId).then(function(data) {
@@ -128,6 +187,11 @@
         });
     }
 
+    /**
+     * [set description]
+     * @param {[type]} key   [description]
+     * @param {[type]} value [description]
+     */
     FortyTwo.set = function(key, value) {
         return new Promise(function(resolve, reject) {
             var settings = {};
