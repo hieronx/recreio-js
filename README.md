@@ -4,7 +4,7 @@ fortytwo-js
 JS package for the API provided by [42 Education](https://42education.com).
 
 Installation
-------------
+------
 
 You can install the package using Bower:
 
@@ -21,7 +21,7 @@ npm install fortytwo-js --save
 Or you can download *fortytwo.js* from Github.
 
 Usage
------
+------
 Include fortytwo.js in your application.
 
 ```html
@@ -39,25 +39,46 @@ var FortyTwo = new FortyTwo(
 );
 ```
 
-Now you can start using the library:
+Now you can use the library to implement authentication, using:
+
+1. An external oAuth or SAML authentication provider, such as Google or Active Directory.
+
+2. An username/email and password combination specifically used for the 42 Education platform.
 
 ```js
 FortyTwo.signIn(provider); // redirect to the sign in page of a SSO provider (e.g. Google, Facebook)
 FortyTwo.signIn(username, password); // sign in using a username and password combination
-FortyTwo.getAccount(); // return your account profile
+FortyTwo.getUserProfile(); // return your account profile
 FortyTwo.signOut(); // sign out of account
+```
 
-FortyTwo.get(key); // retrieve a user setting
-FortyTwo.set(key, value); // create or update a user setting
+You can then retrieve the first unit and start the learning activity by looping the learning objects as part of that unit. The set of learning objects is an ordered list (implemented as a linked list) and should be completed in that order only.
 
-FortyTwo.getNextUnit(); // get the next unit assigned to this user
-FortyTwo.getAssignedUnits(); // get a list of all assigned units
-FortyTwo.getUnitByID(unitId); // get a specific unit by its index
+```js
+var unitPromise = FortyTwo.getNextUnit(); // get the next unit assigned to this user
+var unitPromise = FortyTwo.getUnit(unitId); // get a specific unit by its index
 
-FortyTwo.beginUnit(unitId); // begin a specific unit
-FortyTwo.saveObject(results); // save the results of this object and return the next object
-FortyTwo.saveUnit(results); // save the results of this unit and return the next unit
-FortyTwo.beginNextUnit(); // begin the next unit
+unitPromise.then(function(unit) {
+  unit.begin();
+
+  var learningObject = unit.first;
+  do {
+    learningObject.save(result);
+    learningObject = learningObject.next;
+  } while (learningObject.next !== null)
+
+  unit.end();
+});
+```
+
+To simplify development of custom features, you can store any kind of (JSON-based) data for your app and/or for the currently authenticated user.
+
+```js
+FortyTwo.appStorage.get(key); // retrieve an app setting
+FortyTwo.appStorage.set(key, value); // create or update an app setting
+
+FortyTwo.userStorage.get(key); // retrieve a user setting
+FortyTwo.userStorage.set(key, value); // create or update a user setting
 ```
 
 Feedback
@@ -66,7 +87,7 @@ Feedback
 For any questions, bug reports, feature requests or anything else, do reach out to us! We're available at [support@42education.com](mailto:support@42education.com).
 
 License
-----
+------
 
 Released under the terms of MIT License:
 
