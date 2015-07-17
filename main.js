@@ -130,17 +130,6 @@
         for (var objectKey in unit.objects) {
             this.objects.push(new LearningObject(unit.objects[objectKey]));
         }
-
-        this.begin = function() {
-            this.startTime = new Date().getTime();
-        }
-
-        this.end = function() {
-            this.endTime = new Date().getTime();
-            this.duration = this.endTime - this.startTime;
-
-            console.log(this.name + " took you " + this.duration + "s");
-        }
     }
 
     function LearningObject(learningObject) {
@@ -156,13 +145,53 @@
         this.image = learningObject.image;
         this.active = learningObject.active;
 
+        this.begin = function() {
+            this.startTime = new Date().getTime();
+        }
+
+        var statement = {
+            "actor": {
+                "name": "Test",
+                "account": {
+                    "id": "1"
+                }
+            },
+            "verb": {
+                "id": "completed"
+            },
+            "object": {
+                "id": "2",
+                "definition": {
+                    "name": "Test"
+                }
+            },
+            "result": {
+                "completion": true,
+                "success": false,
+                "duration": "90S"
+            },
+            "context": {
+                "extensions": {
+                    "app": "tiles"
+                }
+            },
+            "timestamp": "2015-08-03T12:22:44.000000123Z"
+        }
+
         this.save = function(result) {
+            this.endTime = new Date().getTime();
+            this.duration = this.endTime - this.startTime;
+
+            console.log(this.name + " took you " + this.duration + "s");
+
             if (result == this.answer) {
                 console.log("That's right!");
 
             } else {
                 console.log("Hmm, that's wrong..");
-            }
+            }            
+
+            console.log(statement);
         }
     }
 
