@@ -86,12 +86,36 @@
      */
     FortyTwo.getNextUnit = function() {
         return new Promise(function(resolve, reject) {
+            var data = {
+                "name": "unit",
+                "id": "c32d2b9351c318db70c87693b435edfa",
+                "inLanguage": "NL",
+                "typicalAgeRange": "10-12",
+                "objects": [
+                    {
+                      "template": "multiple-choice",
+                      "subtemplate": "choose-the-verb",
+                      "preInstruction": "Choose the verb",
+                      "answer": "talk",
+                      "image": "https://assets.42education.com/home1.jpg",
+                      "options": ["boy", "apple", "talk", "car"],
+                      "active": true
+                    }
+                ],
+                "alignments": [
+                    {
+                        "name": "CCSS.ELA-Literacy.RST.11-12.3",
+                        "url": "http://www.corestandards.org/ELA-Literacy/RST/11-12/3",
+                        "description": "Follow precisely a complex multistep procedure when carrying out experiments, taking measurements, or performing technical tasks; analyze the specific results based on explanations in the text."
+                    }
+                ]
+            };
+
+            resolve(new Unit(data));
+
             // TODO: change path to users/me/assignments?status=open
             globals.request('GET', 'units').then(function(body) {
-                var data = JSON.parse(body);
-
-                resolve(new Unit(data[0]));
-
+                resolve(new Unit(JSON.parse(body)));
             }).catch(function(error) {
                 console.log(error);
                 reject(error);
@@ -99,49 +123,48 @@
         });
     }
 
-    function Unit(data) {
-        this.name = data.name;
-        this.objects = data.objects;
-    }
+    function Unit(unit) {
+        this.name = unit.name;
 
-    function LearningObject() {
-        this.length = 0;
-        this.first = null;
-    }
-
-    LearningObject.prototype = {
-
-        add: function (data){
-
-            //create a new node, place data in
-            var node = {
-                data: data,
-                next: null
-            }
-
-            //used to traverse the structure
-            var current;
-
-            //special case: no items in the list yet
-            if (this.first === null){
-                this.first = node;
-
-            } else {
-                current = this.first;
-
-                while (current.next) {
-                    current = current.next;
-                }
-
-                current.next = node;
-            }
-
-            //don't forget to update the count
-            this.length++;
-
+        this.objects = [];
+        for (var objectKey in unit.objects) {
+            this.objects.push(new LearningObject(unit.objects[objectKey]));
         }
 
-    };
+        this.begin = function() {
+            this.startTime = new Date().getTime();
+        }
+
+        this.end = function() {
+            this.endTime = new Date().getTime();
+            this.duration = this.endTime - this.startTime;
+
+            console.log(this.name + " took you " + this.duration + "s");
+        }
+    }
+
+    function LearningObject(learningObject) {
+        this.template = learningObject.template;
+        this.subtemplate = learningObject.subtemplate;
+
+        this.preInstruction = learningObject.preInstruction;
+        this.instruction = learningObject.instruction;
+        this.postInstruction = learningObject.postInstruction;
+
+        this.options = learningObject.options;
+        this.answer = learningObject.answer;
+        this.image = learningObject.image;
+        this.active = learningObject.active;
+
+        this.save = function(result) {
+            if (result == this.answer) {
+                console.log("That's right!");
+
+            } else {
+                console.log("Hmm, that's wrong..");
+            }
+        }
+    }
 
     /**
      * [findUnit description]
