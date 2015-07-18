@@ -48,7 +48,7 @@ Now you can use the library to implement authentication, using:
 ```js
 FortyTwo.signIn(provider); // redirect to the sign in page of a SSO provider (e.g. Google, Facebook)
 FortyTwo.signIn(username, password); // sign in using a username and password combination
-FortyTwo.getUserProfile(); // return your account profile
+FortyTwo.getAccount(); // return your account profile
 FortyTwo.signOut(); // sign out of account
 ```
 
@@ -59,15 +59,13 @@ var unitPromise = FortyTwo.getNextUnit(); // get the next unit assigned to this 
 var unitPromise = FortyTwo.getUnit(unitId); // get a specific unit by its index
 
 unitPromise.then(function(unit) {
-  unit.begin();
-
-  var learningObject = unit.first;
-  do {
+  for (var i = 0; i < unit.objects.length; i++) {
+    var learningObject = unit.objects[i];
+    
+    learningObject.begin();
+    // wait for user input
     learningObject.save(result);
-    learningObject = learningObject.next;
-  } while (learningObject.next !== null)
-
-  unit.end();
+  }
 });
 ```
 
