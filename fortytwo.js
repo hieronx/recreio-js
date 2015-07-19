@@ -20,6 +20,7 @@
         self.url = "http://api.42education.com/";
         self.api_key = "abcdef";
         self.appId = "5bb424af3a8f20607ab384db88ea9ec0";
+        self.appName = "flashcards";
 
         this.request = function(type, path, data) {
             return new Promise(function(resolve, reject) {
@@ -42,6 +43,36 @@
                     }
                 }
             });
+        }
+
+        this.getISODateString = function(d) {
+            function pad (val, n) {
+                var padder,
+                    tempVal;
+                if (typeof val === "undefined" || val === null) {
+                    val = 0;
+                }
+                if (typeof n === "undefined" || n === null) {
+                    n = 2;
+                }
+                padder = Math.pow(10, n-1);
+                tempVal = val.toString();
+
+                while (val < padder && padder > 1) {
+                    tempVal = "0" + tempVal;
+                    padder = padder / 10;
+                }
+
+                return tempVal;
+            }
+
+            return d.getUTCFullYear() + "-" +
+                pad(d.getUTCMonth() + 1) + "-" +
+                pad(d.getUTCDate()) + "T" +
+                pad(d.getUTCHours()) + ":" +
+                pad(d.getUTCMinutes()) + ":" +
+                pad(d.getUTCSeconds()) + "." +
+                pad(d.getUTCMilliseconds(), 3) + "Z";
         }
     };
 
@@ -125,26 +156,18 @@
     }
 
     function Unit(unit) {
+        this.id = unit.id;
         this.name = unit.name;
 
         this.objects = [];
         for (var objectKey in unit.objects) {
-            this.objects.push(new LearningObject(unit.objects[objectKey]));
-        }
-
-        this.begin = function() {
-            this.startTime = new Date().getTime();
-        }
-
-        this.end = function() {
-            this.endTime = new Date().getTime();
-            this.duration = this.endTime - this.startTime;
-
-            console.log(this.name + " took you " + this.duration + "s");
+            this.objects.push(new LearningObject(unit, unit.objects[objectKey]));
         }
     }
 
-    function LearningObject(learningObject) {
+    function LearningObject(unit, learningObject) {
+        this.unit = unit;
+
         this.template = learningObject.template;
         this.subtemplate = learningObject.subtemplate;
 
@@ -157,13 +180,60 @@
         this.image = learningObject.image;
         this.active = learningObject.active;
 
-        this.save = function(result) {
-            if (result == this.answer) {
-                console.log("That's right!");
-
-            } else {
-                console.log("Hmm, that's wrong..");
+        this.begin = function() {
+            if (!this.user) {
+                console.error("Not yet authenticated.")
+                return false;
             }
+
+            this.startTime = new Date().getTime();
+
+            FortyTwo.getAccount().then(function(account) {
+                this.user = account;
+            });
+
+            return this;
+        }
+
+        this.save = function(result) {
+            if (!this.startTime) {
+                console.error("Learning object hasn't started yet.")
+                return false;
+            }
+
+            this.endTime = new Date().getTime();
+            this.duration = this.endTime - this.startTime;
+
+            var statement = {
+                actor: {
+                    name: this.user.name,
+                    account: {
+                        id: this.user.id
+                    }
+                },
+                verb: {
+                    id: "completed"
+                },
+                object: {
+                    id: this.unit.id,
+                    definition: {
+                        name: this.unit.name
+                    }
+                },
+                result: {
+                    completion: true,
+                    success: (result == this.answer),
+                    duration: Math.floor(Math.abs(this.duration / 1000)) + "S"
+                },
+                context: {
+                    extensions: {
+                        app: globals.appName
+                    }
+                },
+                timestamp: globals.getISODateString(new Date())
+            }
+
+            return statement;
         }
     }
 
