@@ -11,13 +11,16 @@
     window.FortyTwo = window.FortyTwo || {};
     var FortyTwo = window.FortyTwo;
 
+    // Settings
+    var API_URL = "http://api.42education.com/";
+    var MOUSE_TRACKING_RATE = 10; // times per second
+
     // Globals functions
     FortyTwo.globals = function() {
 
         var self = this;
 
         // Configuration of the plugin
-        self.url = "http://api.42education.com/";
         self.api_key = "abcdef";
         self.appId = "5bb424af3a8f20607ab384db88ea9ec0";
         self.appName = "flashcards";
@@ -26,7 +29,7 @@
             return new Promise(function(resolve, reject) {
                 var httpRequest = new XMLHttpRequest();
 
-                httpRequest.open(type, self.url + path, true);
+                httpRequest.open(type, API_URL + path, true);
                 httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 httpRequest.setRequestHeader("X-42-Key", self.api_key);
                 httpRequest.withCredentials = true; // Send cookies with CORS requests
@@ -165,8 +168,9 @@
         }
     }
 
-    function LearningObject(unit, learningObject) {
-        this.unit = unit;
+    function LearningObject(parentUnit, learningObject) {
+        var user = {};
+        var unit = parentUnit;
 
         this.template = learningObject.template;
         this.subtemplate = learningObject.subtemplate;
@@ -180,16 +184,59 @@
         this.image = learningObject.image;
         this.active = learningObject.active;
 
+        var mousePosition = {};
+        var mouseMovement = new Array();
+        var mouseInterval = 0;
+
+        this.handleMouseMove = function(event) {
+            var dot, eventDoc, doc, body, pageX, pageY;
+
+            event = event || window.event; // IE-ism
+
+            // If pageX/Y aren't available and clientX/Y are,
+            // calculate pageX/Y - logic taken from jQuery.
+            // (This is to support old IE)
+            if (event.pageX == null && event.clientX != null) {
+                eventDoc = (event.target && event.target.ownerDocument) || document;
+                doc = eventDoc.documentElement;
+                body = eventDoc.body;
+
+                event.pageX = event.clientX +
+                  (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
+                  (doc && doc.clientLeft || body && body.clientLeft || 0);
+                event.pageY = event.clientY +
+                  (doc && doc.scrollTop  || body && body.scrollTop  || 0) -
+                  (doc && doc.clientTop  || body && body.clientTop  || 0 );
+            }
+
+            mousePosition = {
+                x: event.pageX,
+                y: event.pageY
+            };
+        }
+        this.getMousePosition = function() {
+            if (mousePosition.x && mousePosition.y) {
+                mouseMovement[mouseInterval] = { x: mousePosition.x, y: mousePosition.y }
+                mouseInterval++;   
+            }
+        }
+
         this.begin = function() {
-            if (!this.user) {
+            if (!user) {
                 console.error("Not yet authenticated.")
-                return false;
+                // return false;
             }
 
             this.startTime = new Date().getTime();
 
+            // Save mouse position 10 times per second
+            document.onmousemove = this.handleMouseMove;
+            this.mouseInterval = setInterval(this.getMousePosition, 1000 / MOUSE_TRACKING_RATE);
+
             FortyTwo.getAccount().then(function(account) {
-                this.user = account;
+                user = account;
+            }).error(function(error) {
+                user = { id: 42, name: "John Doe" };
             });
 
             return this;
@@ -204,20 +251,22 @@
             this.endTime = new Date().getTime();
             this.duration = this.endTime - this.startTime;
 
+            clearInterval(this.mouseInterval);
+
             var statement = {
                 actor: {
-                    name: this.user.name,
+                    name: user.name,
                     account: {
-                        id: this.user.id
+                        id: user.id
                     }
                 },
                 verb: {
                     id: "completed"
                 },
                 object: {
-                    id: this.unit.id,
+                    id: unit.id,
                     definition: {
-                        name: this.unit.name
+                        name: unit.name
                     }
                 },
                 result: {
@@ -227,7 +276,8 @@
                 },
                 context: {
                     extensions: {
-                        app: globals.appName
+                        app: globals.appName,
+                        mouseMovement: mouseMovement
                     }
                 },
                 timestamp: globals.getISODateString(new Date())
