@@ -234,7 +234,7 @@
 
             FortyTwo.getAccount().then(function(account) {
                 user = account;
-            }).error(function(error) {
+            }).catch(function(exception) {
                 user = { id: 42, name: "John Doe" };
             });
 
