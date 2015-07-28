@@ -31,7 +31,7 @@
 
                 httpRequest.open(type, API_URL + path, true);
                 httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                httpRequest.setRequestHeader("X-42-Key", self.api_key);
+                // httpRequest.setRequestHeader("X-42-Key", self.api_key);
                 httpRequest.withCredentials = true; // Send cookies with CORS requests
 
                 httpRequest.send(JSON.stringify(data));
@@ -121,36 +121,16 @@
      */
     FortyTwo.getNextUnit = function() {
         return new Promise(function(resolve, reject) {
-            var data = {
-                "name": "unit",
-                "id": "c32d2b9351c318db70c87693b435edfa",
-                "inLanguage": "NL",
-                "typicalAgeRange": "10-12",
-                "objects": [
-                    {
-                      "template": "multiple-choice",
-                      "subtemplate": "choose-the-verb",
-                      "preInstruction": "Choose the verb",
-                      "answer": "talk",
-                      "image": "https://assets.42education.com/home1.jpg",
-                      "options": ["boy", "apple", "talk", "car"],
-                      "active": true
-                    }
-                ],
-                "alignments": [
-                    {
-                        "name": "CCSS.ELA-Literacy.RST.11-12.3",
-                        "url": "http://www.corestandards.org/ELA-Literacy/RST/11-12/3",
-                        "description": "Follow precisely a complex multistep procedure when carrying out experiments, taking measurements, or performing technical tasks; analyze the specific results based on explanations in the text."
-                    }
-                ]
-            };
+            globals.request('GET', 'users/me/assignments?status=open').then(function(body) {
+                var assignments = JSON.parse(body);
+                console.log(assignments);
 
-            resolve(new Unit(data));
-
-            // TODO: change path to users/me/assignments?status=open
-            globals.request('GET', 'units').then(function(body) {
-                resolve(new Unit(JSON.parse(body)));
+                globals.request('GET', 'units/' + assignments[0].unitId).then(function(body) {
+                    resolve(new Unit(JSON.parse(body)));
+                }).catch(function(error) {
+                    console.log(error);
+                    reject(error);
+                });
             }).catch(function(error) {
                 console.log(error);
                 reject(error);
@@ -283,6 +263,12 @@
                 timestamp: globals.getISODateString(new Date())
             }
 
+            globals.request('POST', 'statements', statement).then(function(body) {
+                console.log(body);
+            }).catch(function(error) {
+                console.log(error);
+            });
+
             return statement;
         }
     }
@@ -355,7 +341,6 @@
     window.FortyTwo.userStorage = new FortyTwo.userStorage();
 
 })();
-
 },{"bluebird":2}],2:[function(require,module,exports){
 (function (process,global){
 /* @preserve

@@ -55,10 +55,7 @@ FortyTwo.signOut(); // sign out of account
 You can then retrieve the first unit and start the learning activity by looping the learning objects as part of that unit. The set of learning objects is an ordered list (implemented as a linked list) and should be completed in that order only.
 
 ```js
-var unitPromise = FortyTwo.getNextUnit(); // get the next unit assigned to this user
-var unitPromise = FortyTwo.getUnit(unitId); // get a specific unit by its index
-
-unitPromise.then(function(unit) {
+FortyTwo.getNextUnit().then(function(unit) {
   for (var i = 0; i < unit.objects.length; i++) {
     var learningObject = unit.objects[i];
     
@@ -72,11 +69,11 @@ unitPromise.then(function(unit) {
 To simplify development of custom features, you can store any kind of (JSON-based) data for your app and/or for the currently authenticated user.
 
 ```js
-FortyTwo.appStorage.get(key); // retrieve an app setting
-FortyTwo.appStorage.set(key, value); // create or update an app setting
-
 FortyTwo.userStorage.get(key); // retrieve a user setting
 FortyTwo.userStorage.set(key, value); // create or update a user setting
+
+FortyTwo.appStorage.get(key); // retrieve an app setting
+FortyTwo.appStorage.set(key, value); // create or update an app setting
 ```
 
 Feedback
