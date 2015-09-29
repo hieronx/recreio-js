@@ -91,7 +91,7 @@
                 resolve(data);
 
             }).catch(function(error) {
-                console.log(error);
+                console.error(error);
                 reject(error);
             });
         });
@@ -108,60 +108,88 @@
                 window.location.href = url;
 
             }).catch(function(error) {
-                console.log(error);
+                console.error(error);
                 reject(error);
             });
         });
     }
 
     /**
-     * Get the next assigned unit that hasn't been completed
-     * @return Unit
+     * [signIn description]
+     * @param  {[type]} provider [description]
+     * @return {[type]}          [description]
      */
-    FortyTwo.getNextUnit = function() {
+    FortyTwo.signInWithPassword = function(username, password) {
         return new Promise(function(resolve, reject) {
-            globals.request('GET', 'users/me/assignments?status=open').then(function(body) {
-                var assignments = JSON.parse(body);
-                console.log(assignments);
+            globals.request('POST', 'auth/callback/password', { login: username, password: password, isUsername: true }).then(function(response) {
+                resolve(JSON.parse(body));
 
-                globals.request('GET', 'units/' + assignments[0].unitId).then(function(body) {
-                    resolve(new Unit(JSON.parse(body)));
-                }).catch(function(error) {
-                    console.log(error);
-                    reject(error);
-                });
             }).catch(function(error) {
-                console.log(error);
+                console.error(error);
                 reject(error);
             });
         });
     }
 
-    function Unit(unit) {
-        this.id = unit.id;
-        this.name = unit.name;
+    /**
+     * [signIn description]
+     * @param  {[type]} provider [description]
+     * @return {[type]}          [description]
+     */
+    FortyTwo.signInWithEmail = function(email, password) {
+        return new Promise(function(resolve, reject) {
+            globals.request('POST', 'auth/callback/password', { login: email, password: password, isUsername: false }).then(function(response) {
+                resolve(JSON.parse(body));
 
-        this.objects = [];
-        for (var objectKey in unit.objects) {
-            this.objects.push(new LearningObject(unit, unit.objects[objectKey]));
-        }
+            }).catch(function(error) {
+                console.error(error);
+                reject(error);
+            });
+        });
     }
 
-    function LearningObject(parentUnit, learningObject) {
-        var user = {};
-        var unit = parentUnit;
+    /**
+     * Get the next assigned exercise that hasn't been completed
+     * @return Exercise
+     */
+    FortyTwo.getNextExercise = function() {
+        return new Promise(function(resolve, reject) {
+            globals.request('GET', 'users/me/assignments?status=open').then(function(body) {
+                if (JSON.parse(body).length == 0) {
+                    // Retrieve the first exercise when there are no assigned exercises
+                    globals.request('GET', 'exercises').then(function(body) {
+                        resolve(new Exercise(JSON.parse(body)[0]));
+                    }).catch(function(error) {
+                        console.error(error);
+                        reject(error);
+                    });
+                } else {
+                    // Retrieve the assigned exercises
+                    var assignments = JSON.parse(body);
 
-        this.template = learningObject.template;
-        this.subtemplate = learningObject.subtemplate;
+                    globals.request('GET', 'exercises/' + assignments[0].exerciseId).then(function(body) {
+                        resolve(new Exercise(JSON.parse(body)));
+                    }).catch(function(error) {
+                        console.error(error);
+                        reject(error);
+                    });
+                }
+            }).catch(function(error) {
+                console.error(error);
+                reject(error);
+            });
+        });
+    }
 
-        this.preInstruction = learningObject.preInstruction;
-        this.instruction = learningObject.instruction;
-        this.postInstruction = learningObject.postInstruction;
-
-        this.options = learningObject.options;
-        this.answer = learningObject.answer;
-        this.image = learningObject.image;
-        this.active = learningObject.active;
+    function Exercise(exercise) {
+        this.id = exercise.id;
+        this.name = exercise.name;
+        this.template = exercise.template;
+        this.pattern = exercise.pattern;
+        this.active = exercise.active;
+        this.curriculum = exercise.curriculum;
+        this.inLanguage = exercise.inLanguage;
+        this.typicalAgeRange = exercise.typicalAgeRange;
 
         var mousePosition = {};
         var mouseMovement = new Array();
@@ -223,7 +251,7 @@
 
         this.save = function(result) {
             if (!this.startTime) {
-                console.error("Learning object hasn't started yet.")
+                console.error("Exercise hasn't started yet.")
                 return false;
             }
 
@@ -243,9 +271,9 @@
                     id: "completed"
                 },
                 object: {
-                    id: unit.id,
+                    id: exercise.id,
                     definition: {
-                        name: unit.name
+                        name: exercise.name
                     }
                 },
                 result: {
@@ -263,9 +291,9 @@
             }
 
             globals.request('POST', 'statements', statement).then(function(body) {
-                console.log(body);
+                // do nothing
             }).catch(function(error) {
-                console.log(error);
+                console.error(error);
             });
 
             return statement;
@@ -273,17 +301,17 @@
     }
 
     /**
-     * [findUnit description]
+     * [findExercise description]
      * @param  Integer id 
-     * @return Unit
+     * @return Exercise
      */
-    FortyTwo.getUnit = function(id) {
+    FortyTwo.getExercise = function(id) {
         return new Promise(function(resolve, reject) {
-            globals.request('GET', 'units/' + id).then(function(data) {
-                resolve(new Unit(JSON.parse(data)));
+            globals.request('GET', 'exercises/' + id).then(function(data) {
+                resolve(new Exercise(JSON.parse(data)));
 
             }).catch(function(error) {
-                console.log(error);
+                console.error(error);
                 reject(error);
             });
         });
@@ -293,6 +321,12 @@
         var self = this;
         var globals = new FortyTwo.globals();
 
+        FortyTwo.getAccount().then(function(account) {
+            user = account;
+        }).catch(function(exception) {
+            user = { id: 42, name: "John Doe" };
+        });
+
         /**
          * [get description]
          * @param  {[type]} key [description]
@@ -300,7 +334,7 @@
          */
         this.get = function(key) {
             return new Promise(function(resolve, reject) {
-                globals.request('GET', 'settings/me/apps/' + globals.appId).then(function(data) {
+                globals.request('GET', 'users/' + user.id + '/storage/' + key).then(function(data) {
                     var settings = JSON.parse(data);
                     
                     if (settings[key]) {
@@ -310,7 +344,7 @@
                     }
 
                 }).catch(function(error) {
-                    console.log(error);
+                    console.error(error);
                     reject(error);
                 });
             });
@@ -326,11 +360,11 @@
                 var settings = {};
                 settings[key] = value;
 
-                globals.request('PUT', 'settings/me/apps/' + globals.appId, settings).then(function(data) {
+                globals.request('PUT', 'users/' + user.id + '/storage/' + key, settings).then(function(data) {
                     resolve(data);
 
                 }).catch(function(error) {
-                    console.log(error);
+                    console.error(error);
                     reject(error);
                 });
             });
