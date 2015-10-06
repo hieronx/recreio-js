@@ -148,18 +148,30 @@
         });
     }
 
+    var exercises = [];
+    var exerciseIndex = 0;
+
     /**
      * Get the next assigned exercise that hasn't been completed
      * @return Exercise
      */
     FortyTwo.getNextExercise = function() {
         return new Promise(function(resolve, reject) {
-            globals.request('GET', 'users/me/exercises').then(function(body) {
-                resolve(new Exercise(JSON.parse(body)[0]));
-            }).catch(function(error) {
-                console.error(error);
-                reject(error);
-            });
+            if (exercises.length == 0 || exerciseIndex == exercises.length - 1) {
+                exerciseIndex = 0;
+
+                globals.request('GET', 'users/me/exercises').then(function(body) {
+                    exercises = JSON.parse(body);
+                    resolve(new Exercise(exercises[0]));
+                }).catch(function(error) {
+                    console.error(error);
+                    reject(error);
+                });
+
+            } else {
+                exerciseIndex += 1;
+                resolve(new Exercise(exercises[exerciseIndex]));
+            }
         });
     }
 
