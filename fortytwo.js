@@ -12,7 +12,7 @@
     var FortyTwo = window.FortyTwo;
 
     // Settings
-    var API_URL = "http://api.42education.com/";
+    var API_URL = "https://api.recre.io/";
     var MOUSE_TRACKING_RATE = 10; // times per second
 
     // Globals functions
@@ -21,9 +21,8 @@
         var self = this;
 
         // Configuration of the plugin
-        self.api_key = "abcdef";
-        self.appId = "5bb424af3a8f20607ab384db88ea9ec0";
-        self.appName = "flashcards";
+        self.api_key = "LWSQBugvzYB5xS9ZV8y6xrurGZmqCqDb";
+        self.appId = "1";
 
         this.request = function(type, path, data) {
             return new Promise(function(resolve, reject) {
@@ -31,7 +30,7 @@
 
                 httpRequest.open(type, API_URL + path, true);
                 httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                // httpRequest.setRequestHeader("X-42-Key", self.api_key);
+                httpRequest.setRequestHeader("X-API-Key", self.api_key);
                 httpRequest.withCredentials = true; // Send cookies with CORS requests
 
                 httpRequest.send(JSON.stringify(data));
@@ -155,26 +154,8 @@
      */
     FortyTwo.getNextExercise = function() {
         return new Promise(function(resolve, reject) {
-            globals.request('GET', 'users/me/assignments?status=open').then(function(body) {
-                if (JSON.parse(body).length == 0) {
-                    // Retrieve the first exercise when there are no assigned exercises
-                    globals.request('GET', 'exercises').then(function(body) {
-                        resolve(new Exercise(JSON.parse(body)[0]));
-                    }).catch(function(error) {
-                        console.error(error);
-                        reject(error);
-                    });
-                } else {
-                    // Retrieve the assigned exercises
-                    var assignments = JSON.parse(body);
-
-                    globals.request('GET', 'exercises/' + assignments[0].exerciseId).then(function(body) {
-                        resolve(new Exercise(JSON.parse(body)));
-                    }).catch(function(error) {
-                        console.error(error);
-                        reject(error);
-                    });
-                }
+            globals.request('GET', 'users/me/exercises').then(function(body) {
+                resolve(new Exercise(JSON.parse(body)[0]));
             }).catch(function(error) {
                 console.error(error);
                 reject(error);
@@ -183,14 +164,10 @@
     }
 
     function Exercise(exercise) {
-        this.id = exercise.id;
-        this.name = exercise.name;
         this.template = exercise.template;
         this.pattern = exercise.pattern;
-        this.active = exercise.active;
+        this.instruction = exercise.instruction;
         this.curriculum = exercise.curriculum;
-        this.inLanguage = exercise.inLanguage;
-        this.typicalAgeRange = exercise.typicalAgeRange;
 
         var mousePosition = {};
         var mouseMovement = new Array();
@@ -274,7 +251,7 @@
                 object: {
                     id: exercise.id,
                     definition: {
-                        name: exercise.name
+                        name: ""
                     }
                 },
                 result: {
@@ -284,7 +261,7 @@
                 },
                 context: {
                     extensions: {
-                        app: globals.appName,
+                        app: globals.appId,
                         mouseMovement: mouseMovement
                     }
                 },
