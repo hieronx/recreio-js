@@ -118,7 +118,7 @@
      * @param  {[type]} provider [description]
      * @return {[type]}          [description]
      */
-    FortyTwo.signInWithPassword = function(username, password) {
+    FortyTwo.signInWithUsername = function(username, password) {
         return new Promise(function(resolve, reject) {
             globals.request('POST', 'auth/callback/password', { login: username, password: password, isUsername: true }).then(function(response) {
                 resolve(JSON.parse(body));
@@ -238,7 +238,7 @@
             return this;
         }
 
-        this.save = function(result) {
+        this.save = function(success) {
             if (!this.startTime) {
                 console.error("Exercise hasn't started yet.")
                 return false;
@@ -267,7 +267,7 @@
                 },
                 result: {
                     completion: true,
-                    success: (result == this.answer),
+                    success: success,
                     duration: Math.floor(Math.abs(this.duration / 1000)) + "S"
                 },
                 context: {
@@ -287,23 +287,6 @@
 
             return statement;
         }
-    }
-
-    /**
-     * [findExercise description]
-     * @param  Integer id 
-     * @return Exercise
-     */
-    FortyTwo.getExercise = function(id) {
-        return new Promise(function(resolve, reject) {
-            globals.request('GET', 'exercises/' + id).then(function(data) {
-                resolve(new Exercise(JSON.parse(data)));
-
-            }).catch(function(error) {
-                console.error(error);
-                reject(error);
-            });
-        });
     }
 
     FortyTwo.userStorage = function() {
