@@ -155,12 +155,14 @@
      * Get the next assigned exercise that hasn't been completed
      * @return Exercise
      */
-    FortyTwo.getNextExercise = function() {
+    FortyTwo.getNextExercise = function(template) {
+        if (typeof template === 'undefined') { template = 'true-false'; }
+
         return new Promise(function(resolve, reject) {
             if (exercises.length == 0 || exerciseIndex == exercises.length - 1) {
                 exerciseIndex = 0;
 
-                globals.request('GET', 'users/me/exercises').then(function(body) {
+                globals.request('GET', 'users/me/exercises?template=' + template).then(function(body) {
                     exercises = JSON.parse(body);
                     resolve(new Exercise(exercises[0]));
                 }).catch(function(error) {
