@@ -1,5 +1,5 @@
 /**
- * FortyTwo JavaScript Library
+ * RecreIO JavaScript Library
  * Copyright 2015, 42 Education
  * Released under the MIT license.
  */
@@ -7,15 +7,15 @@
 
     var Promise = require("bluebird");
 
-    window.FortyTwo = window.FortyTwo || {};
-    var FortyTwo = window.FortyTwo;
+    window.RecreIO = window.RecreIO || {};
+    var RecreIO = window.RecreIO;
 
     // Settings
     var API_URL = "https://api.recre.io/";
     var MOUSE_TRACKING_RATE = 10; // times per second
 
     // Globals functions
-    FortyTwo.globals = function() {
+    RecreIO.globals = function() {
 
         var self = this;
 
@@ -77,13 +77,13 @@
         }
     };
 
-    var globals = new FortyTwo.globals();
+    var globals = new RecreIO.globals();
 
     /**
      * [getAccount description]
      * @return {[type]} [description]
      */
-    FortyTwo.getAccount = function() {
+    RecreIO.getAccount = function() {
         return new Promise(function(resolve, reject) {
             globals.request('GET', 'users/me').then(function(body) {
                 var data = JSON.parse(body);
@@ -101,7 +101,7 @@
      * @param  {[type]} provider [description]
      * @return {[type]}          [description]
      */
-    FortyTwo.signIn = function(provider) {
+    RecreIO.signIn = function(provider) {
         return new Promise(function(resolve, reject) {
             globals.request('GET', 'auth/providers').then(function(url) {
                 window.location.href = url;
@@ -118,7 +118,7 @@
      * @param  {[type]} provider [description]
      * @return {[type]}          [description]
      */
-    FortyTwo.signInWithUsername = function(username, password) {
+    RecreIO.signInWithUsername = function(username, password) {
         return new Promise(function(resolve, reject) {
             globals.request('POST', 'auth/callback/password', { login: username, password: password, isUsername: true }).then(function(response) {
                 resolve(JSON.parse(body));
@@ -135,7 +135,7 @@
      * @param  {[type]} provider [description]
      * @return {[type]}          [description]
      */
-    FortyTwo.signInWithEmail = function(email, password) {
+    RecreIO.signInWithEmail = function(email, password) {
         return new Promise(function(resolve, reject) {
             globals.request('POST', 'auth/callback/password', { login: email, password: password, isUsername: false }).then(function(response) {
                 resolve(JSON.parse(body));
@@ -154,7 +154,7 @@
      * Get the next assigned exercise that hasn't been completed
      * @return Exercise
      */
-    FortyTwo.getNextExercise = function(template) {
+    RecreIO.getNextExercise = function(template) {
         if (typeof template === 'undefined') { template = 'true-false'; }
 
         return new Promise(function(resolve, reject) {
@@ -231,7 +231,7 @@
             document.onmousemove = this.handleMouseMove;
             this.mouseInterval = setInterval(this.getMousePosition, 1000 / MOUSE_TRACKING_RATE);
 
-            FortyTwo.getAccount().then(function(account) {
+            RecreIO.getAccount().then(function(account) {
                 user = account;
             }).catch(function(exception) {
                 user = { id: 42, name: "John Doe" };
@@ -291,11 +291,11 @@
         }
     }
 
-    FortyTwo.userStorage = function() {
+    RecreIO.userStorage = function() {
         var self = this;
-        var globals = new FortyTwo.globals();
+        var globals = new RecreIO.globals();
 
-        FortyTwo.getAccount().then(function(account) {
+        RecreIO.getAccount().then(function(account) {
             user = account;
         }).catch(function(exception) {
             user = { id: 42, name: "John Doe" };
@@ -345,6 +345,6 @@
         }
     };
 
-    window.FortyTwo.userStorage = new FortyTwo.userStorage();
+    window.RecreIO.userStorage = new RecreIO.userStorage();
 
 })();

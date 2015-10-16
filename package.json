@@ -1,23 +1,23 @@
 {
-  "name": "fortytwo-js",
+  "name": "recreio-js",
   "version": "1.0.0",
-  "description": "Javascript package for the API provided by 42 Education",
+  "description": "Javascript package for the API provided by recre.io",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify main.js -o fortytwo.js && browserify main.js -d --plugin [minifyify --map fortytwo.min.map.json --output fortytwo.min.map.json] > fortytwo.min.js",
+    "build": "browserify main.js -o recreio.js && browserify main.js -d --plugin [minifyify --map recreio.min.map.json --output recreio.min.map.json] > recreio.min.js",
     "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/42education/fortytwo-js.git"
+    "url": "https://github.com/recreio/recreio-js.git"
   },
-  "author": "42 Education",
+  "author": "recre.io",
   "license": "proprietary",
   "bugs": {
-    "url": "https://github.com/42education/fortytwo-js/issues"
+    "url": "https://github.com/recreio/recreio-js/issues"
   },
-  "homepage": "https://github.com/42education/fortytwo-js",
+  "homepage": "https://github.com/recreio/recreio-js",
   "dependencies": {
     "bluebird": "^2.9.14",
     "browserify": "^9.0.3",
