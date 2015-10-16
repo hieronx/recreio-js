@@ -1,7 +1,7 @@
-fortytwo-js
+recreio-js
 ==============
 
-JS package for the API provided by [42 Education](https://42education.com).
+JS package for the API provided by [recre.io](https://recre.io).
 
 Installation
 ------
@@ -9,31 +9,30 @@ Installation
 You can install the package using Bower:
 
 ```shell
-bower install fortytwo-js --save
+bower install recreio-js --save
 ```
 
 Or using npm:
 
 ```shell
-npm install fortytwo-js --save
+npm install recreio-js --save
 ```
 
-Or you can download *fortytwo.js* from Github.
+Or you can download *recreio.min.js* from Github.
 
 Usage
 ------
-Include fortytwo.js in your application.
+Include recreio.js in your application.
 
 ```html
-<script src="components/fortytwo-js/fortytwo.js"></script>
+<script src="components/recreio-js/recreio.min.js"></script>
 ```
 
 Then initialize the object with the basic configuration:
 
 ```js
-var FortyTwo = new FortyTwo(
+var RecreIO = new RecreIO(
   {
-    url: "https://api.42education.com/",
     api_key: "abcdef"
   }
 );
@@ -46,40 +45,36 @@ Now you can use the library to implement authentication, using:
 2. An username/email and password combination specifically used for the 42 Education platform.
 
 ```js
-FortyTwo.signIn(provider); // redirect to the sign in page of a SSO provider (e.g. Google, Facebook)
-FortyTwo.signIn(username, password); // sign in using a username and password combination
-FortyTwo.getAccount(); // return your account profile
-FortyTwo.signOut(); // sign out of account
+RecreIO.signIn(provider); // redirect to the sign in page of a SSO provider (e.g. Google, Facebook)
+RecreIO.signIn(username, password); // sign in using a username and password combination
+RecreIO.getAccount(); // return your account profile
+RecreIO.signOut(); // sign out of account
 ```
 
 You can then retrieve the first unit and start the learning activity by looping the learning objects as part of that unit. The set of learning objects is an ordered list (implemented as a linked list) and should be completed in that order only.
 
 ```js
-FortyTwo.getNextUnit().then(function(unit) {
-  for (var i = 0; i < unit.objects.length; i++) {
-    var learningObject = unit.objects[i];
-    
-    learningObject.begin();
-    // wait for user input
-    learningObject.save(result);
-  }
+RecreIO.getNextExercise().then(function(exercise) {
+  exercise.begin();
+  // wait for user input
+  exercise.save(result);
 });
 ```
 
 To simplify development of custom features, you can store any kind of (JSON-based) data for your app and/or for the currently authenticated user.
 
 ```js
-FortyTwo.userStorage.get(key); // retrieve a user setting
-FortyTwo.userStorage.set(key, value); // create or update a user setting
+RecreIO.userStorage.get(key); // retrieve a user setting
+RecreIO.userStorage.set(key, value); // create or update a user setting
 
-FortyTwo.appStorage.get(key); // retrieve an app setting
-FortyTwo.appStorage.set(key, value); // create or update an app setting
+RecreIO.appStorage.get(key); // retrieve an app setting
+RecreIO.appStorage.set(key, value); // create or update an app setting
 ```
 
 Feedback
 ------
 
-For any questions, bug reports, feature requests or anything else, do reach out to us! We're available at [support@42education.com](mailto:support@42education.com).
+For any questions, bug reports, feature requests or anything else, do reach out to us! We're available at [support@recre.io](mailto:support@recre.io).
 
 License
 ------
