@@ -17,11 +17,9 @@ declare module RecreIO {
         save(success: boolean): any;
     }
 
-    getAccount(): Promise<any>;
-    signIn(provider: any): Promise<any>
-    signInWithUsername(username: string, password: string): Promise<any>
-    signInWithEmail(email: string, password: string): Promise<any>
-    getNextExercise(template: string): Promise<Exercise>;
-
-
+    function getAccount(): Promise<any>;
+    function signIn(provider: any): Promise<any>
+    function signInWithUsername(username: string, password: string): Promise<any>
+    function signInWithEmail(email: string, password: string): Promise<any>
+    function getNextExercise(template: string): Promise<Exercise>;
 }
