@@ -1,5 +1,5 @@
 /**
- * RecreIO JavaScript Library
+ * recre.io JavaScript Library
  * Copyright 2015, 42 Education
  * Released under the MIT license.
  */
