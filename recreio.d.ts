@@ -8,7 +8,8 @@
 declare module RecreIO {
 
     interface Curriculum {
-        option: String;
+        option: string;
+        correct: boolean;
     }
 
     interface Exercise {
