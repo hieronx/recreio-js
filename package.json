@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify main.js -o recreio.js && browserify main.js -d --plugin [minifyify --map recreio.min.map.json --output recreio.min.map.json] > recreio.min.js",
+    "build": "tsc --out dist/main.js src/main.ts && browserify dist/main.js -o dist/recreio.js && browserify dist/main.js -d --plugin [minifyify --map dist/recreio.min.map.json --output dist/recreio.min.map.json] > dist/recreio.min.js",
     "prepublish": "npm run build"
   },
   "repository": {
@@ -22,6 +22,8 @@
     "bluebird": "^2.9.14",
     "browserify": "^9.0.3",
     "minifyify": "^6.3.2",
-    "watchify": "^2.4.0"
+    "watchify": "^2.4.0",
+    "typescript": "^1.6.2",
+    "superagent": "^1.4.0"
   }
 }

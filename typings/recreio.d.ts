@@ -7,16 +7,11 @@
 
 declare module RecreIO {
 
-    interface Curriculum {
-        option: string;
-        correct: boolean;
-    }
-
     interface Exercise {
         template: string;
         pattern?: string;
         instruction?: string;
-        curriculum?: Curriculum[];
+        curriculum?: any;
 
         begin(): Exercise;
         save(success: boolean): any;

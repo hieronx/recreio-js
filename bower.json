@@ -1,15 +1,15 @@
 {
-  "name": "fortytwo-js",
-  "description": "Javascript package for the API provided by 42 Education",
-  "main": "./fortytwo.js",
+  "name": "recreio-js",
+  "description": "Javascript SDK for the API provided by recre.io",
+  "main": "./recreio.js",
   "license": "MIT",
   "ignore": [],
   "authors": [
-    "42 Education"
+    "recre.io"
   ],
-  "homepage": "https://github.com/42education/fortytwo-js",
+  "homepage": "https://github.com/recreio/recreio-js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/42education/fortytwo-js.git"
+    "url": "git://github.com/recreio/recreio-js.git"
   }
 }
