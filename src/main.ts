@@ -10,7 +10,7 @@
 declare var superagent: any;
 declare var bluebird: any;
 
-module RecreIO {
+export module RecreIO {
 
   /**
    * ...
