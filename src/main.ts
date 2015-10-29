@@ -84,8 +84,8 @@ module RecreIO {
     /**
      * ...
      */
-    getNextExercise(template: string): any {
-      return this.sendRequest('GET', '/users/me/exercises?template=' + template);
+    getNextExercise(template: string, soundEnabled: boolean = false): any {
+      return this.sendRequest('GET', '/users/me/exercises?template=' + template + '&sound=' + soundEnabled);
     };
 
   };

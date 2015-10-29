@@ -64,8 +64,9 @@ var RecreIO;
         /**
          * ...
          */
-        Client.prototype.getNextExercise = function (template) {
-            return this.sendRequest('GET', '/users/me/exercises?template=' + template);
+        Client.prototype.getNextExercise = function (template, soundEnabled) {
+            if (soundEnabled === void 0) { soundEnabled = false; }
+            return this.sendRequest('GET', '/users/me/exercises?template=' + template + '&sound=' + soundEnabled);
         };
         ;
         return Client;
