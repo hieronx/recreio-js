@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc --out dist/main.js --module 'commonjs' src/main.ts && browserify dist/main.js -o dist/recreio.js && browserify dist/main.js -d --plugin [minifyify --map dist/recreio.min.map.json --output dist/recreio.min.map.json] > dist/recreio.min.js",
+    "build": "tsc --outDir dist --module commonjs src/main.ts && browserify dist/main.js -o dist/recreio.js && browserify dist/main.js -d --plugin [minifyify --map dist/recreio.min.map.json --output dist/recreio.min.map.json] > dist/recreio.min.js",
     "prepublish": "npm run build"
   },
   "repository": {
