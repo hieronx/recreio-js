@@ -47,12 +47,12 @@ module RecreIO {
       var promise: any = new Promise(function(resolve, reject) {
         var httpRequest = new XMLHttpRequest();
 
-        var url: string = this.apiUrl + to;
+        var url: string = 'https://api.recre.io/' + to;
         var encodedPayload: string = JSON.stringify(payload);
 
         httpRequest.open(method, url, true);
         httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        httpRequest.setRequestHeader("X-API-Key", this.apiKey);
+        httpRequest.setRequestHeader("X-API-Key", 'wzHb9a2YjLPQWAMyxSSjLuy9XsPAV3e3');
         httpRequest.withCredentials = true; // Send cookies with CORS requests
         httpRequest.send(encodedPayload);
         httpRequest.onreadystatechange = function() {
