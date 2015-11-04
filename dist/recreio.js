@@ -27,7 +27,7 @@ var RecreIO;
         Client.prototype.sendRequest = function (method, to, payload) {
             var url = this.API_URL + to;
             var encodedPayload = JSON.stringify(payload);
-            superagent(method, url)
+            request(method, url)
                 .type('application/json')
                 .send(payload)
                 .timeout(5000)

@@ -7,7 +7,7 @@
 /// <reference path="../typings/superagent/superagent.d.ts" />
 /// <reference path="../typings/bluebird/bluebird.d.ts" />
 
-declare var superagent: any;
+declare var request: any;
 declare var bluebird: any;
 
 module RecreIO {
@@ -48,7 +48,7 @@ module RecreIO {
       var url: string = this.API_URL + to;
       var encodedPayload: string = JSON.stringify(payload);
 
-      superagent(method, url)
+      request(method, url)
         .type('application/json')
         .send(payload)
         .timeout(5000)
