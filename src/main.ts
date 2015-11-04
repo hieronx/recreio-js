@@ -30,10 +30,10 @@ module RecreIO {
   export class Client {
 
     /** The host of the API. */
-    private API_URL: string = "https://api.recre.io/";
+    static API_URL: string = "https://api.recre.io/";
       
     /** The number of mouse frames tracked per second. */
-    private MOUSE_TRACKING_RATE: number = 10;
+    static MOUSE_TRACKING_RATE: number = 10;
 
     /**
      * Create a new RecreIO client with your API key.
@@ -44,8 +44,9 @@ module RecreIO {
      * ...
      */
     private sendRequest(method: string, to: string, payload?: any) {
-      return new Promise(function(resolve, reject) {
+      var promise: any = new Promise(function(resolve, reject) {
         var httpRequest = new XMLHttpRequest();
+
         var url: string = this.API_URL + to;
         var encodedPayload: string = JSON.stringify(payload);
 
@@ -64,6 +65,7 @@ module RecreIO {
           }
         }
       });
+      return promise.bind(this);
     }
 
     /**

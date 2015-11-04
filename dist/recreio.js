@@ -16,16 +16,12 @@ var RecreIO;
          */
         function Client(apikey) {
             this.apikey = apikey;
-            /** The host of the API. */
-            this.API_URL = "https://api.recre.io/";
-            /** The number of mouse frames tracked per second. */
-            this.MOUSE_TRACKING_RATE = 10;
         }
         /**
          * ...
          */
         Client.prototype.sendRequest = function (method, to, payload) {
-            return new Promise(function (resolve, reject) {
+            var promise = new Promise(function (resolve, reject) {
                 var httpRequest = new XMLHttpRequest();
                 var url = this.API_URL + to;
                 var encodedPayload = JSON.stringify(payload);
@@ -45,6 +41,7 @@ var RecreIO;
                     }
                 };
             });
+            return promise.bind(this);
         };
         /**
          * ...
@@ -70,6 +67,10 @@ var RecreIO;
             if (soundEnabled === void 0) { soundEnabled = false; }
             return this.sendRequest('GET', '/users/me/exercises?template=' + template + '&sound=' + soundEnabled);
         };
+        /** The host of the API. */
+        Client.API_URL = "https://api.recre.io/";
+        /** The number of mouse frames tracked per second. */
+        Client.MOUSE_TRACKING_RATE = 10;
         return Client;
     })();
     RecreIO.Client = Client;
