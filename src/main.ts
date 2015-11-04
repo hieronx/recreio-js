@@ -10,7 +10,7 @@
 declare var superagent: any;
 declare var bluebird: any;
 
-export module RecreIO {
+module RecreIO {
 
   /**
    * ...
@@ -72,21 +72,21 @@ export module RecreIO {
         isUsername: true
       }
       return this.sendRequest('POST', '/auth/callback/password', payload);
-    };
+    }
 
     /**
      * ...
      */
     getAccount(): any { 
       return this.sendRequest('GET', '/users/me');
-    };
+    }
 
     /**
      * ...
      */
     getNextExercise(template: string, soundEnabled: boolean = false): any {
       return this.sendRequest('GET', '/users/me/exercises?template=' + template + '&sound=' + soundEnabled);
-    };
+    }
 
   };
 
