@@ -25,20 +25,25 @@ var RecreIO;
          * ...
          */
         Client.prototype.sendRequest = function (method, to, payload) {
-            var url = this.API_URL + to;
-            var encodedPayload = JSON.stringify(payload);
-            request(method, url)
-                .type('application/json')
-                .send(payload)
-                .timeout(5000)
-                .set('X-API-Key', this.apikey)
-                .end(function (err, res) {
-                if (res.ok) {
-                    bluebird.resolve(res.body);
-                }
-                else {
-                    bluebird.reject(res.body);
-                }
+            return new Promise(function (resolve, reject) {
+                var httpRequest = new XMLHttpRequest();
+                var url = this.API_URL + to;
+                var encodedPayload = JSON.stringify(payload);
+                httpRequest.open(method, url, true);
+                httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                httpRequest.setRequestHeader("X-API-Key", this.apikey);
+                httpRequest.withCredentials = true; // Send cookies with CORS requests
+                httpRequest.send(encodedPayload);
+                httpRequest.onreadystatechange = function () {
+                    if (httpRequest.readyState === 4) {
+                        if (httpRequest.status === 200) {
+                            resolve(httpRequest.responseText);
+                        }
+                        else {
+                            reject(httpRequest.status);
+                        }
+                    }
+                };
             });
         };
         /**

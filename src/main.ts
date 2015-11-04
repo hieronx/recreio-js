@@ -7,7 +7,6 @@
 /// <reference path="../typings/superagent/superagent.d.ts" />
 /// <reference path="../typings/bluebird/bluebird.d.ts" />
 
-declare var request: any;
 declare var bluebird: any;
 
 module RecreIO {
@@ -44,22 +43,27 @@ module RecreIO {
     /**
      * ...
      */
-    private sendRequest(method: string, to: string, payload?: any): any {
-      var url: string = this.API_URL + to;
-      var encodedPayload: string = JSON.stringify(payload);
+    private sendRequest(method: string, to: string, payload?: any) {
+      return new Promise(function(resolve, reject) {
+        var httpRequest = new XMLHttpRequest();
+        var url: string = this.API_URL + to;
+        var encodedPayload: string = JSON.stringify(payload);
 
-      request(method, url)
-        .type('application/json')
-        .send(payload)
-        .timeout(5000)
-        .set('X-API-Key', this.apikey)
-        .end(function(err: any, res: any) {
-          if (res.ok) {
-            bluebird.resolve(res.body);
-          } else {
-            bluebird.reject(res.body);
+        httpRequest.open(method, url, true);
+        httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        httpRequest.setRequestHeader("X-API-Key", this.apikey);
+        httpRequest.withCredentials = true; // Send cookies with CORS requests
+        httpRequest.send(encodedPayload);
+        httpRequest.onreadystatechange = function() {
+          if (httpRequest.readyState === 4) {
+            if (httpRequest.status === 200) {
+              resolve(httpRequest.responseText);
+            } else {
+              reject(httpRequest.status);
+            }
           }
-        });
+        }
+      });
     }
 
     /**
