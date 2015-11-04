@@ -52,20 +52,20 @@ var RecreIO;
                 password: password,
                 isUsername: true
             };
-            return this.sendRequest('POST', '/auth/callback/password', payload);
+            return this.sendRequest('POST', 'auth/callback/password', payload);
         };
         /**
          * ...
          */
         Client.prototype.getAccount = function () {
-            return this.sendRequest('GET', '/users/me');
+            return this.sendRequest('GET', 'users/me');
         };
         /**
          * ...
          */
         Client.prototype.getNextExercise = function (template, soundEnabled) {
             if (soundEnabled === void 0) { soundEnabled = false; }
-            return this.sendRequest('GET', '/users/me/exercises?template=' + template + '&sound=' + soundEnabled);
+            return this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled);
         };
         /** The host of the API. */
         Client.API_URL = "https://api.recre.io/";

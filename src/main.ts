@@ -77,21 +77,21 @@ module RecreIO {
         password: password,
         isUsername: true
       }
-      return this.sendRequest('POST', '/auth/callback/password', payload);
+      return this.sendRequest('POST', 'auth/callback/password', payload);
     }
 
     /**
      * ...
      */
     getAccount(): any { 
-      return this.sendRequest('GET', '/users/me');
+      return this.sendRequest('GET', 'users/me');
     }
 
     /**
      * ...
      */
     getNextExercise(template: string, soundEnabled: boolean = false): any {
-      return this.sendRequest('GET', '/users/me/exercises?template=' + template + '&sound=' + soundEnabled);
+      return this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled);
     }
 
   };
