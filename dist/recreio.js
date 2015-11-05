@@ -6,8 +6,9 @@
 var RecreIO;
 (function (RecreIO) {
     var Exercise = (function () {
-        function Exercise(client, exercise) {
+        function Exercise(client, currentUser, exercise) {
             this.client = client;
+            this.currentUser = currentUser;
             this.exercise = exercise;
             this.mousePosition = {};
             this.mouseMovement = new Array();
@@ -22,11 +23,6 @@ var RecreIO;
             // Save mouse position 10 times per second
             document.onmousemove = this.handleMouseMove;
             this.mouseInterval = setInterval(this.getMousePosition, 1000 / this.client.MOUSE_TRACKING_RATE);
-            this.client.getAccount().then(function (account) {
-                this.user = account;
-            }).catch(function (exception) {
-                this.user = { id: 42, name: "John Doe" };
-            });
             return this;
         };
         Exercise.prototype.save = function (success) {
@@ -39,9 +35,9 @@ var RecreIO;
             clearInterval(this.mouseInterval);
             var statement = {
                 actor: {
-                    name: this.user.name,
+                    name: this.currentUser.name,
                     account: {
-                        id: this.user.id
+                        id: this.currentUser.id
                     }
                 },
                 verb: {
@@ -124,6 +120,11 @@ var RecreIO;
             this.appId = appId;
             this.exercises = [];
             this.exerciseIndex = 0;
+            this.getAccount().then(function (account) {
+                this.currentUser = account;
+            }).catch(function (exception) {
+                this.currentUser = { id: 42, name: "John Doe" };
+            });
         }
         /**
          * ...
@@ -180,7 +181,7 @@ var RecreIO;
                     _this.exerciseIndex = 0;
                     _this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled).then(function (body) {
                         this.exercises = JSON.parse(body);
-                        resolve(new RecreIO.Exercise(this, this.exercises[0]));
+                        resolve(new RecreIO.Exercise(this, this.currentUser, this.exercises[0]));
                     }).catch(function (error) {
                         console.error(error);
                         reject(error);
@@ -188,7 +189,7 @@ var RecreIO;
                 }
                 else {
                     _this.exerciseIndex += 1;
-                    resolve(new RecreIO.Exercise(_this, _this.exercises[_this.exerciseIndex]));
+                    resolve(new RecreIO.Exercise(_this, _this.currentUser, _this.exercises[_this.exerciseIndex]));
                 }
             });
         };

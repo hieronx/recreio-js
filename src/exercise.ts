@@ -8,7 +8,7 @@ module RecreIO {
 
   export class Exercise {
 
-    constructor(private client: any, private exercise: any) {}
+    constructor(private client: any, private currentUser: any, private exercise: any) {}
 
     private startTime: any;
     private endTime: any;
@@ -28,12 +28,6 @@ module RecreIO {
       document.onmousemove = this.handleMouseMove;
       this.mouseInterval = setInterval(this.getMousePosition, 1000 / this.client.MOUSE_TRACKING_RATE);
 
-      this.client.getAccount().then(function(account) {
-          this.user = account;
-      }).catch(function(exception) {
-          this.user = { id: 42, name: "John Doe" };
-      });
-
       return this;
     }
 
@@ -50,9 +44,9 @@ module RecreIO {
 
       var statement = {
           actor: {
-              name: this.user.name,
+              name: this.currentUser.name,
               account: {
-                  id: this.user.id
+                  id: this.currentUser.id
               }
           },
           verb: {

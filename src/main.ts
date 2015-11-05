@@ -19,10 +19,18 @@ module RecreIO {
     /** The number of mouse frames tracked per second. */
     static MOUSE_TRACKING_RATE: number = 10;
 
+    private currentUser: any;
+
     /**
      * Create a new RecreIO client with your API key.
      */
-    constructor(private apiKey: string, private appId: number) {}
+    constructor(private apiKey: string, private appId: number) {
+      this.getAccount().then(function(account) {
+        this.currentUser = account;
+      }).catch(function(exception) {
+        this.currentUser = { id: 42, name: "John Doe" };
+      });
+    }
 
     /**
      * ...
@@ -84,7 +92,7 @@ module RecreIO {
 
             this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled).then(function(body) {
                 this.exercises = JSON.parse(body);
-                resolve(new RecreIO.Exercise(this, this.exercises[0]));
+                resolve(new RecreIO.Exercise(this, this.currentUser, this.exercises[0]));
             }).catch(function(error) {
                 console.error(error);
                 reject(error);
@@ -92,7 +100,7 @@ module RecreIO {
 
         } else {
             this.exerciseIndex += 1;
-            resolve(new RecreIO.Exercise(this, this.exercises[this.exerciseIndex]));
+            resolve(new RecreIO.Exercise(this, this.currentUser, this.exercises[this.exerciseIndex]));
         }
       });
     }
