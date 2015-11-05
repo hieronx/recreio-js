@@ -20,12 +20,10 @@ declare module RecreIO {
 
     }
 
-    interface Exercise {
-        template: string;
-        pattern?: string;
-        instruction?: string;
-        curriculum?: any;
+    class Exercise {
 
+        constructor(template: string, pattern?: string, instruction?: string, curriculum?: any);
+        
         begin(): Exercise;
         save(success: boolean): any;
     }

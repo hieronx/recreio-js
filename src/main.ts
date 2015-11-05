@@ -4,29 +4,13 @@
  * Released under the MIT license.
  */
 
-/// <reference path="../typings/superagent/superagent.d.ts" />
 /// <reference path="../typings/bluebird/bluebird.d.ts" />
+/// <reference path="exercise.ts" />
 
 declare var bluebird: any;
 
 module RecreIO {
 
-  /**
-   * ...
-   */
-  interface Exercise {
-    template: string;
-    pattern?: string;
-    instruction?: string;
-    curriculum?: any;
-
-    begin(): Exercise;
-    save(success: boolean): any;
-  }
-
-  /**
-   * ...
-   */
   export class Client {
 
     /** The host of the API. */
@@ -38,12 +22,12 @@ module RecreIO {
     /**
      * Create a new RecreIO client with your API key.
      */
-    constructor(private apikey: string) {}
+    constructor(private apiKey: string, private appId: number) {}
 
     /**
      * ...
      */
-    private sendRequest(method: string, to: string, payload?: any) {
+    public sendRequest(method: string, to: string, payload?: any) {
       var promise: any = new Promise(function(resolve, reject) {
         var httpRequest = new XMLHttpRequest();
 
@@ -65,13 +49,13 @@ module RecreIO {
           }
         }
       });
-      return promise.bind({apiKey: this.apikey, apiUrl: 'https://api.recre.io/'});
+      return promise.bind({apiKey: this.apiKey, apiUrl: 'https://api.recre.io/'});
     }
 
     /**
      * ...
      */
-    signInWithUsername(username: string, password: string): any {
+    public signInWithUsername(username: string, password: string): any {
       var payload = {
         login: username,
         password: password,
@@ -83,15 +67,34 @@ module RecreIO {
     /**
      * ...
      */
-    getAccount(): any { 
+    public getAccount(): any {
       return this.sendRequest('GET', 'users/me');
     }
+
+    private  exercises: any[] = [];
+    private  exerciseIndex: number = 0;
 
     /**
      * ...
      */
-    getNextExercise(template: string, soundEnabled: boolean = false): any {
-      return this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled);
+    public getNextExercise(template: string = 'true-false', soundEnabled: boolean = false): any {
+      return new Promise(function(resolve, reject) {
+        if (this.exercises.length == 0 || this.exerciseIndex == this.exercises.length - 1) {
+            this.exerciseIndex = 0;
+
+            this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled).then(function(body) {
+                this.exercises = JSON.parse(body);
+                resolve(new RecreIO.Exercise(this, this.exercises[0]));
+            }).catch(function(error) {
+                console.error(error);
+                reject(error);
+            });
+
+        } else {
+            this.exerciseIndex += 1;
+            resolve(new RecreIO.Exercise(this, this.exercises[this.exerciseIndex]));
+        }
+      });
     }
 
   };

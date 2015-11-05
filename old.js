@@ -186,6 +186,10 @@
         var mouseMovement = new Array();
         var mouseInterval = 0;
 
+        var startTime: any;
+        var endTime: any;
+        var duration: any;
+
         this.handleMouseMove = function(event) {
             var dot, eventDoc, doc, body, pageX, pageY;
 
@@ -220,10 +224,10 @@
         }
 
         this.begin = function() {
-            if (!user) {
-                console.error("Not yet authenticated.")
-                // return false;
-            }
+            // if (!user) {
+            //     console.error("Not yet authenticated.")
+            //     // return false;
+            // }
 
             this.startTime = new Date().getTime();
 
