@@ -115,28 +115,30 @@ var RecreIO;
         /**
          * Create a new RecreIO client with your API key.
          */
-        function Client(apiKey, appId) {
+        function Client(apiKey) {
+            var _this = this;
             this.apiKey = apiKey;
-            this.appId = appId;
+            this.appId = 5;
             this.exercises = [];
             this.exerciseIndex = 0;
             this.getAccount().then(function (account) {
-                this.currentUser = account;
+                _this.currentUser = account;
             }).catch(function (exception) {
-                this.currentUser = { id: 42, name: "John Doe" };
+                _this.currentUser = { id: 42, name: "John Doe" };
             });
         }
         /**
          * ...
          */
         Client.prototype.sendRequest = function (method, to, payload) {
-            var promise = new Promise(function (resolve, reject) {
+            var _this = this;
+            return new Promise(function (resolve, reject) {
                 var httpRequest = new XMLHttpRequest();
                 var url = 'https://api.recre.io/' + to;
                 var encodedPayload = JSON.stringify(payload);
                 httpRequest.open(method, url, true);
                 httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                httpRequest.setRequestHeader("X-API-Key", 'wzHb9a2YjLPQWAMyxSSjLuy9XsPAV3e3');
+                httpRequest.setRequestHeader("X-API-Key", _this.apiKey);
                 httpRequest.withCredentials = true; // Send cookies with CORS requests
                 httpRequest.send(encodedPayload);
                 httpRequest.onreadystatechange = function () {
@@ -150,7 +152,6 @@ var RecreIO;
                     }
                 };
             });
-            return promise.bind({ apiKey: this.apiKey, apiUrl: 'https://api.recre.io/' });
         };
         /**
          * ...
@@ -180,10 +181,9 @@ var RecreIO;
                 if (_this.exercises.length == 0 || _this.exerciseIndex == _this.exercises.length - 1) {
                     _this.exerciseIndex = 0;
                     _this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled).then(function (body) {
-                        this.exercises = JSON.parse(body);
-                        resolve(new RecreIO.Exercise(this, this.currentUser, this.exercises[0]));
+                        _this.exercises = JSON.parse(body);
+                        resolve(new RecreIO.Exercise(_this, _this.currentUser, _this.exercises[0]));
                     }).catch(function (error) {
-                        console.error(error);
                         reject(error);
                     });
                 }

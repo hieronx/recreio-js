@@ -21,13 +21,15 @@ module RecreIO {
 
     private currentUser: any;
 
+    private appId: number = 5;
+
     /**
      * Create a new RecreIO client with your API key.
      */
-    constructor(private apiKey: string, private appId: number) {
-      this.getAccount().then(function(account) {
+    constructor(private apiKey: string) {
+      this.getAccount().then((account) => {
         this.currentUser = account;
-      }).catch(function(exception) {
+      }).catch((exception) => {
         this.currentUser = { id: 42, name: "John Doe" };
       });
     }
@@ -36,7 +38,7 @@ module RecreIO {
      * ...
      */
     public sendRequest(method: string, to: string, payload?: any) {
-      var promise: any = new Promise(function(resolve, reject) {
+      return new Promise((resolve, reject) => {
         var httpRequest = new XMLHttpRequest();
 
         var url: string = 'https://api.recre.io/' + to;
@@ -44,10 +46,10 @@ module RecreIO {
 
         httpRequest.open(method, url, true);
         httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        httpRequest.setRequestHeader("X-API-Key", 'wzHb9a2YjLPQWAMyxSSjLuy9XsPAV3e3');
+        httpRequest.setRequestHeader("X-API-Key", this.apiKey);
         httpRequest.withCredentials = true; // Send cookies with CORS requests
         httpRequest.send(encodedPayload);
-        httpRequest.onreadystatechange = function() {
+        httpRequest.onreadystatechange = () => {
           if (httpRequest.readyState === 4) {
             if (httpRequest.status === 200) {
               resolve(httpRequest.responseText);
@@ -57,7 +59,6 @@ module RecreIO {
           }
         }
       });
-      return promise.bind({apiKey: this.apiKey, apiUrl: 'https://api.recre.io/'});
     }
 
     /**
@@ -90,11 +91,10 @@ module RecreIO {
         if (this.exercises.length == 0 || this.exerciseIndex == this.exercises.length - 1) {
             this.exerciseIndex = 0;
 
-            this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled).then(function(body) {
+            this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled).then((body: string) => {
                 this.exercises = JSON.parse(body);
                 resolve(new RecreIO.Exercise(this, this.currentUser, this.exercises[0]));
-            }).catch(function(error) {
-                console.error(error);
+            }).catch((error) => {
                 reject(error);
             });
 

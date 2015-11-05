@@ -72,9 +72,9 @@ module RecreIO {
           timestamp: new Date().toISOString()
       }
 
-      this.client.sendRequest('POST', 'statements', statement).then(function(body) {
+      this.client.sendRequest('POST', 'statements', statement).then((body) => {
           // do nothing
-      }).catch(function(error) {
+      }).catch((error) => {
           console.error(error);
       });
 
