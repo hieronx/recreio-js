@@ -71,14 +71,14 @@ module RecreIO {
       return this.sendRequest('GET', 'users/me');
     }
 
-    private  exercises: any[] = [];
-    private  exerciseIndex: number = 0;
+    private exercises: any[] = [];
+    private exerciseIndex: number = 0;
 
     /**
      * ...
      */
     public getNextExercise(template: string = 'true-false', soundEnabled: boolean = false): any {
-      return new Promise(function(resolve, reject) {
+      return new Promise((resolve, reject) => {
         if (this.exercises.length == 0 || this.exerciseIndex == this.exercises.length - 1) {
             this.exerciseIndex = 0;
 

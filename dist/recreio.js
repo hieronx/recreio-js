@@ -172,12 +172,13 @@ var RecreIO;
          * ...
          */
         Client.prototype.getNextExercise = function (template, soundEnabled) {
+            var _this = this;
             if (template === void 0) { template = 'true-false'; }
             if (soundEnabled === void 0) { soundEnabled = false; }
             return new Promise(function (resolve, reject) {
-                if (this.exercises.length == 0 || this.exerciseIndex == this.exercises.length - 1) {
-                    this.exerciseIndex = 0;
-                    this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled).then(function (body) {
+                if (_this.exercises.length == 0 || _this.exerciseIndex == _this.exercises.length - 1) {
+                    _this.exerciseIndex = 0;
+                    _this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled).then(function (body) {
                         this.exercises = JSON.parse(body);
                         resolve(new RecreIO.Exercise(this, this.exercises[0]));
                     }).catch(function (error) {
@@ -186,8 +187,8 @@ var RecreIO;
                     });
                 }
                 else {
-                    this.exerciseIndex += 1;
-                    resolve(new RecreIO.Exercise(this, this.exercises[this.exerciseIndex]));
+                    _this.exerciseIndex += 1;
+                    resolve(new RecreIO.Exercise(_this, _this.exercises[_this.exerciseIndex]));
                 }
             });
         };
