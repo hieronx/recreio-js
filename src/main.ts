@@ -20,7 +20,6 @@ module RecreIO {
     static MOUSE_TRACKING_RATE: number = 10;
 
     private currentUser: any;
-
     private appId: number = 5;
 
     /**
