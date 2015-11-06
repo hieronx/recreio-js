@@ -20,23 +20,20 @@ module RecreIO {
     static MOUSE_TRACKING_RATE: number = 10;
 
     private currentUser: any;
+    private currentUserGroups: any;
     private appId: number = 5;
 
     /**
      * Create a new RecreIO client with your API key.
      */
     constructor(private apiKey: string) {
-      this.getAccount().then((account) => {
-        this.currentUser = account;
-      }).catch((exception) => {
-        this.currentUser = { id: 42, name: "John Doe" };
-      });
+      this.getAccount()
     }
 
     /**
      * ...
      */
-    public sendRequest(method: string, to: string, payload?: any) {
+    private sendRequest = (method: string, to: string, payload?: any) => {
       return new Promise((resolve, reject) => {
         var httpRequest = new XMLHttpRequest();
 
@@ -63,7 +60,7 @@ module RecreIO {
     /**
      * ...
      */
-    public signInWithUsername(username: string, password: string): any {
+    public signInWithUsername = (username: string, password: string): any => {
       var payload = {
         login: username,
         password: password,
@@ -75,8 +72,21 @@ module RecreIO {
     /**
      * ...
      */
-    public getAccount(): any {
-      return this.sendRequest('GET', 'users/me');
+    public getAccount = (): any => {
+      return new Promise((resolve, reject) => {
+        this.sendRequest('GET', 'users/me').then((body: string) => {
+          var data = JSON.parse(body);
+          
+          this.currentUser = data.user;
+          this.currentUserGroups = data.groups;
+
+          resolve(data);
+
+        }).catch(function(error) {
+          console.error(error);
+          reject(error);
+        });
+      });
     }
 
     private exercises: any[] = [];
@@ -85,7 +95,7 @@ module RecreIO {
     /**
      * ...
      */
-    public getNextExercise(template: string = 'true-false', soundEnabled: boolean = false): any {
+    public getNextExercise = (template: string = 'true-false', soundEnabled: boolean = false): any => {
       return new Promise((resolve, reject) => {
         if (this.exercises.length == 0 || this.exerciseIndex == this.exercises.length - 1) {
             this.exerciseIndex = 0;

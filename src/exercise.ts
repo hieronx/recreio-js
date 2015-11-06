@@ -48,7 +48,7 @@ module RecreIO {
 
       var statement = {
           actor: {
-              name: this.currentUser.name,
+              name: this.currentUser.displayName,
               account: {
                   id: this.currentUser.id
               }

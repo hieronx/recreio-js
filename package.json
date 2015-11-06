@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc --outFile dist/recreio.js src/main.ts src/exercise.ts",
+    "build": "tsc --outFile dist/recreio.js src/main.ts src/exercise.ts && cp dist/recreio.js ~/42/game1-racing/assets/scripts/recreio.js",
     "prepublish": "npm run build"
   },
   "repository": {

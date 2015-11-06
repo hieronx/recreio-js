@@ -35,7 +35,7 @@ var RecreIO;
                 clearInterval(_this.mouseInterval);
                 var statement = {
                     actor: {
-                        name: _this.currentUser.name,
+                        name: _this.currentUser.displayName,
                         account: {
                             id: _this.currentUser.id
                         }
@@ -120,80 +120,84 @@ var RecreIO;
             var _this = this;
             this.apiKey = apiKey;
             this.appId = 5;
-            this.exercises = [];
-            this.exerciseIndex = 0;
-            this.getAccount().then(function (account) {
-                _this.currentUser = account;
-            }).catch(function (exception) {
-                _this.currentUser = { id: 42, name: "John Doe" };
-            });
-        }
-        /**
-         * ...
-         */
-        Client.prototype.sendRequest = function (method, to, payload) {
-            var _this = this;
-            return new Promise(function (resolve, reject) {
-                var httpRequest = new XMLHttpRequest();
-                var url = 'https://api.recre.io/' + to;
-                var encodedPayload = JSON.stringify(payload);
-                httpRequest.open(method, url, true);
-                httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                httpRequest.setRequestHeader("X-API-Key", _this.apiKey);
-                httpRequest.withCredentials = true; // Send cookies with CORS requests
-                httpRequest.send(encodedPayload);
-                httpRequest.onreadystatechange = function () {
-                    if (httpRequest.readyState === 4) {
-                        if (httpRequest.status === 200) {
-                            resolve(httpRequest.responseText);
+            /**
+             * ...
+             */
+            this.sendRequest = function (method, to, payload) {
+                return new Promise(function (resolve, reject) {
+                    var httpRequest = new XMLHttpRequest();
+                    var url = 'https://api.recre.io/' + to;
+                    var encodedPayload = JSON.stringify(payload);
+                    httpRequest.open(method, url, true);
+                    httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                    httpRequest.setRequestHeader("X-API-Key", _this.apiKey);
+                    httpRequest.withCredentials = true; // Send cookies with CORS requests
+                    httpRequest.send(encodedPayload);
+                    httpRequest.onreadystatechange = function () {
+                        if (httpRequest.readyState === 4) {
+                            if (httpRequest.status === 200) {
+                                resolve(httpRequest.responseText);
+                            }
+                            else {
+                                reject(httpRequest.status);
+                            }
                         }
-                        else {
-                            reject(httpRequest.status);
-                        }
-                    }
-                };
-            });
-        };
-        /**
-         * ...
-         */
-        Client.prototype.signInWithUsername = function (username, password) {
-            var payload = {
-                login: username,
-                password: password,
-                isUsername: true
+                    };
+                });
             };
-            return this.sendRequest('POST', 'auth/callback/password', payload);
-        };
-        /**
-         * ...
-         */
-        Client.prototype.getAccount = function () {
-            return this.sendRequest('GET', 'users/me');
-        };
-        /**
-         * ...
-         */
-        Client.prototype.getNextExercise = function (template, soundEnabled) {
-            var _this = this;
-            if (template === void 0) { template = 'true-false'; }
-            if (soundEnabled === void 0) { soundEnabled = false; }
-            return new Promise(function (resolve, reject) {
-                if (_this.exercises.length == 0 || _this.exerciseIndex == _this.exercises.length - 1) {
-                    _this.exerciseIndex = 0;
-                    _this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled).then(function (body) {
-                        _this.exercises = JSON.parse(body);
-                        resolve(new RecreIO.Exercise(_this, _this.currentUser, _this.exercises[0]));
+            /**
+             * ...
+             */
+            this.signInWithUsername = function (username, password) {
+                var payload = {
+                    login: username,
+                    password: password,
+                    isUsername: true
+                };
+                return _this.sendRequest('POST', 'auth/callback/password', payload);
+            };
+            /**
+             * ...
+             */
+            this.getAccount = function () {
+                return new Promise(function (resolve, reject) {
+                    _this.sendRequest('GET', 'users/me').then(function (body) {
+                        var data = JSON.parse(body);
+                        _this.currentUser = data.user;
+                        _this.currentUserGroups = data.groups;
+                        resolve(data);
                     }).catch(function (error) {
+                        console.error(error);
                         reject(error);
                     });
-                }
-                else {
-                    _this.exerciseIndex += 1;
-                    resolve(new RecreIO.Exercise(_this, _this.currentUser, _this.exercises[_this.exerciseIndex]));
-                }
-            });
-        };
+                });
+            };
+            this.exercises = [];
+            this.exerciseIndex = 0;
+            /**
+             * ...
+             */
+            this.getNextExercise = function (template, soundEnabled) {
+                if (template === void 0) { template = 'true-false'; }
+                if (soundEnabled === void 0) { soundEnabled = false; }
+                return new Promise(function (resolve, reject) {
+                    if (_this.exercises.length == 0 || _this.exerciseIndex == _this.exercises.length - 1) {
+                        _this.exerciseIndex = 0;
+                        _this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled).then(function (body) {
+                            _this.exercises = JSON.parse(body);
+                            resolve(new RecreIO.Exercise(_this, _this.currentUser, _this.exercises[0]));
+                        }).catch(function (error) {
+                            reject(error);
+                        });
+                    }
+                    else {
+                        _this.exerciseIndex += 1;
+                        resolve(new RecreIO.Exercise(_this, _this.currentUser, _this.exercises[_this.exerciseIndex]));
+                    }
+                });
+            };
+            this.getAccount();
+        }
         /** The host of the API. */
         Client.API_URL = "https://api.recre.io/";
         /** The number of mouse frames tracked per second. */
