@@ -6,6 +6,11 @@
 
 module RecreIO {
 
+  interface Window {
+    getSpeechSynthesis(): any;
+    getSpeechSynthesisUtterance(): any;
+  }
+
   export class Exercise {
 
     constructor(private client: any, private currentUser: any, private exercise: any) {}
@@ -31,6 +36,14 @@ module RecreIO {
       // Save mouse position 10 times per second
       document.onmousemove = this.handleMouseMove;
       this.mouseInterval = setInterval(this.getMousePosition, 1000 / this.client.MOUSE_TRACKING_RATE);
+
+      if (this.exercise.soundEnabled) {
+        var utterance = new SpeechSynthesisUtterance();
+        utterance.text = this.exercise.content.sound;
+        utterance.lang = 'en-US';
+        utterance.rate = 1;
+        speechSynthesis.speak(utterance);
+      }
 
       return this;
     }

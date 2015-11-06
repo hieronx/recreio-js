@@ -23,6 +23,13 @@ var RecreIO;
                 // Save mouse position 10 times per second
                 document.onmousemove = _this.handleMouseMove;
                 _this.mouseInterval = setInterval(_this.getMousePosition, 1000 / _this.client.MOUSE_TRACKING_RATE);
+                if (_this.exercise.soundEnabled) {
+                    var utterance = new SpeechSynthesisUtterance();
+                    utterance.text = _this.exercise.content.sound;
+                    utterance.lang = 'en-US';
+                    utterance.rate = 1;
+                    speechSynthesis.speak(utterance);
+                }
                 return _this;
             };
             this.save = function (success) {
@@ -109,6 +116,7 @@ var RecreIO;
  * Released under the MIT license.
  */
 /// <reference path="../typings/bluebird/bluebird.d.ts" />
+/// <reference path="../typings/webspeechapi/webspeechapi.d.ts" />
 /// <reference path="exercise.ts" />
 var RecreIO;
 (function (RecreIO) {

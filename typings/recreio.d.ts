@@ -4,10 +4,10 @@
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 
 /// <reference path="bluebird/bluebird.d.ts" />
+/// <reference path="webspeechapi/webspeechapi.d.ts" />
 
 declare module RecreIO {
-
-    class Client {
+   class Client {
 
         constructor(apiKey: string);
 

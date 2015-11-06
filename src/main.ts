@@ -5,6 +5,7 @@
  */
 
 /// <reference path="../typings/bluebird/bluebird.d.ts" />
+/// <reference path="../typings/webspeechapi/webspeechapi.d.ts" />
 /// <reference path="exercise.ts" />
 
 declare var bluebird: any;
