@@ -13,7 +13,18 @@ module RecreIO {
 
   export class Exercise {
 
-    constructor(private client: any, private currentUser: any, private exercise: any) {}
+    constructor(private client: any, private currentUser: any, private exercise: any) {
+      for(var k in exercise) this[k] = exercise[k];
+      delete this.exercise;
+    }
+
+    private access: string;
+    private active: boolean;
+    private content: any;
+    private instruction: string;
+    private pattern: string;
+    private soundEnabled: boolean;
+    private template: string;
 
     private startTime: number;
     private endTime: number;
@@ -30,6 +41,8 @@ module RecreIO {
       //     console.error("Not yet authenticated.")
       //     // return false;
       // }
+      
+      console.log(this);
 
       this.startTime = new Date().getTime();
 
@@ -37,10 +50,10 @@ module RecreIO {
       document.onmousemove = this.handleMouseMove;
       this.mouseInterval = setInterval(this.getMousePosition, 1000 / this.client.MOUSE_TRACKING_RATE);
 
-      if (this.exercise.soundEnabled) {
+      if (this.soundEnabled) {
         var utterance = new SpeechSynthesisUtterance();
-        utterance.text = this.exercise.content.sound;
-        utterance.lang = 'en-US';
+        utterance.text = this.content.sound;
+        utterance.lang = this.currentUser.language;
         utterance.rate = 1;
         speechSynthesis.speak(utterance);
       }

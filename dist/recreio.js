@@ -19,14 +19,15 @@ var RecreIO;
                 //     console.error("Not yet authenticated.")
                 //     // return false;
                 // }
+                console.log(_this);
                 _this.startTime = new Date().getTime();
                 // Save mouse position 10 times per second
                 document.onmousemove = _this.handleMouseMove;
                 _this.mouseInterval = setInterval(_this.getMousePosition, 1000 / _this.client.MOUSE_TRACKING_RATE);
-                if (_this.exercise.soundEnabled) {
+                if (_this.soundEnabled) {
                     var utterance = new SpeechSynthesisUtterance();
-                    utterance.text = _this.exercise.content.sound;
-                    utterance.lang = 'en-US';
+                    utterance.text = _this.content.sound;
+                    utterance.lang = _this.currentUser.language;
                     utterance.rate = 1;
                     speechSynthesis.speak(utterance);
                 }
@@ -104,6 +105,9 @@ var RecreIO;
                     _this.mouseInterval++;
                 }
             };
+            for (var k in exercise)
+                this[k] = exercise[k];
+            delete this.exercise;
         }
         return Exercise;
     })();
