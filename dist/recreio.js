@@ -15,11 +15,6 @@ var RecreIO;
             this.mouseMovement = new Array();
             this.mouseInterval = 0;
             this.begin = function () {
-                // if (!user) {
-                //     console.error("Not yet authenticated.")
-                //     // return false;
-                // }
-                console.log(_this);
                 _this.startTime = new Date().getTime();
                 // Save mouse position 10 times per second
                 document.onmousemove = _this.handleMouseMove;

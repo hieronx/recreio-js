@@ -37,13 +37,6 @@ module RecreIO {
     private mouseInterval = 0;
 
     public begin = (): Exercise => {
-      // if (!user) {
-      //     console.error("Not yet authenticated.")
-      //     // return false;
-      // }
-      
-      console.log(this);
-
       this.startTime = new Date().getTime();
 
       // Save mouse position 10 times per second
