@@ -18,13 +18,13 @@ module RecreIO {
       delete this.exercise;
     }
 
-    private access: string;
-    private active: boolean;
-    private content: any;
-    private instruction: string;
-    private pattern: string;
-    private soundEnabled: boolean;
-    private template: string;
+    public access: string;
+    public active: boolean;
+    public content: any;
+    public instruction: string;
+    public pattern: string;
+    public soundEnabled: boolean;
+    public template: string;
 
     private startTime: number;
     private endTime: number;

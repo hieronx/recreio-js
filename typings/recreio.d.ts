@@ -22,6 +22,24 @@ declare module RecreIO {
 
     class Exercise {
 
+        public access: string;
+        public active: boolean;
+        public content: any;
+        public instruction: string;
+        public pattern: string;
+        public soundEnabled: boolean;
+        public template: string;
+
+        private startTime: number;
+        private endTime: number;
+        private duration: number;
+
+        private user: any;
+
+        private mousePosition: any;
+        private mouseMovement: any[];
+        private mouseInterval;
+
         constructor(template: string, pattern?: string, instruction?: string, curriculum?: any);
         
         begin(): Exercise;
