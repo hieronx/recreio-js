@@ -21,6 +21,7 @@ module RecreIO {
     public access: string;
     public active: boolean;
     public content: any;
+    public symbolId: number;
     public instruction: string;
     public pattern: string;
     public soundEnabled: boolean;
@@ -64,35 +65,18 @@ module RecreIO {
       this.duration = this.endTime - this.startTime;
 
       clearInterval(this.mouseInterval);
-
+      
       var statement = {
-          actor: {
-              name: this.currentUser.displayName,
-              account: {
-                  id: this.currentUser.id
-              }
-          },
-          verb: {
-              id: "completed"
-          },
-          object: {
-              id: 42,
-              definition: {
-                  name: ""
-              }
-          },
-          result: {
-              completion: true,
-              success: success,
-              duration: Math.floor(Math.abs(this.duration / 1000)) + "S"
-          },
-          context: {
-              extensions: {
-                  app: this.client.appId,
-                  mouseMovement: this.mouseMovement
-              }
-          },
-          timestamp: new Date().toISOString()
+        userId: this.currentUser.id,
+        symbolId: this.symbolId,
+        success: success,
+        sentAt: new Date().toISOString(),
+        processedAt: new Date().toISOString(),
+        context: {
+          app: this.client.appId,
+          duration: this.duration / 1000,
+          mouseMovement: this.mouseMovement
+        }
       }
 
       this.client.sendRequest('POST', 'statements', statement).then((body) => {

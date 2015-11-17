@@ -37,33 +37,16 @@ var RecreIO;
                 _this.duration = _this.endTime - _this.startTime;
                 clearInterval(_this.mouseInterval);
                 var statement = {
-                    actor: {
-                        name: _this.currentUser.displayName,
-                        account: {
-                            id: _this.currentUser.id
-                        }
-                    },
-                    verb: {
-                        id: "completed"
-                    },
-                    object: {
-                        id: 42,
-                        definition: {
-                            name: ""
-                        }
-                    },
-                    result: {
-                        completion: true,
-                        success: success,
-                        duration: Math.floor(Math.abs(_this.duration / 1000)) + "S"
-                    },
+                    userId: _this.currentUser.id,
+                    symbolId: _this.symbolId,
+                    success: success,
+                    sentAt: new Date().toISOString(),
+                    processedAt: new Date().toISOString(),
                     context: {
-                        extensions: {
-                            app: _this.client.appId,
-                            mouseMovement: _this.mouseMovement
-                        }
-                    },
-                    timestamp: new Date().toISOString()
+                        app: _this.client.appId,
+                        duration: _this.duration / 1000,
+                        mouseMovement: _this.mouseMovement
+                    }
                 };
                 _this.client.sendRequest('POST', 'statements', statement).then(function (body) {
                     // do nothing
