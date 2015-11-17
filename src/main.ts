@@ -22,7 +22,7 @@ module RecreIO {
 
     private currentUser: any;
     private currentUserGroups: any;
-    private appId: number = 5;
+    private appId: number = 1;
 
     /**
      * Create a new RecreIO client with your API key.

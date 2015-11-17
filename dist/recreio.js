@@ -39,11 +39,11 @@ var RecreIO;
                 var statement = {
                     userId: _this.currentUser.id,
                     symbolId: _this.symbolId,
+                    appId: _this.client.appId,
                     success: success,
                     sentAt: new Date().toISOString(),
                     processedAt: new Date().toISOString(),
                     context: {
-                        app: _this.client.appId,
                         duration: _this.duration / 1000,
                         mouseMovement: _this.mouseMovement
                     }
@@ -109,7 +109,7 @@ var RecreIO;
         function Client(apiKey) {
             var _this = this;
             this.apiKey = apiKey;
-            this.appId = 5;
+            this.appId = 1;
             /**
              * ...
              */

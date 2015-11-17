@@ -65,15 +65,15 @@ module RecreIO {
       this.duration = this.endTime - this.startTime;
 
       clearInterval(this.mouseInterval);
-      
+
       var statement = {
         userId: this.currentUser.id,
         symbolId: this.symbolId,
+        appId: this.client.appId,
         success: success,
         sentAt: new Date().toISOString(),
         processedAt: new Date().toISOString(),
         context: {
-          app: this.client.appId,
           duration: this.duration / 1000,
           mouseMovement: this.mouseMovement
         }
