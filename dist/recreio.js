@@ -155,7 +155,7 @@ var RecreIO;
                 return new Promise(function (resolve, reject) {
                     _this.sendRequest('GET', 'users/me').then(function (body) {
                         var data = JSON.parse(body);
-                        _this.currentUser = data.user;
+                        _this.currentUser = data;
                         _this.currentUserGroups = data.groups;
                         resolve(data);
                     }).catch(function (error) {
