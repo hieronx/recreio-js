@@ -1,24 +1,26 @@
 {
   "name": "recreio-js",
   "version": "1.0.0",
-  "description": "Javascript package for the API provided by recre.io",
+  "description": "Javascript package for the API provided by Recreio",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --outFile dist/recreio.js src/main.ts src/exercise.ts && cp dist/recreio.js ~/42/game1-racing/assets/scripts/recreio.js",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "test": "npm run build && mocha -u tdd -t 5000"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/recreio/recreio-js.git"
   },
-  "author": "recre.io",
+  "author": "Recreio",
   "license": "proprietary",
   "bugs": {
     "url": "https://github.com/recreio/recreio-js/issues"
   },
   "homepage": "https://github.com/recreio/recreio-js",
   "dependencies": {
-    "typescript": "^1.6.2"
+    "typescript": "^1.6.2",
+    "jsdom": "^3.1.2",
+    "mocha": "^2.2.1"
   }
 }

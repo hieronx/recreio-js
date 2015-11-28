@@ -78,7 +78,7 @@ module RecreIO {
         this.sendRequest('GET', 'users/me').then((body: string) => {
           var data = JSON.parse(body);
           
-          this.currentUser = data.user;
+          this.currentUser = data;
           this.currentUserGroups = data.groups;
 
           resolve(data);

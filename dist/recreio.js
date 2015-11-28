@@ -38,8 +38,10 @@ var RecreIO;
                 clearInterval(_this.mouseInterval);
                 var statement = {
                     userId: _this.currentUser.id,
-                    symbolId: _this.symbolId,
-                    appId: _this.client.appId,
+                    knowledgeObjectId: _this.knowledgeObjectId,
+                    applicationId: _this.client.appId,
+                    patternId: _this.patternId,
+                    templateId: _this.templateId,
                     success: success,
                     sentAt: new Date().toISOString(),
                     processedAt: new Date().toISOString(),

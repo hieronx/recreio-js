@@ -21,11 +21,13 @@ module RecreIO {
     public access: string;
     public active: boolean;
     public content: any;
-    public symbolId: number;
+    public knowledgeObjectId: number;
     public instruction: string;
+    public templateId: string;
+    public template: string;
+    public patternId: string;
     public pattern: string;
     public soundEnabled: boolean;
-    public template: string;
 
     private startTime: number;
     private endTime: number;
@@ -68,8 +70,10 @@ module RecreIO {
 
       var statement = {
         userId: this.currentUser.id,
-        symbolId: this.symbolId,
-        appId: this.client.appId,
+        knowledgeObjectId: this.knowledgeObjectId,
+        applicationId: this.client.appId,
+        patternId: this.patternId,
+        templateId: this.templateId,
         success: success,
         sentAt: new Date().toISOString(),
         processedAt: new Date().toISOString(),
