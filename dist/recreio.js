@@ -20,11 +20,16 @@ var RecreIO;
                 document.onmousemove = _this.handleMouseMove;
                 _this.mouseInterval = setInterval(_this.getMousePosition, 1000 / _this.client.MOUSE_TRACKING_RATE);
                 if (_this.soundEnabled && _this.content.sound) {
-                    var utterance = new SpeechSynthesisUtterance();
-                    utterance.text = _this.content.sound;
-                    utterance.lang = _this.currentUser.language;
-                    utterance.rate = 1;
-                    speechSynthesis.speak(utterance);
+                    var instructionUtterance = new SpeechSynthesisUtterance();
+                    instructionUtterance.text = _this.instruction;
+                    instructionUtterance.lang = _this.currentUser.language;
+                    instructionUtterance.rate = 1;
+                    speechSynthesis.speak(instructionUtterance);
+                    var contentUtterance = new SpeechSynthesisUtterance();
+                    contentUtterance.text = _this.content.sound;
+                    contentUtterance.lang = _this.currentUser.language;
+                    contentUtterance.rate = 1;
+                    speechSynthesis.speak(contentUtterance);
                 }
                 return _this;
             };

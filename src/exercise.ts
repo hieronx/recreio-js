@@ -47,11 +47,17 @@ module RecreIO {
       this.mouseInterval = setInterval(this.getMousePosition, 1000 / this.client.MOUSE_TRACKING_RATE);
 
       if (this.soundEnabled && this.content.sound) {
-        var utterance = new SpeechSynthesisUtterance();
-        utterance.text = this.content.sound;
-        utterance.lang = this.currentUser.language;
-        utterance.rate = 1;
-        speechSynthesis.speak(utterance);
+        var instructionUtterance = new SpeechSynthesisUtterance();
+        instructionUtterance.text = this.instruction;
+        instructionUtterance.lang = this.currentUser.language;
+        instructionUtterance.rate = 1;
+        speechSynthesis.speak(instructionUtterance);
+
+        var contentUtterance = new SpeechSynthesisUtterance();
+        contentUtterance.text = this.content.sound;
+        contentUtterance.lang = this.currentUser.language;
+        contentUtterance.rate = 1;
+        speechSynthesis.speak(contentUtterance);
       }
 
       return this;
