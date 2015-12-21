@@ -13,21 +13,14 @@ module RecreIO {
 
   export class Exercise {
 
-    constructor(private client: any, private currentUser: any, private exercise: any) {
-      for(var k in exercise) this[k] = exercise[k];
-      delete this.exercise;
+    constructor(private client: any, private currentUser: any, private template: string = 'true-false', private soundEnabled: boolean = false, private exercise: any) {
+      for (var k in exercise) this[k] = exercise[k];
+        delete this.exercise;
     }
 
-    public access: string;
-    public active: boolean;
-    public content: any;
-    public knowledgeObjectId: number;
+    public id: number;
     public instruction: string;
-    public templateId: string;
-    public template: string;
-    public patternId: string;
-    public pattern: string;
-    public soundEnabled: boolean;
+    public content: any;
 
     private startTime: number;
     private endTime: number;
@@ -75,11 +68,8 @@ module RecreIO {
       clearInterval(this.mouseInterval);
 
       var statement = {
-        userId: this.currentUser.id,
-        knowledgeObjectId: this.knowledgeObjectId,
-        applicationId: this.client.appId,
-        patternId: this.patternId,
-        templateId: this.templateId,
+        id: this.id,
+        template: this.template,
         success: success,
         sentAt: new Date().toISOString(),
         processedAt: new Date().toISOString(),

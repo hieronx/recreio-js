@@ -103,14 +103,14 @@ module RecreIO {
 
             this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled).then((body: string) => {
                 this.exercises = JSON.parse(body);
-                resolve(new RecreIO.Exercise(this, this.currentUser, this.exercises[0]));
+                resolve(new RecreIO.Exercise(this, this.currentUser, template, soundEnabled, this.exercises[0]));
             }).catch((error) => {
                 reject(error);
             });
 
         } else {
             this.exerciseIndex += 1;
-            resolve(new RecreIO.Exercise(this, this.currentUser, this.exercises[this.exerciseIndex]));
+            resolve(new RecreIO.Exercise(this, this.currentUser, template, soundEnabled, this.exercises[this.exerciseIndex]));
         }
       });
     }

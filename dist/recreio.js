@@ -6,10 +6,14 @@
 var RecreIO;
 (function (RecreIO) {
     var Exercise = (function () {
-        function Exercise(client, currentUser, exercise) {
+        function Exercise(client, currentUser, template, soundEnabled, exercise) {
             var _this = this;
+            if (template === void 0) { template = 'true-false'; }
+            if (soundEnabled === void 0) { soundEnabled = false; }
             this.client = client;
             this.currentUser = currentUser;
+            this.template = template;
+            this.soundEnabled = soundEnabled;
             this.exercise = exercise;
             this.mousePosition = {};
             this.mouseMovement = new Array();
@@ -42,11 +46,8 @@ var RecreIO;
                 _this.duration = _this.endTime - _this.startTime;
                 clearInterval(_this.mouseInterval);
                 var statement = {
-                    userId: _this.currentUser.id,
-                    knowledgeObjectId: _this.knowledgeObjectId,
-                    applicationId: _this.client.appId,
-                    patternId: _this.patternId,
-                    templateId: _this.templateId,
+                    id: _this.id,
+                    template: _this.template,
                     success: success,
                     sentAt: new Date().toISOString(),
                     processedAt: new Date().toISOString(),
@@ -182,14 +183,14 @@ var RecreIO;
                         _this.exerciseIndex = 0;
                         _this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled).then(function (body) {
                             _this.exercises = JSON.parse(body);
-                            resolve(new RecreIO.Exercise(_this, _this.currentUser, _this.exercises[0]));
+                            resolve(new RecreIO.Exercise(_this, _this.currentUser, template, soundEnabled, _this.exercises[0]));
                         }).catch(function (error) {
                             reject(error);
                         });
                     }
                     else {
                         _this.exerciseIndex += 1;
-                        resolve(new RecreIO.Exercise(_this, _this.currentUser, _this.exercises[_this.exerciseIndex]));
+                        resolve(new RecreIO.Exercise(_this, _this.currentUser, template, soundEnabled, _this.exercises[_this.exerciseIndex]));
                     }
                 });
             };
