@@ -32,6 +32,8 @@ module RecreIO {
     private mouseMovement: any[] = new Array();
     private mouseInterval = 0;
 
+    private isTesting: boolean;
+
     public begin = (): Exercise => {
       this.startTime = new Date().getTime();
 
@@ -53,12 +55,19 @@ module RecreIO {
         speechSynthesis.speak(contentUtterance);
       }
 
+      this.isTesting = (this.getParameterByName('testing') == 'true');
+
       return this;
     }
 
     public save = (success): any => {
       if (!this.startTime) {
           console.error("Exercise hasn't started yet.")
+          return false;
+      }
+
+      if (this.isTesting) {
+          console.log("Results are not saved when in testing mode.")
           return false;
       }
 
@@ -120,6 +129,13 @@ module RecreIO {
         this.mouseMovement[this.mouseInterval] = { x: this.mousePosition.x, y: this.mousePosition.y }
         this.mouseInterval++;
       }
+    }
+
+    private getParameterByName = (name: string) => {
+      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+          results = regex.exec(location.search);
+      return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
   }
 

@@ -35,11 +35,16 @@ var RecreIO;
                     contentUtterance.rate = 1;
                     speechSynthesis.speak(contentUtterance);
                 }
+                _this.isTesting = (_this.getParameterByName('testing') == 'true');
                 return _this;
             };
             this.save = function (success) {
                 if (!_this.startTime) {
                     console.error("Exercise hasn't started yet.");
+                    return false;
+                }
+                if (_this.isTesting) {
+                    console.log("Results are not saved when in testing mode.");
                     return false;
                 }
                 _this.endTime = new Date().getTime();
@@ -90,6 +95,11 @@ var RecreIO;
                     _this.mouseMovement[_this.mouseInterval] = { x: _this.mousePosition.x, y: _this.mousePosition.y };
                     _this.mouseInterval++;
                 }
+            };
+            this.getParameterByName = function (name) {
+                name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
+                return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
             };
             for (var k in exercise)
                 this[k] = exercise[k];
