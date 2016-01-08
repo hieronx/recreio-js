@@ -19,6 +19,7 @@ module RecreIO {
     }
 
     public id: number;
+    public knowledgeObjectId: number;
     public instruction: string;
     public content: any;
 
@@ -29,7 +30,7 @@ module RecreIO {
     private user: any;
 
     private mousePosition: any = {};
-    private mouseMovement: any[] = new Array();
+    private mouseMovement: any[] = [];
     private mouseInterval = 0;
 
     private isTesting: boolean;
@@ -58,16 +59,16 @@ module RecreIO {
       this.isTesting = (this.getParameterByName('testing') == 'true');
 
       return this;
-    }
+    };
 
     public save = (success): any => {
       if (!this.startTime) {
-          console.error("Exercise hasn't started yet.")
+          console.error("Exercise hasn't started yet.");
           return false;
       }
 
       if (this.isTesting) {
-          console.log("Results are not saved when in testing mode.")
+          console.log("Results are not saved when in testing mode.");
           return false;
       }
 
@@ -78,6 +79,7 @@ module RecreIO {
 
       var statement = {
         id: this.id,
+        knowledgeObjectId: this.knowledgeObjectId,
         template: this.template,
         success: success,
         sentAt: new Date().toISOString(),
@@ -85,8 +87,10 @@ module RecreIO {
         context: {
           duration: this.duration / 1000,
           mouseMovement: this.mouseMovement
-        }
-      }
+        },
+        instruction: this.instruction,
+        content: this.content
+      };
 
       this.client.sendRequest('POST', 'statements', statement).then((body) => {
         // do nothing
@@ -95,7 +99,7 @@ module RecreIO {
       });
 
       return statement;
-    }
+    };
 
     private handleMouseMove = (event: any): void => {
       var dot, eventDoc, doc, body, pageX, pageY;
@@ -122,14 +126,14 @@ module RecreIO {
         x: event.pageX,
         y: event.pageY
       };
-    }
+    };
     
     private getMousePosition = (): void => {
       if (this.mousePosition && this.mousePosition.x && this.mousePosition.y) {
-        this.mouseMovement[this.mouseInterval] = { x: this.mousePosition.x, y: this.mousePosition.y }
+        this.mouseMovement[this.mouseInterval] = { x: this.mousePosition.x, y: this.mousePosition.y };
         this.mouseInterval++;
       }
-    }
+    };
 
     private getParameterByName = (name: string) => {
       name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -139,4 +143,4 @@ module RecreIO {
     }
   }
 
-};
+}
