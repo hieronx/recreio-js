@@ -16,7 +16,7 @@ var RecreIO;
             this.soundEnabled = soundEnabled;
             this.exercise = exercise;
             this.mousePosition = {};
-            this.mouseMovement = new Array();
+            this.mouseMovement = [];
             this.mouseInterval = 0;
             this.begin = function () {
                 _this.startTime = new Date().getTime();
@@ -52,6 +52,7 @@ var RecreIO;
                 clearInterval(_this.mouseInterval);
                 var statement = {
                     id: _this.id,
+                    knowledgeObjectId: _this.knowledgeObjectId,
                     template: _this.template,
                     success: success,
                     sentAt: new Date().toISOString(),
@@ -59,7 +60,9 @@ var RecreIO;
                     context: {
                         duration: _this.duration / 1000,
                         mouseMovement: _this.mouseMovement
-                    }
+                    },
+                    instruction: _this.instruction,
+                    content: _this.content
                 };
                 _this.client.sendRequest('POST', 'statements', statement).then(function (body) {
                     // do nothing
@@ -109,7 +112,6 @@ var RecreIO;
     })();
     RecreIO.Exercise = Exercise;
 })(RecreIO || (RecreIO = {}));
-;
 /**
  * recre.io JavaScript SDK
  * Copyright 2015, recre.io
