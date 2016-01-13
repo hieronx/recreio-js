@@ -1,12 +1,13 @@
 /**
- * recre.io JavaScript SDK
- * Copyright 2015, recre.io
+ * Recreio JavaScript SDK
+ * Copyright 2015-2016, Recreio
  * Released under the MIT license.
  */
 
 /// <reference path="../typings/bluebird/bluebird.d.ts" />
 /// <reference path="../typings/webspeechapi/webspeechapi.d.ts" />
-/// <reference path="exercise.ts" />
+/// <reference path="Exercise.ts" />
+/// <reference path="ContentQuery.ts" />
 
 declare var bluebird: any;
 

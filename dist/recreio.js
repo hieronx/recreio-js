@@ -1,6 +1,6 @@
 /**
- * recre.io JavaScript SDK
- * Copyright 2015, recre.io
+ * Recreio JavaScript SDK
+ * Copyright 2015-2016, Recreio
  * Released under the MIT license.
  */
 var RecreIO;
@@ -113,13 +113,85 @@ var RecreIO;
     RecreIO.Exercise = Exercise;
 })(RecreIO || (RecreIO = {}));
 /**
- * recre.io JavaScript SDK
- * Copyright 2015, recre.io
+ * Recreio JavaScript SDK
+ * Copyright 2015-2016, Recreio
+ * Released under the MIT license.
+ */
+var RecreIO;
+(function (RecreIO) {
+    var ContentQuery = (function () {
+        function ContentQuery(client) {
+            var _this = this;
+            this.client = client;
+            // settings
+            this._grouped = false;
+            this._sound = false;
+            this.templates = function (templates) {
+                _this._templates = templates;
+                return _this;
+            };
+            this.patterns = function (patterns) {
+                _this._patterns = patterns;
+                return _this;
+            };
+            this.type = function (type) {
+                _this._type = type;
+                return _this;
+            };
+            this.grouped = function (grouped) {
+                if (grouped === void 0) { grouped = true; }
+                _this._grouped = grouped;
+                return _this;
+            };
+            this.limit = function (limit) {
+                _this._limit = limit;
+                return _this;
+            };
+            this.sound = function (sound) {
+                _this._sound = sound;
+                return _this;
+            };
+            this.get = function () {
+                return new Promise(function (resolve, reject) {
+                    var exerciseParams = {};
+                    if (_this._templates.length > 0)
+                        exerciseParams.templates = _this._templates;
+                    if (_this._patterns.length > 0)
+                        exerciseParams.patterns = _this._patterns;
+                    if (_this.type)
+                        exerciseParams.type = _this._type;
+                    if (_this.grouped)
+                        exerciseParams.grouped = _this._grouped;
+                    if (_this.limit)
+                        exerciseParams.limit = _this._limit;
+                    if (_this.sound)
+                        exerciseParams.sound = _this._sound;
+                    _this.client.sendRequest('GET', 'users/me/exercises', exerciseParams).then(function (body) {
+                        var data = JSON.parse(body);
+                        var exercises = [];
+                        data.forEach(function (exercise) {
+                            exercises.push(new RecreIO.Exercise(_this.client, _this.client.currentUser, exercise.template, _this._sound, exercise));
+                        });
+                        resolve(exercises);
+                    }).catch(function (error) {
+                        reject(error);
+                    });
+                });
+            };
+        }
+        return ContentQuery;
+    })();
+    RecreIO.ContentQuery = ContentQuery;
+})(RecreIO || (RecreIO = {}));
+/**
+ * Recreio JavaScript SDK
+ * Copyright 2015-2016, Recreio
  * Released under the MIT license.
  */
 /// <reference path="../typings/bluebird/bluebird.d.ts" />
 /// <reference path="../typings/webspeechapi/webspeechapi.d.ts" />
-/// <reference path="exercise.ts" />
+/// <reference path="Exercise.ts" />
+/// <reference path="ContentQuery.ts" />
 var RecreIO;
 (function (RecreIO) {
     var Client = (function () {
