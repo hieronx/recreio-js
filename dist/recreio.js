@@ -123,6 +123,9 @@ var RecreIO;
         function ContentQuery(client) {
             var _this = this;
             this.client = client;
+            // content type
+            this._templates = [];
+            this._patterns = [];
             // settings
             this._grouped = false;
             this._sound = false;

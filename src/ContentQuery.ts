@@ -11,8 +11,8 @@ module RecreIO {
     constructor(private client: any) {}
 
     // content type
-    private _templates: string[];
-    private _patterns: string[];
+    private _templates: string[] = [];
+    private _patterns: string[] = [];
     private _type: string;
 
     // settings
