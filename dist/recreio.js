@@ -211,14 +211,17 @@ var RecreIO;
              */
             this.sendRequest = function (method, to, payload) {
                 return new Promise(function (resolve, reject) {
+                    console.log(payload);
                     var httpRequest = new XMLHttpRequest();
                     var url = 'https://api.recre.io/' + to;
                     var encodedPayload = JSON.stringify(payload);
+                    console.log(encodedPayload);
                     httpRequest.open(method, url, true);
                     httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                     httpRequest.setRequestHeader("X-API-Key", _this.apiKey);
                     httpRequest.withCredentials = true; // Send cookies with CORS requests
                     httpRequest.send(encodedPayload);
+                    console.log(httpRequest);
                     httpRequest.onreadystatechange = function () {
                         if (httpRequest.readyState === 4) {
                             if (httpRequest.status === 200) {
