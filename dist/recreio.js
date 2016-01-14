@@ -161,14 +161,15 @@ var RecreIO;
                         exerciseParams.templates = _this._templates;
                     if (_this._patterns.length > 0)
                         exerciseParams.patterns = _this._patterns;
-                    if (_this.type)
+                    if (_this._type)
                         exerciseParams.type = _this._type;
-                    if (_this.grouped)
+                    if (_this._grouped)
                         exerciseParams.grouped = _this._grouped;
-                    if (_this.limit)
+                    if (_this._limit)
                         exerciseParams.limit = _this._limit;
-                    if (_this.sound)
+                    if (_this._sound)
                         exerciseParams.sound = _this._sound;
+                    console.log(exerciseParams);
                     _this.client.sendRequest('GET', 'users/me/exercises', exerciseParams).then(function (body) {
                         var data = JSON.parse(body);
                         var exercises = [];

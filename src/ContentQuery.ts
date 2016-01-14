@@ -56,11 +56,13 @@ module RecreIO {
 
         if (this._templates.length > 0) exerciseParams.templates = this._templates;
         if (this._patterns.length > 0) exerciseParams.patterns = this._patterns;
-        if (this.type) exerciseParams.type = this._type;
+        if (this._type) exerciseParams.type = this._type;
 
-        if (this.grouped) exerciseParams.grouped = this._grouped;
-        if (this.limit) exerciseParams.limit = this._limit;
-        if (this.sound) exerciseParams.sound = this._sound;
+        if (this._grouped) exerciseParams.grouped = this._grouped;
+        if (this._limit) exerciseParams.limit = this._limit;
+        if (this._sound) exerciseParams.sound = this._sound;
+
+        console.log(exerciseParams);
 
         this.client.sendRequest('GET', 'users/me/exercises', exerciseParams).then((body: string) => {
           var data = JSON.parse(body);
