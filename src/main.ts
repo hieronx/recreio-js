@@ -116,6 +116,13 @@ module RecreIO {
       });
     }
 
+    /**
+     * 
+     */
+    public content = (): any => {
+        return new RecreIO.ContentQuery(this);
+    }
+
   };
 
 };

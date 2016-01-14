@@ -20,32 +20,32 @@ module RecreIO {
     private _limit: number;
     private _sound: boolean = false;
 
-    public templates = (templates: string[]): any => {
+    public templates = (templates: string[]): RecreIO.ContentQuery => {
         this._templates = templates;
         return this;
     }
 
-    public patterns = (patterns: string[]): any => {
+    public patterns = (patterns: string[]): RecreIO.ContentQuery => {
         this._patterns = patterns;
         return this;
     }
 
-    public type = (type: string): any => {
+    public type = (type: string): RecreIO.ContentQuery => {
         this._type = type;
           return this;
     }
 
-    public grouped = (grouped: boolean = true): any => {
+    public grouped = (grouped: boolean = true): RecreIO.ContentQuery => {
         this._grouped = grouped;
         return this;
     }
 
-    public limit = (limit: number): any => {
+    public limit = (limit: number): RecreIO.ContentQuery => {
         this._limit = limit;
         return this;
     }
 
-    public sound = (sound: boolean): any => {
+    public sound = (sound: boolean): RecreIO.ContentQuery => {
         this._sound = sound;
         return this;
     }

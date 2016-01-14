@@ -278,6 +278,12 @@ var RecreIO;
                     }
                 });
             };
+            /**
+             *
+             */
+            this.content = function () {
+                return new RecreIO.ContentQuery(_this);
+            };
             this.getAccount();
         }
         /** The host of the API. */
