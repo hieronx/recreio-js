@@ -32,16 +32,42 @@ module RecreIO {
       this.getAccount()
     }
 
+
+    /**
+     * Parse a parameter object to HttpRequest parameters
+     */
+    private parseParams = (params: any) => {
+      var returnString = '';
+
+      if(Object.keys(params).length == 0) {
+        return returnString;
+      }
+
+      returnString += '?';
+      for (var key in params) {
+        var value = params[key];
+
+        if(returnString.length > 1) {
+          returnString += '&';
+        }
+        if(value instanceof Array) {
+          value = value.join(",")
+        }
+        returnString += key + '=' + value;
+      }
+
+      return returnString;
+    };
+
     /**
      * ...
      */
-    private sendRequest = (method: string, to: string, payload?: any) => {
+    private sendRequest = (method: string, to: string, payload?: any, params?: any) => {
       return new Promise((resolve, reject) => {
-        console.log(payload);
-
         var httpRequest = new XMLHttpRequest();
+        var _params = params || {};
 
-        var url: string = 'https://api.recre.io/' + to;
+        var url: string = 'https://api.recre.io/' + to + this.parseParams(_params);
         var encodedPayload: string = JSON.stringify(payload);
 
         console.log(encodedPayload);
@@ -126,7 +152,7 @@ module RecreIO {
     /**
      * 
      */
-    public content = (): any => {
+    public content = (): RecreIO.ContentQuery => {
         return new RecreIO.ContentQuery(this);
     }
 

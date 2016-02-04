@@ -4,7 +4,7 @@
   "description": "Javascript package for the API provided by Recreio",
   "main": "main.js",
   "scripts": {
-    "build": "tsc --outFile dist/recreio.js src/Main.ts src/Exercise.ts src/ContentQuery.ts && cp dist/recreio.js ~/42/game1-racing/assets/scripts/recreio.js",
+    "build": "tsc --outFile dist/recreio.js src/Main.ts src/Exercise.ts src/ContentQuery.ts",
     "prepublish": "npm run build",
     "test": "npm run build && mocha -u tdd -t 5000"
   },

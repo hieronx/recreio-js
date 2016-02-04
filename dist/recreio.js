@@ -124,21 +124,22 @@ var RecreIO;
             var _this = this;
             this.client = client;
             // content type
-            this._templates = [];
+            this._template = '';
             this._patterns = [];
+            this._types = [];
             // settings
             this._grouped = false;
             this._sound = false;
-            this.templates = function (templates) {
-                _this._templates = templates;
+            this.template = function (template) {
+                _this._template = template;
                 return _this;
             };
             this.patterns = function (patterns) {
                 _this._patterns = patterns;
                 return _this;
             };
-            this.type = function (type) {
-                _this._type = type;
+            this.types = function (types) {
+                _this._types = types;
                 return _this;
             };
             this.grouped = function (grouped) {
@@ -157,12 +158,12 @@ var RecreIO;
             this.get = function () {
                 return new Promise(function (resolve, reject) {
                     var exerciseParams = {};
-                    if (_this._templates.length > 0)
-                        exerciseParams.templates = _this._templates;
+                    if (_this._template)
+                        exerciseParams.template = _this._template;
                     if (_this._patterns.length > 0)
                         exerciseParams.patterns = _this._patterns;
-                    if (_this._type)
-                        exerciseParams.type = _this._type;
+                    if (_this._types.length > 0)
+                        exerciseParams.types = _this._types;
                     if (_this._grouped)
                         exerciseParams.grouped = _this._grouped;
                     if (_this._limit)
@@ -170,7 +171,7 @@ var RecreIO;
                     if (_this._sound)
                         exerciseParams.sound = _this._sound;
                     console.log(exerciseParams);
-                    _this.client.sendRequest('GET', 'users/me/exercises', exerciseParams).then(function (body) {
+                    _this.client.sendRequest('GET', 'users/me/exercises', {}, exerciseParams).then(function (body) {
                         var data = JSON.parse(body);
                         var exercises = [];
                         data.forEach(function (exercise) {
@@ -207,13 +208,34 @@ var RecreIO;
             this.apiKey = apiKey;
             this.appId = 1;
             /**
+             * Parse a parameter object to HttpRequest parameters
+             */
+            this.parseParams = function (params) {
+                var returnString = '';
+                if (Object.keys(params).length == 0) {
+                    return returnString;
+                }
+                returnString += '?';
+                for (var key in params) {
+                    var value = params[key];
+                    if (returnString.length > 1) {
+                        returnString += '&';
+                    }
+                    if (value instanceof Array) {
+                        value = value.join(",");
+                    }
+                    returnString += key + '=' + value;
+                }
+                return returnString;
+            };
+            /**
              * ...
              */
-            this.sendRequest = function (method, to, payload) {
+            this.sendRequest = function (method, to, payload, params) {
                 return new Promise(function (resolve, reject) {
-                    console.log(payload);
                     var httpRequest = new XMLHttpRequest();
-                    var url = 'https://api.recre.io/' + to;
+                    var _params = params || {};
+                    var url = 'https://api.recre.io/' + to + _this.parseParams(_params);
                     var encodedPayload = JSON.stringify(payload);
                     console.log(encodedPayload);
                     httpRequest.open(method, url, true);
