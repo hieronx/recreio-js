@@ -13,7 +13,7 @@ module RecreIO {
 
   export class Exercise {
 
-    constructor(private client: any, private currentUser: any, private template: string = 'true-false', private soundEnabled: boolean = false, private exercise: any) {
+    constructor(private client: any, private currentUser: any, private exercise: any, private template: string = 'true-false', private soundEnabled: boolean = false, private timed: boolean = false) {
       for (var k in exercise) this[k] = exercise[k];
         delete this.exercise;
     }
@@ -81,6 +81,7 @@ module RecreIO {
         id: this.id,
         knowledgeObjectId: this.knowledgeObjectId,
         template: this.template,
+        timed: this.timed,
         success: success,
         sentAt: new Date().toISOString(),
         processedAt: new Date().toISOString(),

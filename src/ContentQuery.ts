@@ -19,6 +19,7 @@ module RecreIO {
     private _grouped: boolean = false;
     private _limit: number;
     private _sound: boolean = false;
+    private _timed: boolean = false;
 
     public template = (template: string): RecreIO.ContentQuery => {
         this._template = template;
@@ -50,6 +51,11 @@ module RecreIO {
         return this;
     };
 
+    public timed = (timed: boolean = false): RecreIO.ContentQuery => {
+        this._timed = timed;
+        return this;
+    }
+
     public get = (): any => {
       return new Promise((resolve, reject) => {
         var exerciseParams: any = {};
@@ -69,7 +75,7 @@ module RecreIO {
           var exercises = [];
 
           data.forEach((exercise: any) => {
-              exercises.push(new RecreIO.Exercise(this.client, this.client.currentUser, exercise.template, this._sound, exercise));
+              exercises.push(new RecreIO.Exercise(this.client, this.client.currentUser, exercise, exercise.template, this._sound, this._timed));
           });
 
           resolve(exercises);

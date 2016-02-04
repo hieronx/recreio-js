@@ -30,6 +30,7 @@ declare module RecreIO {
         public pattern: string;
         public soundEnabled: boolean;
         public template: string;
+        public timed: boolean;
 
         private startTime: number;
         private endTime: number;
@@ -41,7 +42,7 @@ declare module RecreIO {
         private mouseMovement: any[];
         private mouseInterval;
 
-        constructor(template: string, pattern?: string, instruction?: string, curriculum?: any);
+        constructor(template: string, pattern?: string, instruction?: string, exercise?: any, timed?: boolean);
         
         begin(): Exercise;
         save(success: boolean): any;

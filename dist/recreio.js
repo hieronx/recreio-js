@@ -6,15 +6,17 @@
 var RecreIO;
 (function (RecreIO) {
     var Exercise = (function () {
-        function Exercise(client, currentUser, template, soundEnabled, exercise) {
+        function Exercise(client, currentUser, exercise, template, soundEnabled, timed) {
             var _this = this;
             if (template === void 0) { template = 'true-false'; }
             if (soundEnabled === void 0) { soundEnabled = false; }
+            if (timed === void 0) { timed = false; }
             this.client = client;
             this.currentUser = currentUser;
+            this.exercise = exercise;
             this.template = template;
             this.soundEnabled = soundEnabled;
-            this.exercise = exercise;
+            this.timed = timed;
             this.mousePosition = {};
             this.mouseMovement = [];
             this.mouseInterval = 0;
@@ -54,6 +56,7 @@ var RecreIO;
                     id: _this.id,
                     knowledgeObjectId: _this.knowledgeObjectId,
                     template: _this.template,
+                    timed: _this.timed,
                     success: success,
                     sentAt: new Date().toISOString(),
                     processedAt: new Date().toISOString(),
@@ -130,6 +133,7 @@ var RecreIO;
             // settings
             this._grouped = false;
             this._sound = false;
+            this._timed = false;
             this.template = function (template) {
                 _this._template = template;
                 return _this;
@@ -155,6 +159,11 @@ var RecreIO;
                 _this._sound = sound;
                 return _this;
             };
+            this.timed = function (timed) {
+                if (timed === void 0) { timed = false; }
+                _this._timed = timed;
+                return _this;
+            };
             this.get = function () {
                 return new Promise(function (resolve, reject) {
                     var exerciseParams = {};
@@ -175,7 +184,7 @@ var RecreIO;
                         var data = JSON.parse(body);
                         var exercises = [];
                         data.forEach(function (exercise) {
-                            exercises.push(new RecreIO.Exercise(_this.client, _this.client.currentUser, exercise.template, _this._sound, exercise));
+                            exercises.push(new RecreIO.Exercise(_this.client, _this.client.currentUser, exercise, exercise.template, _this._sound, _this._timed));
                         });
                         resolve(exercises);
                     }).catch(function (error) {
@@ -296,14 +305,14 @@ var RecreIO;
                         _this.exerciseIndex = 0;
                         _this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled).then(function (body) {
                             _this.exercises = JSON.parse(body);
-                            resolve(new RecreIO.Exercise(_this, _this.currentUser, template, soundEnabled, _this.exercises[0]));
+                            resolve(new RecreIO.Exercise(_this, _this.currentUser, _this.exercises[0], template, soundEnabled));
                         }).catch(function (error) {
                             reject(error);
                         });
                     }
                     else {
                         _this.exerciseIndex += 1;
-                        resolve(new RecreIO.Exercise(_this, _this.currentUser, template, soundEnabled, _this.exercises[_this.exerciseIndex]));
+                        resolve(new RecreIO.Exercise(_this, _this.currentUser, _this.exercises[_this.exerciseIndex], template, soundEnabled));
                     }
                 });
             };
