@@ -179,7 +179,6 @@ var RecreIO;
                         exerciseParams.limit = _this._limit;
                     if (_this._sound)
                         exerciseParams.sound = _this._sound;
-                    console.log(exerciseParams);
                     _this.client.sendRequest('GET', 'users/me/exercises', {}, exerciseParams).then(function (body) {
                         var data = JSON.parse(body);
                         var exercises = [];
@@ -246,13 +245,11 @@ var RecreIO;
                     var _params = params || {};
                     var url = 'https://api.recre.io/' + to + _this.parseParams(_params);
                     var encodedPayload = JSON.stringify(payload);
-                    console.log(encodedPayload);
                     httpRequest.open(method, url, true);
                     httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                     httpRequest.setRequestHeader("X-API-Key", _this.apiKey);
                     httpRequest.withCredentials = true; // Send cookies with CORS requests
                     httpRequest.send(encodedPayload);
-                    console.log(httpRequest);
                     httpRequest.onreadystatechange = function () {
                         if (httpRequest.readyState === 4) {
                             if (httpRequest.status === 200) {
