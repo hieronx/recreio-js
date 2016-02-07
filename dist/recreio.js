@@ -361,7 +361,9 @@ var RecreIO;
             };
             this.getUser = function () {
                 if (_this.currentUser) {
-                    return _this.currentUser;
+                    return new Promise(function (resolve, reject) {
+                        resolve(_this.currentUser);
+                    });
                 }
                 else {
                     return _this.getAccount();

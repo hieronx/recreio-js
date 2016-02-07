@@ -150,9 +150,11 @@ module RecreIO {
       });
     }
 
-    public getUser = (): User  => {
+    public getUser = (): Promise<any>  => {
       if (this.currentUser){
-        return this.currentUser;
+        return new Promise((resolve, reject) => {
+          resolve(this.currentUser);
+        })
       }
       else {
         return this.getAccount();
