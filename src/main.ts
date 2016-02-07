@@ -8,6 +8,7 @@
 /// <reference path="../typings/webspeechapi/webspeechapi.d.ts" />
 /// <reference path="Exercise.ts" />
 /// <reference path="ContentQuery.ts" />
+/// <reference path="User.ts" />
 
 declare var bluebird: any;
 
@@ -21,8 +22,8 @@ module RecreIO {
     /** The number of mouse frames tracked per second. */
     static MOUSE_TRACKING_RATE: number = 10;
 
-    private currentUser: any;
-    private currentUserGroups: any;
+    private currentUser: RecreIO.User;
+    private currentUserGroups: RecreIO.Group[];
     private appId: number = 1;
 
     /**
@@ -107,9 +108,13 @@ module RecreIO {
       return new Promise((resolve, reject) => {
         this.sendRequest('GET', 'users/me').then((body: string) => {
           var data = JSON.parse(body);
-          
-          this.currentUser = data;
-          this.currentUserGroups = data.groups;
+
+          this.currentUserGroups = []
+
+          data.groups.forEach((group: any) => {
+            this.currentUserGroups.push(new Group(group.id, group.name, group.role, group.type, group.parentId));
+          });
+          this.currentUser = new User(data.id, data.firstName, data.lastName, data.displayName, data.permissions, data.avatar, data.language, data.gender, data.createdAt, data.createdBy, this.currentUserGroups, data.email, data.username, data.visualPassword);
 
           resolve(data);
 
@@ -143,6 +148,15 @@ module RecreIO {
             resolve(new RecreIO.Exercise(this, this.currentUser, this.exercises[this.exerciseIndex], template, soundEnabled));
         }
       });
+    }
+
+    public getUser = (): User  => {
+      if (this.currentUser){
+        return this.currentUser;
+      }
+      else {
+        return this.getAccount();
+      }
     }
 
     /**

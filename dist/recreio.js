@@ -196,6 +196,48 @@ var RecreIO;
     })();
     RecreIO.ContentQuery = ContentQuery;
 })(RecreIO || (RecreIO = {}));
+var RecreIO;
+(function (RecreIO) {
+    var Group = (function () {
+        function Group(id, name, role, type, parentId) {
+            this.id = id;
+            this.name = name;
+            this.role = role;
+            this.type = type;
+            this.parentId = parentId;
+        }
+        return Group;
+    })();
+    RecreIO.Group = Group;
+})(RecreIO || (RecreIO = {}));
+/// <reference path="Group.ts" />
+var RecreIO;
+(function (RecreIO) {
+    var User = (function () {
+        function User(id, firstName, lastName, displayName, permissions, avatar, language, gender, createdAt, createdBy, groups, email, username, visualPassword) {
+            var _this = this;
+            this.id = id;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.displayName = displayName;
+            this.permissions = permissions;
+            this.avatar = avatar;
+            this.language = language;
+            this.gender = gender;
+            this.createdAt = createdAt;
+            this.createdBy = createdBy;
+            this.groups = groups;
+            this.email = email;
+            this.username = username;
+            this.visualPassword = visualPassword;
+            this.getLanguage = function () {
+                return _this.language;
+            };
+        }
+        return User;
+    })();
+    RecreIO.User = User;
+})(RecreIO || (RecreIO = {}));
 /**
  * Recreio JavaScript SDK
  * Copyright 2015-2016, Recreio
@@ -205,6 +247,7 @@ var RecreIO;
 /// <reference path="../typings/webspeechapi/webspeechapi.d.ts" />
 /// <reference path="Exercise.ts" />
 /// <reference path="ContentQuery.ts" />
+/// <reference path="User.ts" />
 var RecreIO;
 (function (RecreIO) {
     var Client = (function () {
@@ -280,8 +323,11 @@ var RecreIO;
                 return new Promise(function (resolve, reject) {
                     _this.sendRequest('GET', 'users/me').then(function (body) {
                         var data = JSON.parse(body);
-                        _this.currentUser = data;
-                        _this.currentUserGroups = data.groups;
+                        _this.currentUserGroups = [];
+                        data.groups.forEach(function (group) {
+                            _this.currentUserGroups.push(new RecreIO.Group(group.id, group.name, group.role, group.type, group.parentId));
+                        });
+                        _this.currentUser = new RecreIO.User(data.id, data.firstName, data.lastName, data.displayName, data.permissions, data.avatar, data.language, data.gender, data.createdAt, data.createdBy, _this.currentUserGroups, data.email, data.username, data.visualPassword);
                         resolve(data);
                     }).catch(function (error) {
                         console.error(error);
@@ -312,6 +358,14 @@ var RecreIO;
                         resolve(new RecreIO.Exercise(_this, _this.currentUser, _this.exercises[_this.exerciseIndex], template, soundEnabled));
                     }
                 });
+            };
+            this.getUser = function () {
+                if (_this.currentUser) {
+                    return _this.currentUser;
+                }
+                else {
+                    return _this.getAccount();
+                }
             };
             /**
              *
