@@ -54,9 +54,9 @@ var RecreIO;
                 clearInterval(_this.mouseInterval);
                 var statement = {
                     id: _this.id,
-                    knowledgeObjectId: _this.knowledgeObjectId,
                     template: _this.template,
                     timed: _this.timed,
+                    sound: _this.soundEnabled,
                     success: success,
                     sentAt: new Date().toISOString(),
                     processedAt: new Date().toISOString(),
