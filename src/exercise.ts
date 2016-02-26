@@ -79,9 +79,9 @@ module RecreIO {
 
       var statement = {
         id: this.id,
-        knowledgeObjectId: this.knowledgeObjectId,
         template: this.template,
         timed: this.timed,
+        sound: this.soundEnabled,
         success: success,
         sentAt: new Date().toISOString(),
         processedAt: new Date().toISOString(),
