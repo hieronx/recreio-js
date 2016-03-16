@@ -87,7 +87,7 @@ module RecreIO {
           }
         }
       });
-    }
+    };
 
     /**
      * ...
@@ -97,9 +97,9 @@ module RecreIO {
         login: username,
         password: password,
         isUsername: true
-      }
+      };
       return this.sendRequest('POST', 'auth/callback/password', payload);
-    }
+    };
 
     /**
      * ...
@@ -109,7 +109,7 @@ module RecreIO {
         this.sendRequest('GET', 'users/me').then((body: string) => {
           var data = JSON.parse(body);
 
-          this.currentUserGroups = []
+          this.currentUserGroups = [];
 
           data.groups.forEach((group: any) => {
             this.currentUserGroups.push(new Group(group.id, group.name, group.role, group.type, group.parentId));
@@ -123,7 +123,7 @@ module RecreIO {
           reject(error);
         });
       });
-    }
+    };
 
     private exercises: any[] = [];
     private exerciseIndex: number = 0;
@@ -148,7 +148,7 @@ module RecreIO {
             resolve(new RecreIO.Exercise(this, this.currentUser, this.exercises[this.exerciseIndex], template, soundEnabled));
         }
       });
-    }
+    };
 
     public getUser = (): Promise<any>  => {
       if (this.currentUser){
@@ -159,7 +159,23 @@ module RecreIO {
       else {
         return this.getAccount();
       }
-    }
+    };
+
+
+    /**
+     *
+     */
+    public getTranslations = (): Promise<any> => {
+      return this.getUser().then((user: any) => {
+        return new Promise((resolve, reject) => {
+          this.sendRequest('GET', 'translations/'+ user.language).then((body: string) => {
+            resolve(JSON.parse(body))
+          }).catch((error) => {
+            reject(error);
+          });
+        })
+      })
+    };
 
     /**
      * 
@@ -168,6 +184,6 @@ module RecreIO {
         return new RecreIO.ContentQuery(this);
     }
 
-  };
+  }
 
-};
+}

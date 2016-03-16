@@ -372,6 +372,20 @@ var RecreIO;
             /**
              *
              */
+            this.getTranslations = function () {
+                return _this.getUser().then(function (user) {
+                    return new Promise(function (resolve, reject) {
+                        _this.sendRequest('GET', 'translations/' + user.language).then(function (body) {
+                            resolve(JSON.parse(body));
+                        }).catch(function (error) {
+                            reject(error);
+                        });
+                    });
+                });
+            };
+            /**
+             *
+             */
             this.content = function () {
                 return new RecreIO.ContentQuery(_this);
             };
@@ -384,6 +398,4 @@ var RecreIO;
         return Client;
     })();
     RecreIO.Client = Client;
-    ;
 })(RecreIO || (RecreIO = {}));
-;

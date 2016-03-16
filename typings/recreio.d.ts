@@ -9,14 +9,16 @@
 declare module RecreIO {
    class Client {
 
-        constructor(apiKey: string);
+       constructor(apiKey: string);
 
-        // signIn(provider: any): Promise<any>;
-        signInWithUsername(username: string, password: string): Promise<any>;
-        // signInWithEmail(email: string, password: string): Promise<any>;
-        getAccount(): Promise<any>;
-    
-        getNextExercise(template: string, soundEnabled: boolean): Promise<Exercise>;
+       // signIn(provider: any): Promise<any>;
+       signInWithUsername(username: string, password: string): Promise<any>;
+       // signInWithEmail(email: string, password: string): Promise<any>;
+       getAccount(): Promise<any>;
+
+       getNextExercise(template: string, soundEnabled: boolean): Promise<Exercise>;
+
+       getTranslations(): Promise<any>;
 
        content(): ContentQuery;
     }
