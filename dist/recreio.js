@@ -250,6 +250,21 @@ var RecreIO;
 /// <reference path="User.ts" />
 var RecreIO;
 (function (RecreIO) {
+    var Translations = (function () {
+        function Translations() {
+            this.data = null;
+        }
+        Translations.prototype.get = function (key) {
+            if (this.data[key]) {
+                return this.data[key];
+            }
+            else {
+                return key;
+            }
+        };
+        return Translations;
+    })();
+    RecreIO.Translations = Translations;
     var Client = (function () {
         /**
          * Create a new RecreIO client with your API key.
@@ -257,6 +272,7 @@ var RecreIO;
         function Client(apiKey) {
             var _this = this;
             this.apiKey = apiKey;
+            this.translations = new Translations();
             this.appId = 1;
             /**
              * Parse a parameter object to HttpRequest parameters
@@ -373,15 +389,24 @@ var RecreIO;
              *
              */
             this.getTranslations = function () {
-                return _this.getUser().then(function (user) {
+                if (_this.translations.data) {
                     return new Promise(function (resolve, reject) {
-                        _this.sendRequest('GET', 'translations?lang=' + user.language).then(function (body) {
-                            resolve(JSON.parse(body));
-                        }).catch(function (error) {
-                            reject(error);
+                        resolve(_this.translations);
+                    });
+                }
+                else {
+                    return _this.getUser().then(function (user) {
+                        return new Promise(function (resolve, reject) {
+                            _this.sendRequest('GET', 'translations?lang=' + user.language).then(function (body) {
+                                var translations = JSON.parse(body);
+                                _this.translations.data = translations;
+                                resolve(translations);
+                            }).catch(function (error) {
+                                reject(error);
+                            });
                         });
                     });
-                });
+                }
             };
             /**
              *

@@ -14,6 +14,18 @@ declare var bluebird: any;
 
 module RecreIO {
 
+  export class Translations {
+    public data: any = null;
+
+    get(key: string) {
+      if(this.data[key]) {
+        return this.data[key];
+      } else {
+        return key
+      }
+    }
+  }
+
   export class Client {
 
     /** The host of the API. */
@@ -24,6 +36,7 @@ module RecreIO {
 
     private currentUser: RecreIO.User;
     private currentUserGroups: RecreIO.Group[];
+    private translations: Translations = new Translations();
     private appId: number = 1;
 
     /**
@@ -166,15 +179,24 @@ module RecreIO {
      *
      */
     public getTranslations = (): Promise<any> => {
-      return this.getUser().then((user: any) => {
+      if(this.translations.data) {
         return new Promise((resolve, reject) => {
-          this.sendRequest('GET', 'translations?lang='+ user.language).then((body: string) => {
-            resolve(JSON.parse(body))
-          }).catch((error) => {
-            reject(error);
-          });
+          resolve(this.translations);
         })
-      })
+      }
+      else {
+        return this.getUser().then((user:any) => {
+          return new Promise((resolve, reject) => {
+            this.sendRequest('GET', 'translations?lang=' + user.language).then((body:string) => {
+              var translations = JSON.parse(body);
+              this.translations.data = translations;
+              resolve(translations)
+            }).catch((error) => {
+              reject(error);
+            });
+          })
+        })
+      }
     };
 
     /**

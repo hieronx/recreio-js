@@ -23,6 +23,10 @@ declare module RecreIO {
        content(): ContentQuery;
     }
 
+    class Translations {
+        get(key: String): string;
+    }
+
     class Exercise {
 
         public access: string;
