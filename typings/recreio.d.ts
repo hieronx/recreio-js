@@ -77,11 +77,16 @@ declare module RecreIO {
         private createdAt: string;
         private createdBy: number;
         private groups: RecreIO.Group[];
+        private volume: number;
         private email: string;
         private username: string;
         private visualPassword: string;
 
-        getLanguage();
+        public getLanguage(): string;
+
+        public getId(): number;
+
+        public getVolume(): number;
     }
 
     class Group {

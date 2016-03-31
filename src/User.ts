@@ -15,12 +15,21 @@ module RecreIO {
                     private createdAt: string,
                     private createdBy: number,
                     private groups: RecreIO.Group[],
+                    private volume: number,
                     private email?: string,
                     private username?: string,
                     private visualPassword?: string) {}
 
         getLanguage = () => {
             return this.language;
+        };
+
+        getId = () => {
+            return this.id;
+        };
+
+        getVolume = () => {
+            return this.volume;
         }
     }
 }

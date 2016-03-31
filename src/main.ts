@@ -127,7 +127,7 @@ module RecreIO {
           data.groups.forEach((group: any) => {
             this.currentUserGroups.push(new Group(group.id, group.name, group.role, group.type, group.parentId));
           });
-          this.currentUser = new User(data.id, data.firstName, data.lastName, data.displayName, data.permissions, data.avatar, data.language, data.gender, data.createdAt, data.createdBy, this.currentUserGroups, data.email, data.username, data.visualPassword);
+          this.currentUser = new User(data.id, data.firstName, data.lastName, data.displayName, data.permissions, data.avatar, data.language, data.gender, data.createdAt, data.createdBy, this.currentUserGroups, data.volume, data.email, data.username, data.visualPassword);
 
           resolve(data);
 

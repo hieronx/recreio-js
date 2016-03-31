@@ -56,7 +56,7 @@ module RecreIO {
         speechSynthesis.speak(contentUtterance);
       }
 
-      this.isTesting = (this.getParameterByName('testing') == 'true');
+      this.isTesting = (this.client.getParameterByName('testing') == 'true');
 
       return this;
     };
@@ -135,13 +135,6 @@ module RecreIO {
         this.mouseInterval++;
       }
     };
-
-    private getParameterByName = (name: string) => {
-      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-          results = regex.exec(location.search);
-      return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
   }
 
 }

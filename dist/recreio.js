@@ -37,7 +37,7 @@ var RecreIO;
                     contentUtterance.rate = 1;
                     speechSynthesis.speak(contentUtterance);
                 }
-                _this.isTesting = (_this.getParameterByName('testing') == 'true');
+                _this.isTesting = (_this.client.getParameterByName('testing') == 'true');
                 return _this;
             };
             this.save = function (success) {
@@ -214,7 +214,7 @@ var RecreIO;
 var RecreIO;
 (function (RecreIO) {
     var User = (function () {
-        function User(id, firstName, lastName, displayName, permissions, avatar, language, gender, createdAt, createdBy, groups, email, username, visualPassword) {
+        function User(id, firstName, lastName, displayName, permissions, avatar, language, gender, createdAt, createdBy, groups, volume, email, username, visualPassword) {
             var _this = this;
             this.id = id;
             this.firstName = firstName;
@@ -227,11 +227,18 @@ var RecreIO;
             this.createdAt = createdAt;
             this.createdBy = createdBy;
             this.groups = groups;
+            this.volume = volume;
             this.email = email;
             this.username = username;
             this.visualPassword = visualPassword;
             this.getLanguage = function () {
                 return _this.language;
+            };
+            this.getId = function () {
+                return _this.id;
+            };
+            this.getVolume = function () {
+                return _this.volume;
             };
         }
         return User;
@@ -343,7 +350,7 @@ var RecreIO;
                         data.groups.forEach(function (group) {
                             _this.currentUserGroups.push(new RecreIO.Group(group.id, group.name, group.role, group.type, group.parentId));
                         });
-                        _this.currentUser = new RecreIO.User(data.id, data.firstName, data.lastName, data.displayName, data.permissions, data.avatar, data.language, data.gender, data.createdAt, data.createdBy, _this.currentUserGroups, data.email, data.username, data.visualPassword);
+                        _this.currentUser = new RecreIO.User(data.id, data.firstName, data.lastName, data.displayName, data.permissions, data.avatar, data.language, data.gender, data.createdAt, data.createdBy, _this.currentUserGroups, data.volume, data.email, data.username, data.visualPassword);
                         resolve(data);
                     }).catch(function (error) {
                         console.error(error);
