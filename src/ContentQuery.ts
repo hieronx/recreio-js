@@ -66,7 +66,7 @@ module RecreIO {
 
         if (this._grouped) exerciseParams.grouped = this._grouped;
         if (this._limit) exerciseParams.limit = this._limit;
-        if (this._sound) exerciseParams.sound = this._sound;
+        if (this._sound) exerciseParams.sound = this._sound || (this.client.currentUser.volume > 0);
 
         this.client.sendRequest('GET', 'users/me/exercises', {}, exerciseParams).then((body: string) => {
           var data = JSON.parse(body);
