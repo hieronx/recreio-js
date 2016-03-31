@@ -215,7 +215,6 @@ var RecreIO;
 (function (RecreIO) {
     var User = (function () {
         function User(id, firstName, lastName, displayName, permissions, avatar, language, gender, createdAt, createdBy, groups, volume, email, username, visualPassword) {
-            var _this = this;
             this.id = id;
             this.firstName = firstName;
             this.lastName = lastName;
@@ -231,15 +230,6 @@ var RecreIO;
             this.email = email;
             this.username = username;
             this.visualPassword = visualPassword;
-            this.getLanguage = function () {
-                return _this.language;
-            };
-            this.getId = function () {
-                return _this.id;
-            };
-            this.getVolume = function () {
-                return _this.volume;
-            };
         }
         return User;
     })();

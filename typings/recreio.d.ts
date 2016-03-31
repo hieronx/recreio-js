@@ -66,27 +66,21 @@ declare module RecreIO {
     }
 
     class User {
-        private id: number;
+        public id: number;
         private firstName: number;
         private lastName: number;
-        private displayName: number;
+        public displayName: number;
         private premissions: number;
-        private avatar: number;
-        private language: string;
-        private gender: string;
+        public avatar: number;
+        public language: string;
+        public gender: string;
         private createdAt: string;
         private createdBy: number;
         private groups: RecreIO.Group[];
-        private volume: number;
+        public volume: number;
         private email: string;
         private username: string;
         private visualPassword: string;
-
-        public getLanguage(): string;
-
-        public getId(): number;
-
-        public getVolume(): number;
     }
 
     class Group {
