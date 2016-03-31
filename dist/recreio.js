@@ -25,7 +25,7 @@ var RecreIO;
                 // Save mouse position 10 times per second
                 document.onmousemove = _this.handleMouseMove;
                 _this.mouseInterval = setInterval(_this.getMousePosition, 1000 / _this.client.MOUSE_TRACKING_RATE);
-                if (_this.soundEnabled && _this.content.sound) {
+                if ((_this.soundEnabled || _this.currentUser.volume > 0) && _this.content.sound) {
                     var instructionUtterance = new SpeechSynthesisUtterance();
                     instructionUtterance.text = _this.instruction;
                     instructionUtterance.lang = _this.currentUser.language;

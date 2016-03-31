@@ -42,7 +42,7 @@ module RecreIO {
       document.onmousemove = this.handleMouseMove;
       this.mouseInterval = setInterval(this.getMousePosition, 1000 / this.client.MOUSE_TRACKING_RATE);
 
-      if (this.soundEnabled && this.content.sound) {
+      if ((this.soundEnabled || this.currentUser.volume > 0) && this.content.sound) {
         var instructionUtterance = new SpeechSynthesisUtterance();
         instructionUtterance.text = this.instruction;
         instructionUtterance.lang = this.currentUser.language;
