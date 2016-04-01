@@ -38,6 +38,9 @@ declare module RecreIO {
         public template: string;
         public timed: boolean;
 
+        public next: Exercise;
+        public previous: Exercise;
+
         private startTime: number;
         private endTime: number;
         private duration: number;

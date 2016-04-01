@@ -138,31 +138,6 @@ module RecreIO {
       });
     };
 
-    private exercises: any[] = [];
-    private exerciseIndex: number = 0;
-
-    /**
-     * ...
-     */
-    public getNextExercise = (template: string = 'true-false', soundEnabled: boolean = false): any => {
-      return new Promise((resolve, reject) => {
-        if (this.exercises.length == 0 || this.exerciseIndex == this.exercises.length - 1) {
-            this.exerciseIndex = 0;
-
-            this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled).then((body: string) => {
-                this.exercises = JSON.parse(body);
-                resolve(new RecreIO.Exercise(this, this.currentUser, this.exercises[0], template, soundEnabled));
-            }).catch((error) => {
-                reject(error);
-            });
-
-        } else {
-            this.exerciseIndex += 1;
-            resolve(new RecreIO.Exercise(this, this.currentUser, this.exercises[this.exerciseIndex], template, soundEnabled));
-        }
-      });
-    };
-
     public getUser = (): Promise<any>  => {
       if (this.currentUser){
         return new Promise((resolve, reject) => {

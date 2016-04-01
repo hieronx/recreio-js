@@ -70,11 +70,19 @@ module RecreIO {
 
         this.client.sendRequest('GET', 'users/me/exercises', {}, exerciseParams).then((body: string) => {
           var data = JSON.parse(body);
-          var exercises = [];
+          var exercises: RecreIO.Exercise[] = [];
+          var previousExercise: RecreIO.Exercise = null;
 
-          data.forEach((exercise: any) => {
-              exercises.push(new RecreIO.Exercise(this.client, this.client.currentUser, exercise, exercise.template, this._sound, this._timed));
-          });
+          for(var i = 0; i < data.length; i++) {
+              var currentExercise = new RecreIO.Exercise(this.client, this.client.currentUser, data[i], data[i].template, this._sound, this._timed, this._grouped);
+
+              previousExercise.next = currentExercise;
+              currentExercise.previous = previousExercise;
+
+              previousExercise = currentExercise;
+
+              exercises.push(currentExercise);
+          }
 
           resolve(exercises);
 

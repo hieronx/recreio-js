@@ -6,7 +6,7 @@
 var RecreIO;
 (function (RecreIO) {
     var Exercise = (function () {
-        function Exercise(client, currentUser, exercise, template, soundEnabled, timed) {
+        function Exercise(client, currentUser, exercise, template, soundEnabled, timed, grouped) {
             var _this = this;
             if (template === void 0) { template = 'true-false'; }
             if (soundEnabled === void 0) { soundEnabled = false; }
@@ -17,6 +17,9 @@ var RecreIO;
             this.template = template;
             this.soundEnabled = soundEnabled;
             this.timed = timed;
+            this.grouped = grouped;
+            this.next = null;
+            this.previous = null;
             this.mousePosition = {};
             this.mouseMovement = [];
             this.mouseInterval = 0;
@@ -26,11 +29,22 @@ var RecreIO;
                 document.onmousemove = _this.handleMouseMove;
                 _this.mouseInterval = setInterval(_this.getMousePosition, 1000 / _this.client.MOUSE_TRACKING_RATE);
                 if ((_this.soundEnabled || _this.currentUser.volume > 0) && _this.content.sound) {
-                    var instructionUtterance = new SpeechSynthesisUtterance();
-                    instructionUtterance.text = _this.instruction;
-                    instructionUtterance.lang = _this.currentUser.language;
-                    instructionUtterance.rate = 1;
-                    speechSynthesis.speak(instructionUtterance);
+                    if (_this.previous == null) {
+                        var instructionUtterance = new SpeechSynthesisUtterance();
+                        instructionUtterance.text = _this.instruction;
+                        instructionUtterance.lang = _this.currentUser.language;
+                        instructionUtterance.rate = 1;
+                        speechSynthesis.speak(instructionUtterance);
+                    }
+                    else {
+                        if (!_this.grouped && (_this.previous.instruction != _this.instruction)) {
+                            var instructionUtterance = new SpeechSynthesisUtterance();
+                            instructionUtterance.text = _this.instruction;
+                            instructionUtterance.lang = _this.currentUser.language;
+                            instructionUtterance.rate = 1;
+                            speechSynthesis.speak(instructionUtterance);
+                        }
+                    }
                     var contentUtterance = new SpeechSynthesisUtterance();
                     contentUtterance.text = _this.content.sound;
                     contentUtterance.lang = _this.currentUser.language;
@@ -178,13 +192,18 @@ var RecreIO;
                     if (_this._limit)
                         exerciseParams.limit = _this._limit;
                     if (_this._sound)
-                        exerciseParams.sound = _this._sound;
+                        exerciseParams.sound = _this._sound || (_this.client.currentUser.volume > 0);
                     _this.client.sendRequest('GET', 'users/me/exercises', {}, exerciseParams).then(function (body) {
                         var data = JSON.parse(body);
                         var exercises = [];
-                        data.forEach(function (exercise) {
-                            exercises.push(new RecreIO.Exercise(_this.client, _this.client.currentUser, exercise, exercise.template, _this._sound, _this._timed));
-                        });
+                        var previousExercise = null;
+                        for (var i = 0; i < data.length; i++) {
+                            var currentExercise = new RecreIO.Exercise(_this.client, _this.client.currentUser, data[i], data[i].template, _this._sound, _this._timed, _this._grouped);
+                            previousExercise.next = currentExercise;
+                            currentExercise.previous = previousExercise;
+                            previousExercise = currentExercise;
+                            exercises.push(currentExercise);
+                        }
                         resolve(exercises);
                     }).catch(function (error) {
                         reject(error);
@@ -346,30 +365,6 @@ var RecreIO;
                         console.error(error);
                         reject(error);
                     });
-                });
-            };
-            this.exercises = [];
-            this.exerciseIndex = 0;
-            /**
-             * ...
-             */
-            this.getNextExercise = function (template, soundEnabled) {
-                if (template === void 0) { template = 'true-false'; }
-                if (soundEnabled === void 0) { soundEnabled = false; }
-                return new Promise(function (resolve, reject) {
-                    if (_this.exercises.length == 0 || _this.exerciseIndex == _this.exercises.length - 1) {
-                        _this.exerciseIndex = 0;
-                        _this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled).then(function (body) {
-                            _this.exercises = JSON.parse(body);
-                            resolve(new RecreIO.Exercise(_this, _this.currentUser, _this.exercises[0], template, soundEnabled));
-                        }).catch(function (error) {
-                            reject(error);
-                        });
-                    }
-                    else {
-                        _this.exerciseIndex += 1;
-                        resolve(new RecreIO.Exercise(_this, _this.currentUser, _this.exercises[_this.exerciseIndex], template, soundEnabled));
-                    }
                 });
             };
             this.getUser = function () {
