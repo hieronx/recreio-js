@@ -199,8 +199,10 @@ var RecreIO;
                         var previousExercise = null;
                         for (var i = 0; i < data.length; i++) {
                             var currentExercise = new RecreIO.Exercise(_this.client, _this.client.currentUser, data[i], data[i].template, _this._sound, _this._timed, _this._grouped);
-                            previousExercise.next = currentExercise;
-                            currentExercise.previous = previousExercise;
+                            if (previousExercise) {
+                                previousExercise.next = currentExercise;
+                                currentExercise.previous = previousExercise;
+                            }
                             previousExercise = currentExercise;
                             exercises.push(currentExercise);
                         }

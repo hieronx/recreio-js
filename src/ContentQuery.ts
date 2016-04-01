@@ -76,8 +76,10 @@ module RecreIO {
           for(var i = 0; i < data.length; i++) {
               var currentExercise = new RecreIO.Exercise(this.client, this.client.currentUser, data[i], data[i].template, this._sound, this._timed, this._grouped);
 
-              previousExercise.next = currentExercise;
-              currentExercise.previous = previousExercise;
+              if(previousExercise) {
+                  previousExercise.next = currentExercise;
+                  currentExercise.previous = previousExercise;
+              }
 
               previousExercise = currentExercise;
 
