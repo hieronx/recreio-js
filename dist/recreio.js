@@ -116,11 +116,6 @@ var RecreIO;
                     _this.mouseInterval++;
                 }
             };
-            this.getParameterByName = function (name) {
-                name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
-                return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-            };
             for (var k in exercise)
                 this[k] = exercise[k];
             delete this.exercise;
@@ -426,11 +421,6 @@ var RecreIO;
              */
             this.content = function () {
                 return new RecreIO.ContentQuery(_this);
-            };
-            this.getParameterByName = function (name) {
-                name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
-                return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
             };
             this.getAccount();
         }
