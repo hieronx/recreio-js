@@ -4,23 +4,21 @@ module RecreIO {
 
     export class User {
 
-        constructor(private id: number,
+        constructor(public id: number,
                     private firstName: string,
                     private lastName: string,
-                    private displayName: string,
+                    public displayName: string,
                     private permissions: number,
-                    private avatar: number,
-                    private language: string,
-                    private gender: string,
+                    public avatar: number,
+                    public language: string,
+                    public gender: string,
                     private createdAt: string,
                     private createdBy: number,
                     private groups: RecreIO.Group[],
+                    public volume: number,
                     private email?: string,
                     private username?: string,
                     private visualPassword?: string) {}
 
-        getLanguage = () => {
-            return this.language;
-        }
     }
 }

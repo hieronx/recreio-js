@@ -13,10 +13,13 @@ module RecreIO {
 
   export class Exercise {
 
-    constructor(private client: any, private currentUser: any, private exercise: any, private template: string = 'true-false', private soundEnabled: boolean = false, private timed: boolean = false) {
+    constructor(private client: any, private currentUser: any, private exercise: any, private template: string = 'true-false', private soundEnabled: boolean = false, private timed: boolean = false, private grouped: boolean) {
       for (var k in exercise) this[k] = exercise[k];
         delete this.exercise;
     }
+
+    public next: Exercise = null;
+    public previous: Exercise = null;
 
     public id: number;
     public knowledgeObjectId: number;
@@ -42,12 +45,24 @@ module RecreIO {
       document.onmousemove = this.handleMouseMove;
       this.mouseInterval = setInterval(this.getMousePosition, 1000 / this.client.MOUSE_TRACKING_RATE);
 
-      if (this.soundEnabled && this.content.sound) {
-        var instructionUtterance = new SpeechSynthesisUtterance();
-        instructionUtterance.text = this.instruction;
-        instructionUtterance.lang = this.currentUser.language;
-        instructionUtterance.rate = 1;
-        speechSynthesis.speak(instructionUtterance);
+      if ((this.soundEnabled || this.currentUser.volume > 0) && this.content.sound) {
+
+        if(this.previous == null) {
+          var instructionUtterance = new SpeechSynthesisUtterance();
+          instructionUtterance.text = this.instruction;
+          instructionUtterance.lang = this.currentUser.language;
+          instructionUtterance.rate = 1;
+          speechSynthesis.speak(instructionUtterance);
+        }
+        else {
+          if(!this.grouped && (this.previous.instruction != this.instruction)) {
+            var instructionUtterance = new SpeechSynthesisUtterance();
+            instructionUtterance.text = this.instruction;
+            instructionUtterance.lang = this.currentUser.language;
+            instructionUtterance.rate = 1;
+            speechSynthesis.speak(instructionUtterance);
+          }
+        }
 
         var contentUtterance = new SpeechSynthesisUtterance();
         contentUtterance.text = this.content.sound;
@@ -56,7 +71,7 @@ module RecreIO {
         speechSynthesis.speak(contentUtterance);
       }
 
-      this.isTesting = (this.getParameterByName('testing') == 'true');
+      this.isTesting = (this.client.getParameterByName('testing') == 'true');
 
       return this;
     };
@@ -135,13 +150,6 @@ module RecreIO {
         this.mouseInterval++;
       }
     };
-
-    private getParameterByName = (name: string) => {
-      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-          results = regex.exec(location.search);
-      return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
   }
 
 }

@@ -66,15 +66,25 @@ module RecreIO {
 
         if (this._grouped) exerciseParams.grouped = this._grouped;
         if (this._limit) exerciseParams.limit = this._limit;
-        if (this._sound) exerciseParams.sound = this._sound;
+        if (this._sound) exerciseParams.sound = this._sound || (this.client.currentUser.volume > 0);
 
         this.client.sendRequest('GET', 'users/me/exercises', {}, exerciseParams).then((body: string) => {
           var data = JSON.parse(body);
-          var exercises = [];
+          var exercises: RecreIO.Exercise[] = [];
+          var previousExercise: RecreIO.Exercise = null;
 
-          data.forEach((exercise: any) => {
-              exercises.push(new RecreIO.Exercise(this.client, this.client.currentUser, exercise, exercise.template, this._sound, this._timed));
-          });
+          for(var i = 0; i < data.length; i++) {
+              var currentExercise = new RecreIO.Exercise(this.client, this.client.currentUser, data[i], data[i].template, this._sound, this._timed, this._grouped);
+
+              if(previousExercise) {
+                  previousExercise.next = currentExercise;
+                  currentExercise.previous = previousExercise;
+              }
+
+              previousExercise = currentExercise;
+
+              exercises.push(currentExercise);
+          }
 
           resolve(exercises);
 

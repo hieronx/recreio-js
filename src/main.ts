@@ -127,7 +127,7 @@ module RecreIO {
           data.groups.forEach((group: any) => {
             this.currentUserGroups.push(new Group(group.id, group.name, group.role, group.type, group.parentId));
           });
-          this.currentUser = new User(data.id, data.firstName, data.lastName, data.displayName, data.permissions, data.avatar, data.language, data.gender, data.createdAt, data.createdBy, this.currentUserGroups, data.email, data.username, data.visualPassword);
+          this.currentUser = new User(data.id, data.firstName, data.lastName, data.displayName, data.permissions, data.avatar, data.language, data.gender, data.createdAt, data.createdBy, this.currentUserGroups, data.volume, data.email, data.username, data.visualPassword);
 
           resolve(data);
 
@@ -135,31 +135,6 @@ module RecreIO {
           console.error(error);
           reject(error);
         });
-      });
-    };
-
-    private exercises: any[] = [];
-    private exerciseIndex: number = 0;
-
-    /**
-     * ...
-     */
-    public getNextExercise = (template: string = 'true-false', soundEnabled: boolean = false): any => {
-      return new Promise((resolve, reject) => {
-        if (this.exercises.length == 0 || this.exerciseIndex == this.exercises.length - 1) {
-            this.exerciseIndex = 0;
-
-            this.sendRequest('GET', 'users/me/exercises?template=' + template + '&sound=' + soundEnabled).then((body: string) => {
-                this.exercises = JSON.parse(body);
-                resolve(new RecreIO.Exercise(this, this.currentUser, this.exercises[0], template, soundEnabled));
-            }).catch((error) => {
-                reject(error);
-            });
-
-        } else {
-            this.exerciseIndex += 1;
-            resolve(new RecreIO.Exercise(this, this.currentUser, this.exercises[this.exerciseIndex], template, soundEnabled));
-        }
       });
     };
 
