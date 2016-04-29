@@ -21,10 +21,18 @@ declare module RecreIO {
        getTranslations(): Promise<any>;
 
        content(): ContentQuery;
+
+       achievements(): Achievements;
     }
 
     class Translations {
         get(key: String): string;
+    }
+
+    class Achievements {
+      constructor(client: RecreIO.Client);
+
+      get(achievementId: number): any;
     }
 
     class Exercise {
@@ -52,7 +60,7 @@ declare module RecreIO {
         private mouseInterval;
 
         constructor(template: string, pattern?: string, instruction?: string, exercise?: any, timed?: boolean);
-        
+
         begin(): Exercise;
         save(success: boolean): any;
     }
@@ -93,5 +101,5 @@ declare module RecreIO {
         private type: string;
         private parentId: number;
     }
-    
+
 }

@@ -9,6 +9,7 @@
 /// <reference path="Exercise.ts" />
 /// <reference path="ContentQuery.ts" />
 /// <reference path="User.ts" />
+/// <reference path="Achievements.ts" />
 
 declare var bluebird: any;
 
@@ -76,7 +77,7 @@ module RecreIO {
     /**
      * ...
      */
-    private sendRequest = (method: string, to: string, payload?: any, params?: any) => {
+    public sendRequest = (method: string, to: string, payload?: any, params?: any) => {
       return new Promise((resolve, reject) => {
         var httpRequest = new XMLHttpRequest();
         var _params = params || {};
@@ -210,6 +211,13 @@ module RecreIO {
      */
     public content = (): RecreIO.ContentQuery => {
         return new RecreIO.ContentQuery(this);
+    }
+
+    /**
+     *
+     */
+    public achievements = (): RecreIO.Achievements => {
+        return new RecreIO.Achievements(this);
     }
 
   }

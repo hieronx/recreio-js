@@ -256,11 +256,47 @@ var RecreIO;
  * Copyright 2015-2016, Recreio
  * Released under the MIT license.
  */
+var RecreIO;
+(function (RecreIO) {
+    var Achievements = (function () {
+        function Achievements(client) {
+            var _this = this;
+            this.client = client;
+            this.get = function (achievementId) {
+                if (_this.achievements) {
+                    return _this.achievements.filter(function (achievement) { return achievement.id == achievementId; })[0];
+                }
+                else {
+                    _this.achievementPromise.then(function (achievements) {
+                        return achievements.filter(function (achievement) { return achievement.id == achievementId; })[0];
+                    });
+                }
+            };
+            this.achievementPromise = new Promise(function (resolve, reject) {
+                _this.client.sendRequest('GET', 'achievements').then(function (body) {
+                    _this.achievements = JSON.parse(body);
+                    resolve(_this.achievements);
+                }).catch(function (error) {
+                    reject(error);
+                });
+            });
+            return this;
+        }
+        return Achievements;
+    })();
+    RecreIO.Achievements = Achievements;
+})(RecreIO || (RecreIO = {}));
+/**
+ * Recreio JavaScript SDK
+ * Copyright 2015-2016, Recreio
+ * Released under the MIT license.
+ */
 /// <reference path="../typings/bluebird/bluebird.d.ts" />
 /// <reference path="../typings/webspeechapi/webspeechapi.d.ts" />
 /// <reference path="Exercise.ts" />
 /// <reference path="ContentQuery.ts" />
 /// <reference path="User.ts" />
+/// <reference path="Achievements.ts" />
 var RecreIO;
 (function (RecreIO) {
     var Translations = (function () {
@@ -426,6 +462,12 @@ var RecreIO;
              */
             this.content = function () {
                 return new RecreIO.ContentQuery(_this);
+            };
+            /**
+             *
+             */
+            this.achievements = function () {
+                return new RecreIO.Achievements(_this);
             };
             this.getAccount();
         }
