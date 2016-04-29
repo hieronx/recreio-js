@@ -263,14 +263,16 @@ var RecreIO;
             var _this = this;
             this.client = client;
             this.get = function (achievementId) {
-                if (_this.achievements) {
-                    return _this.achievements.filter(function (achievement) { return achievement.id == achievementId; })[0];
-                }
-                else {
-                    _this.achievementPromise.then(function (achievements) {
-                        return achievements.filter(function (achievement) { return achievement.id == achievementId; })[0];
-                    });
-                }
+                return new Promise(function (resolve, reject) {
+                    if (_this.achievements) {
+                        resolve(_this.achievements.filter(function (achievement) { return achievement.id == achievementId; })[0]);
+                    }
+                    else {
+                        _this.achievementPromise.then(function (achievements) {
+                            resolve(achievements.filter(function (achievement) { return achievement.id == achievementId; })[0]);
+                        });
+                    }
+                });
             };
             this.unlockedAchievements = [];
             this.achievementSound = new Audio('http://offerijns.nl/AchievementUnlocked.mp3');

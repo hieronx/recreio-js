@@ -26,13 +26,15 @@ module RecreIO {
     }
 
     public get = (achievementId: number): any => {
-      if (this.achievements) {
-        return this.achievements.filter((achievement: any) => { return achievement.id == achievementId })[0];
-      } else {
-        this.achievementPromise.then((achievements: any[]) => {
-          return achievements.filter((achievement: any) => { return achievement.id == achievementId })[0];
-        });
-      }
+      return new Promise((resolve, reject) => {
+        if (this.achievements) {
+          resolve(this.achievements.filter((achievement: any) => { return achievement.id == achievementId })[0]);
+        } else {
+          this.achievementPromise.then((achievements: any[]) => {
+            resolve(achievements.filter((achievement: any) => { return achievement.id == achievementId })[0]);
+          });
+        }
+      });
     }
 
     private unlockedAchievements: boolean[] = [];
