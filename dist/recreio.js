@@ -291,21 +291,23 @@ var RecreIO;
             this.completed = false;
             this.achievementSound = new Audio('http://offerijns.nl/AchievementUnlocked.mp3');
             this.complete = function () {
-                _this.completed = true;
-                _this.achievementSound.play();
-                _this.updateState('completed');
-                // add inline css
-                document.head.insertAdjacentHTML('beforeend', '<style>.notification { transition: opacity 1s ease-in-out; position: relative; bottom: 120px; margin: 0 auto; z-index: 9999; width: 260px; box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1), 0px 8px 8px 0px rgba(0, 0, 0, 0.07), 0px 16px 8px -8px rgba(0, 0, 0, 0.06); background: rgba(51, 51, 51, 0.9); border-radius: 8px; height: 80px; } .notification img { height: 40px; width: 40px; display: inline-block; padding: 20px; float: left; } .notification .content { display: inline-block; padding: 0 20px 0 0; width: 160px; } .notification .content h2 { font-size: 11px; font-family: Arial, sans-serif; color: #ccc; text-transform: uppercase; letter-spacing: .05em; margin-top: 0; width: 160px; padding: 20px 10px 0 0; float: left; } .notification .content h3 { font-family: Arial, sans-serif; font-weight: normal; margin: 5px 0; color: white; }</style>');
-                // add achievement element
-                document.body.insertAdjacentHTML('beforeend', '<div class="notification notification-achievement" id="last-achievement" style="opacity: 0;"><img src="http://offerijns.nl/achievement-icon.png" alt=""><div class="content"><h2>Achievement unlocked</h2><h3>' + _this.name + '</h3></div></div>');
-                // fade in now, fade out after 3s
-                document.getElementById('last-achievement').style.opacity = '1';
-                setTimeout(function () { document.getElementById('last-achievement').style.opacity = '0'; }, 3000);
-                setTimeout(function () { document.getElementById('last-achievement').outerHTML = ''; }, 4000);
+                if (!_this.completed) {
+                    _this.completed = true;
+                    _this.achievementSound.play();
+                    _this.updateState('completed');
+                    // add inline css
+                    document.head.insertAdjacentHTML('beforeend', '<style>.notification { transition: opacity 1s ease-in-out; position: relative; bottom: 120px; margin: 0 auto; z-index: 9999; width: 260px; box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1), 0px 8px 8px 0px rgba(0, 0, 0, 0.07), 0px 16px 8px -8px rgba(0, 0, 0, 0.06); background: rgba(51, 51, 51, 0.9); border-radius: 8px; height: 80px; } .notification img { height: 40px; width: 40px; display: inline-block; padding: 20px; float: left; } .notification .content { display: inline-block; padding: 0 20px 0 0; width: 160px; } .notification .content h2 { font-size: 11px; font-family: Arial, sans-serif; color: #ccc; text-transform: uppercase; letter-spacing: .05em; margin-top: 0; width: 160px; padding: 20px 10px 0 0; float: left; } .notification .content h3 { font-family: Arial, sans-serif; font-weight: normal; margin: 5px 0; color: white; }</style>');
+                    // add achievement element
+                    document.body.insertAdjacentHTML('beforeend', '<div class="notification notification-achievement" id="last-achievement" style="opacity: 0;"><img src="http://offerijns.nl/achievement-icon.png" alt=""><div class="content"><h2>Achievement unlocked</h2><h3>' + _this.name + '</h3></div></div>');
+                    // fade in now, fade out after 3s
+                    document.getElementById('last-achievement').style.opacity = '1';
+                    setTimeout(function () { document.getElementById('last-achievement').style.opacity = '0'; }, 3000);
+                    setTimeout(function () { document.getElementById('last-achievement').outerHTML = ''; }, 4000);
+                }
             };
             this.updateState = function (newState) {
                 if (newState === void 0) { newState = 'completed'; }
-                return _this.client.sendRequest('PUT', 'users/me/achievements/' + _this.id + '/state', newState);
+                return _this.client.sendRequest('PUT', 'users/me/achievements/' + _this.id + '/state', newState, {}, 'text/plain');
             };
             for (var k in achievement)
                 this[k] = achievement[k];
@@ -376,15 +378,21 @@ var RecreIO;
             /**
              * ...
              */
-            this.sendRequest = function (method, to, payload, params) {
+            this.sendRequest = function (method, to, payload, params, contentType) {
                 return new Promise(function (resolve, reject) {
                     var httpRequest = new XMLHttpRequest();
                     var _params = params || {};
+                    var _contentType = contentType || 'application/json';
                     var url = 'https://api.recre.io/' + to + _this.parseParams(_params);
-                    var encodedPayload = JSON.stringify(payload);
+                    if (_contentType == 'application/json') {
+                        var encodedPayload = JSON.stringify(payload);
+                    }
+                    else {
+                        var encodedPayload = payload;
+                    }
                     httpRequest.open(method, url, true);
-                    httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                    httpRequest.setRequestHeader("X-API-Key", _this.apiKey);
+                    httpRequest.setRequestHeader('Content-Type', _contentType + ';charset=UTF-8');
+                    httpRequest.setRequestHeader('X-API-Key', _this.apiKey);
                     httpRequest.withCredentials = true; // Send cookies with CORS requests
                     httpRequest.send(encodedPayload);
                     httpRequest.onreadystatechange = function () {

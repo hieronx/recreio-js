@@ -77,17 +77,23 @@ module RecreIO {
     /**
      * ...
      */
-    public sendRequest = (method: string, to: string, payload?: any, params?: any) => {
+    public sendRequest = (method: string, to: string, payload?: any, params?: any, contentType?: string) => {
       return new Promise((resolve, reject) => {
         var httpRequest = new XMLHttpRequest();
         var _params = params || {};
+        var _contentType = contentType || 'application/json';
 
         var url: string = 'https://api.recre.io/' + to + this.parseParams(_params);
-        var encodedPayload: string = JSON.stringify(payload);
+
+        if (_contentType == 'application/json') {
+          var encodedPayload: string = JSON.stringify(payload);
+        } else {
+          var encodedPayload: string = payload;
+        }
 
         httpRequest.open(method, url, true);
-        httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        httpRequest.setRequestHeader("X-API-Key", this.apiKey);
+        httpRequest.setRequestHeader('Content-Type', _contentType + ';charset=UTF-8');
+        httpRequest.setRequestHeader('X-API-Key', this.apiKey);
         httpRequest.withCredentials = true; // Send cookies with CORS requests
         httpRequest.send(encodedPayload);
 
