@@ -305,7 +305,7 @@ var RecreIO;
             };
             this.updateState = function (newState) {
                 if (newState === void 0) { newState = 'completed'; }
-                return _this.client.sendRequest('PUT', 'users/me/achievements/' + _this.achievement.id + '/state', newState);
+                return _this.client.sendRequest('PUT', 'users/me/achievements/' + _this.id + '/state', newState);
             };
             for (var k in achievement)
                 this[k] = achievement[k];

@@ -73,7 +73,7 @@ module RecreIO {
     }
 
     private updateState = (newState: string = 'completed') => {
-      return this.client.sendRequest('PUT', 'users/me/achievements/' + this.achievement.id + '/state', newState);
+      return this.client.sendRequest('PUT', 'users/me/achievements/' + this.id + '/state', newState);
     }
 
   }
