@@ -54,6 +54,10 @@ module RecreIO {
       delete this.achievement;
     }
 
+    public reveal = () => {
+      this.updateState('visible');
+    }
+
     public complete = () => {
       if (!this.completed) {
         this.completed = true;
