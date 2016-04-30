@@ -270,16 +270,13 @@ var RecreIO;
                 else
                     return null;
             };
-            this.achievementPromise = new Promise(function (resolve, reject) {
-                _this.client.sendRequest('GET', 'achievements').then(function (body) {
-                    var achievements = JSON.parse(body);
-                    for (var i = 0; i < achievements.length; i++) {
-                        _this.achievements.push(new RecreIO.Achievement(_this.client, achievements[i]));
-                    }
-                    resolve(_this);
-                }).catch(function (error) {
-                    reject(error);
-                });
+            this.client.sendRequest('GET', 'achievements').then(function (body) {
+                var achievements = JSON.parse(body);
+                for (var i = 0; i < achievements.length; i++) {
+                    _this.achievements.push(new RecreIO.Achievement(_this.client, achievements[i]));
+                }
+            }).catch(function (error) {
+                console.error('Failed to retrieve the achievements');
             });
             return this;
         }

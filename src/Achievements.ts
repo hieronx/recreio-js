@@ -13,19 +13,15 @@ module RecreIO {
     private achievementPromise: any;
 
     constructor(private client: RecreIO.Client) {
-      this.achievementPromise = new Promise((resolve, reject) => {
-        this.client.sendRequest('GET', 'achievements').then((body: string) => {
-          var achievements = JSON.parse(body);
+      this.client.sendRequest('GET', 'achievements').then((body: string) => {
+        var achievements = JSON.parse(body);
 
-          for(var i = 0; i < achievements.length; i++) {
-              this.achievements.push(new RecreIO.Achievement(this.client, achievements[i]));
-          }
-
-          resolve(this);
-        }).catch((error) => {
-          reject(error);
-        });
-      })
+        for(var i = 0; i < achievements.length; i++) {
+            this.achievements.push(new RecreIO.Achievement(this.client, achievements[i]));
+        }
+      }).catch((error) => {
+        console.error('Failed to retrieve the achievements');
+      });
 
       return this;
     }
