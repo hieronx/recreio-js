@@ -45,26 +45,19 @@ client.getNextExercise(template, soundEnabled).then(function(exercise) {
 });
 ```
 
-To simplify development of custom features, you can store any kind of (JSON-based) data for the currently authenticated user.
-
-```js
-RecreIO.userStorage.get(key); // retrieve a user setting
-RecreIO.userStorage.set(key, value); // create or update a user setting
-```
-
 Achievements
 --------
 
 ```js
 // Initially, you should retrieve all achievements,
 // to ensure that all relevant data is already loaded.
-var achievements = Recreio.achievements();
+client.achievements().bind(this).then((achievements: RecreIO.Achievement[]) => {
+  var sampleAchievement = achievements.get(1); // retrieve achievement by id = 1
+  sampleAchievement.reveal(); // reveal the achievement
+  sampleAchievement.complete(); // complete the achievement
 
-var sampleAchievement = achievements.get(1); // retrieve achievement by id = 1
-sampleAchievement.reveal(); // reveal the achievement
-sampleAchievement.complete(); // complete the achievement
-
-sampleAchievement.increment(1); // increment the completed steps by 1
+  sampleAchievement.increment(1); // increment the completed steps by 1
+});
 ```
 
 Feedback
