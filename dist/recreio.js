@@ -262,40 +262,21 @@ var RecreIO;
         function Achievements(client) {
             var _this = this;
             this.client = client;
+            this.achievements = [];
             this.get = function (achievementId) {
-                return new Promise(function (resolve, reject) {
-                    if (_this.achievements) {
-                        resolve(_this.achievements.filter(function (achievement) { return achievement.id == achievementId; })[0]);
-                    }
-                    else {
-                        _this.achievementPromise.then(function (achievements) {
-                            resolve(achievements.filter(function (achievement) { return achievement.id == achievementId; })[0]);
-                        });
-                    }
-                });
-            };
-            this.unlockedAchievements = [];
-            this.achievementSound = new Audio('http://offerijns.nl/AchievementUnlocked.mp3');
-            this.complete = function (achievementId) {
-                if (!_this.unlockedAchievements[achievementId]) {
-                    _this.unlockedAchievements[achievementId] = true;
-                    _this.get(achievementId).then(function (achievement) {
-                        _this.achievementSound.play();
-                        // add inline css
-                        document.head.insertAdjacentHTML('beforeend', '<style>.notification { transition: opacity 1s ease-in-out; position: relative; bottom: 120px; margin: 0 auto; z-index: 9999; width: 260px; box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1), 0px 8px 8px 0px rgba(0, 0, 0, 0.07), 0px 16px 8px -8px rgba(0, 0, 0, 0.06); background: rgba(51, 51, 51, 0.9); border-radius: 8px; height: 80px; } .notification img { height: 40px; width: 40px; display: inline-block; padding: 20px; float: left; } .notification .content { display: inline-block; padding: 0 20px 0 0; width: 160px; } .notification .content h2 { font-size: 11px; font-family: Arial, sans-serif; color: #ccc; text-transform: uppercase; letter-spacing: .05em; margin-top: 0; width: 160px; padding: 20px 10px 0 0; float: left; } .notification .content h3 { font-family: Arial, sans-serif; font-weight: normal; margin: 5px 0; color: white; }</style>');
-                        // add achievement element
-                        document.body.insertAdjacentHTML('beforeend', '<div class="notification notification-achievement" id="last-achievement" style="opacity: 0;"><img src="http://offerijns.nl/achievement-icon.png" alt=""><div class="content"><h2>Achievement unlocked</h2><h3>' + achievement.name + '</h3></div></div>');
-                        // fade in now, fade out after 3s
-                        document.getElementById('last-achievement').style.opacity = '1';
-                        setTimeout(function () { document.getElementById('last-achievement').style.opacity = '0'; }, 3000);
-                        setTimeout(function () { document.getElementById('last-achievement').outerHTML = ''; }, 4000);
-                    });
-                }
+                var results = _this.achievements.filter(function (achievement) { return achievement.id == achievementId; });
+                if (results[0])
+                    return results[0];
+                else
+                    return null;
             };
             this.achievementPromise = new Promise(function (resolve, reject) {
                 _this.client.sendRequest('GET', 'achievements').then(function (body) {
-                    _this.achievements = JSON.parse(body);
-                    resolve(_this.achievements);
+                    var achievements = JSON.parse(body);
+                    for (var i = 0; i < achievements.length; i++) {
+                        _this.achievements.push(new RecreIO.Achievement(_this.client, achievements[i]));
+                    }
+                    resolve(_this);
                 }).catch(function (error) {
                     reject(error);
                 });
@@ -305,6 +286,37 @@ var RecreIO;
         return Achievements;
     })();
     RecreIO.Achievements = Achievements;
+    var Achievement = (function () {
+        function Achievement(client, achievement) {
+            var _this = this;
+            this.client = client;
+            this.achievement = achievement;
+            this.completed = false;
+            this.achievementSound = new Audio('http://offerijns.nl/AchievementUnlocked.mp3');
+            this.complete = function () {
+                _this.completed = true;
+                _this.achievementSound.play();
+                _this.updateState('completed');
+                // add inline css
+                document.head.insertAdjacentHTML('beforeend', '<style>.notification { transition: opacity 1s ease-in-out; position: relative; bottom: 120px; margin: 0 auto; z-index: 9999; width: 260px; box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1), 0px 8px 8px 0px rgba(0, 0, 0, 0.07), 0px 16px 8px -8px rgba(0, 0, 0, 0.06); background: rgba(51, 51, 51, 0.9); border-radius: 8px; height: 80px; } .notification img { height: 40px; width: 40px; display: inline-block; padding: 20px; float: left; } .notification .content { display: inline-block; padding: 0 20px 0 0; width: 160px; } .notification .content h2 { font-size: 11px; font-family: Arial, sans-serif; color: #ccc; text-transform: uppercase; letter-spacing: .05em; margin-top: 0; width: 160px; padding: 20px 10px 0 0; float: left; } .notification .content h3 { font-family: Arial, sans-serif; font-weight: normal; margin: 5px 0; color: white; }</style>');
+                // add achievement element
+                document.body.insertAdjacentHTML('beforeend', '<div class="notification notification-achievement" id="last-achievement" style="opacity: 0;"><img src="http://offerijns.nl/achievement-icon.png" alt=""><div class="content"><h2>Achievement unlocked</h2><h3>' + _this.name + '</h3></div></div>');
+                // fade in now, fade out after 3s
+                document.getElementById('last-achievement').style.opacity = '1';
+                setTimeout(function () { document.getElementById('last-achievement').style.opacity = '0'; }, 3000);
+                setTimeout(function () { document.getElementById('last-achievement').outerHTML = ''; }, 4000);
+            };
+            this.updateState = function (newState) {
+                if (newState === void 0) { newState = 'completed'; }
+                return _this.client.sendRequest('PUT', 'users/me/achievements/' + _this.achievement.id + '/state', newState);
+            };
+            for (var k in achievement)
+                this[k] = achievement[k];
+            delete this.achievement;
+        }
+        return Achievement;
+    })();
+    RecreIO.Achievement = Achievement;
 })(RecreIO || (RecreIO = {}));
 /**
  * Recreio JavaScript SDK
