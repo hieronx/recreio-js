@@ -14,19 +14,19 @@ declare module RecreIO {
        // signIn(provider: any): Promise<any>;
        signInWithUsername(username: string, password: string): Promise<any>;
        // signInWithEmail(email: string, password: string): Promise<any>;
-       getAccount(): Promise<any>;
 
+       getUser(): Promise<any>;
        getNextExercise(template: string, soundEnabled: boolean): Promise<Exercise>;
-
        getTranslations(): Promise<any>;
 
        content(): ContentQuery;
-
        achievements(): Achievements;
     }
 
     class Translations {
-        get(key: String): string;
+      public data: any
+
+      get(key: String): string;
     }
 
     class Achievements {

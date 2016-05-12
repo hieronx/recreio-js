@@ -44,7 +44,7 @@ module RecreIO {
      * Create a new RecreIO client with your API key.
      */
     constructor(private apiKey: string) {
-      this.getAccount()
+      this.getUser()
     }
 
 
@@ -125,24 +125,7 @@ module RecreIO {
      * ...
      */
     public getAccount = (): any => {
-      return new Promise((resolve, reject) => {
-        this.sendRequest('GET', 'users/me').then((body: string) => {
-          var data = JSON.parse(body);
 
-          this.currentUserGroups = [];
-
-          data.groups.forEach((group: any) => {
-            this.currentUserGroups.push(new Group(group.id, group.name, group.role, group.type, group.parentId));
-          });
-          this.currentUser = new User(data.id, data.firstName, data.lastName, data.displayName, data.permissions, data.avatar, data.language, data.gender, data.createdAt, data.createdBy, this.currentUserGroups, data.volume, data.email, data.username, data.visualPassword);
-
-          resolve(data);
-
-        }).catch(function(error) {
-          console.error(error);
-          reject(error);
-        });
-      });
     };
 
     public getUser = (): Promise<any>  => {
@@ -152,7 +135,24 @@ module RecreIO {
         })
       }
       else {
-        return this.getAccount();
+        return new Promise((resolve, reject) => {
+          this.sendRequest('GET', 'users/me').then((body: string) => {
+            var data = JSON.parse(body);
+
+            this.currentUserGroups = [];
+
+            data.groups.forEach((group: any) => {
+              this.currentUserGroups.push(new Group(group.id, group.name, group.role, group.type, group.parentId));
+            });
+            this.currentUser = new User(data.id, data.firstName, data.lastName, data.displayName, data.permissions, data.avatar, data.language, data.gender, data.createdAt, data.createdBy, this.currentUserGroups, data.volume, data.email, data.username, data.visualPassword);
+
+            resolve(data);
+
+          }).catch(function(error) {
+            console.error(error);
+            reject(error);
+          });
+        });
       }
     };
 

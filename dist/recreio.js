@@ -290,6 +290,9 @@ var RecreIO;
             this.achievement = achievement;
             this.completed = false;
             this.achievementSound = new Audio('http://offerijns.nl/AchievementUnlocked.mp3');
+            this.reveal = function () {
+                _this.updateState('visible');
+            };
             this.complete = function () {
                 if (!_this.completed) {
                     _this.completed = true;
@@ -422,20 +425,6 @@ var RecreIO;
              * ...
              */
             this.getAccount = function () {
-                return new Promise(function (resolve, reject) {
-                    _this.sendRequest('GET', 'users/me').then(function (body) {
-                        var data = JSON.parse(body);
-                        _this.currentUserGroups = [];
-                        data.groups.forEach(function (group) {
-                            _this.currentUserGroups.push(new RecreIO.Group(group.id, group.name, group.role, group.type, group.parentId));
-                        });
-                        _this.currentUser = new RecreIO.User(data.id, data.firstName, data.lastName, data.displayName, data.permissions, data.avatar, data.language, data.gender, data.createdAt, data.createdBy, _this.currentUserGroups, data.volume, data.email, data.username, data.visualPassword);
-                        resolve(data);
-                    }).catch(function (error) {
-                        console.error(error);
-                        reject(error);
-                    });
-                });
             };
             this.getUser = function () {
                 if (_this.currentUser) {
@@ -444,7 +433,20 @@ var RecreIO;
                     });
                 }
                 else {
-                    return _this.getAccount();
+                    return new Promise(function (resolve, reject) {
+                        _this.sendRequest('GET', 'users/me').then(function (body) {
+                            var data = JSON.parse(body);
+                            _this.currentUserGroups = [];
+                            data.groups.forEach(function (group) {
+                                _this.currentUserGroups.push(new RecreIO.Group(group.id, group.name, group.role, group.type, group.parentId));
+                            });
+                            _this.currentUser = new RecreIO.User(data.id, data.firstName, data.lastName, data.displayName, data.permissions, data.avatar, data.language, data.gender, data.createdAt, data.createdBy, _this.currentUserGroups, data.volume, data.email, data.username, data.visualPassword);
+                            resolve(data);
+                        }).catch(function (error) {
+                            console.error(error);
+                            reject(error);
+                        });
+                    });
                 }
             };
             this.getParameterByName = function (name) {
@@ -487,7 +489,7 @@ var RecreIO;
             this.achievements = function () {
                 return new RecreIO.Achievements(_this);
             };
-            this.getAccount();
+            this.getUser();
         }
         /** The host of the API. */
         Client.API_URL = "https://api.recre.io/";
