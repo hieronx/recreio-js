@@ -8,7 +8,6 @@
 
 declare module RecreIO {
    class Client {
-
        constructor(apiKey: string);
 
        // signIn(provider: any): Promise<any>;

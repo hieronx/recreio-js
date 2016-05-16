@@ -76,7 +76,7 @@ module RecreIO {
       return this;
     };
 
-    public save = (success): any => {
+    public save = (success: boolean): any => {
       if (!this.startTime) {
           console.error("Exercise hasn't started yet.");
           return false;
@@ -143,7 +143,7 @@ module RecreIO {
         y: event.pageY
       };
     };
-    
+
     private getMousePosition = (): void => {
       if (this.mousePosition && this.mousePosition.x && this.mousePosition.y) {
         this.mouseMovement[this.mouseInterval] = { x: this.mousePosition.x, y: this.mousePosition.y };

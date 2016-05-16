@@ -263,6 +263,7 @@ var RecreIO;
             var _this = this;
             this.client = client;
             this.achievements = [];
+            this.currentStreak = 0;
             this.get = function (achievementId) {
                 var results = _this.achievements.filter(function (achievement) { return achievement.id == achievementId; });
                 if (results[0])
@@ -270,10 +271,20 @@ var RecreIO;
                 else
                     return null;
             };
+            this.incrementStreak = function () {
+                if (_this.get(4).state != 'completed')
+                    _this.get(4).increment(1);
+                else if (_this.get(5).state != 'completed')
+                    _this.get(5).increment(1);
+                else if (_this.get(6).state != 'completed')
+                    _this.get(6).increment(1);
+                else if (_this.get(7).state != 'completed')
+                    _this.get(7).increment(1);
+            };
             this.client.sendRequest('GET', 'achievements').then(function (body) {
                 var achievements = JSON.parse(body);
                 for (var i = 0; i < achievements.length; i++) {
-                    _this.achievements.push(new RecreIO.Achievement(_this.client, achievements[i]));
+                    _this.achievements.push(new RecreIO.Achievement(_this.client, achievements[i].achievement, achievements[i].state, achievements[i].completedSteps));
                 }
             }).catch(function (error) {
                 console.error('Failed to retrieve the achievements');
@@ -284,32 +295,49 @@ var RecreIO;
     })();
     RecreIO.Achievements = Achievements;
     var Achievement = (function () {
-        function Achievement(client, achievement) {
+        function Achievement(client, achievement, state, completedSteps) {
             var _this = this;
+            if (state === void 0) { state = 'visible'; }
+            if (completedSteps === void 0) { completedSteps = 0; }
             this.client = client;
             this.achievement = achievement;
-            this.completed = false;
+            this.state = state;
+            this.completedSteps = completedSteps;
             this.achievementSound = new Audio('http://offerijns.nl/AchievementUnlocked.mp3');
             this.reveal = function () {
                 _this.updateState('visible');
             };
             this.complete = function () {
-                if (!_this.completed) {
-                    _this.completed = true;
-                    _this.achievementSound.play();
+                if (_this.state != 'completed') {
                     _this.updateState('completed');
-                    // add inline css
-                    document.head.insertAdjacentHTML('beforeend', '<style>.notification { transition: opacity 1s ease-in-out; position: relative; bottom: 120px; margin: 0 auto; z-index: 9999; width: 260px; box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1), 0px 8px 8px 0px rgba(0, 0, 0, 0.07), 0px 16px 8px -8px rgba(0, 0, 0, 0.06); background: rgba(51, 51, 51, 0.9); border-radius: 8px; height: 80px; } .notification img { height: 40px; width: 40px; display: inline-block; padding: 20px; float: left; } .notification .content { display: inline-block; padding: 0 20px 0 0; width: 160px; } .notification .content h2 { font-size: 11px; font-family: Arial, sans-serif; color: #ccc; text-transform: uppercase; letter-spacing: .05em; margin-top: 0; width: 160px; padding: 20px 10px 0 0; float: left; } .notification .content h3 { font-family: Arial, sans-serif; font-weight: normal; margin: 5px 0; color: white; }</style>');
-                    // add achievement element
-                    document.body.insertAdjacentHTML('beforeend', '<div class="notification notification-achievement" id="last-achievement" style="opacity: 0;"><img src="http://offerijns.nl/achievement-icon.png" alt=""><div class="content"><h2>Achievement unlocked</h2><h3>' + _this.name + '</h3></div></div>');
-                    // fade in now, fade out after 3s
-                    document.getElementById('last-achievement').style.opacity = '1';
-                    setTimeout(function () { document.getElementById('last-achievement').style.opacity = '0'; }, 3000);
-                    setTimeout(function () { document.getElementById('last-achievement').outerHTML = ''; }, 4000);
+                    _this.show();
                 }
+            };
+            this.increment = function (steps) {
+                if (steps === void 0) { steps = 1; }
+                if (_this.state != 'completed' && _this.isIncremental) {
+                    _this.completedSteps += steps;
+                    _this.client.sendRequest('PUT', 'users/me/achievements/' + _this.id + '/steps', _this.completedSteps, {}, 'text/plain');
+                    if (_this.completedSteps >= _this.totalSteps) {
+                        _this.state = 'completed';
+                        _this.show();
+                    }
+                }
+            };
+            this.show = function () {
+                _this.achievementSound.play();
+                // add inline css
+                document.head.insertAdjacentHTML('beforeend', '<style>.notification { transition: opacity 1s ease-in-out; position: relative; bottom: 120px; margin: 0 auto; z-index: 9999; width: 260px; box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1), 0px 8px 8px 0px rgba(0, 0, 0, 0.07), 0px 16px 8px -8px rgba(0, 0, 0, 0.06); background: rgba(51, 51, 51, 0.9); border-radius: 8px; height: 80px; } .notification img { height: 40px; width: 40px; display: inline-block; padding: 20px; float: left; } .notification .content { display: inline-block; padding: 0 20px 0 0; width: 160px; } .notification .content h2 { font-size: 11px; font-family: Arial, sans-serif; color: #ccc; text-transform: uppercase; letter-spacing: .05em; margin-top: 0; width: 160px; padding: 20px 10px 0 0; float: left; } .notification .content h3 { font-family: Arial, sans-serif; font-weight: normal; margin: 5px 0; color: white; }</style>');
+                // add achievement element
+                document.body.insertAdjacentHTML('beforeend', '<div class="notification notification-achievement" id="last-achievement" style="opacity: 0;"><img src="http://offerijns.nl/achievement-icon.png" alt=""><div class="content"><h2>Achievement unlocked</h2><h3>' + _this.name + '</h3></div></div>');
+                // fade in now, fade out after 3s
+                document.getElementById('last-achievement').style.opacity = '1';
+                setTimeout(function () { document.getElementById('last-achievement').style.opacity = '0'; }, 3000);
+                setTimeout(function () { document.getElementById('last-achievement').outerHTML = ''; }, 4000);
             };
             this.updateState = function (newState) {
                 if (newState === void 0) { newState = 'completed'; }
+                _this.state = newState;
                 return _this.client.sendRequest('PUT', 'users/me/achievements/' + _this.id + '/state', newState, {}, 'text/plain');
             };
             for (var k in achievement)
@@ -411,21 +439,28 @@ var RecreIO;
                 });
             };
             /**
-             * ...
+             * Sign in with your username and password
              */
             this.signInWithUsername = function (username, password) {
                 var payload = {
-                    login: username,
-                    password: password,
-                    isUsername: true
+                    username: username,
+                    password: password
+                };
+                return _this.sendRequest('POST', 'auth/callback/password', payload);
+            };
+            /**
+             * Sign in with your email address and password
+             */
+            this.signInWithEmail = function (email, password) {
+                var payload = {
+                    email: email,
+                    password: password
                 };
                 return _this.sendRequest('POST', 'auth/callback/password', payload);
             };
             /**
              * ...
              */
-            this.getAccount = function () {
-            };
             this.getUser = function () {
                 if (_this.currentUser) {
                     return new Promise(function (resolve, reject) {
@@ -487,7 +522,10 @@ var RecreIO;
              *
              */
             this.achievements = function () {
-                return new RecreIO.Achievements(_this);
+                if (!_this.achievementInstance) {
+                    _this.achievementInstance = new RecreIO.Achievements(_this);
+                }
+                return _this.achievementInstance;
             };
             this.getUser();
         }

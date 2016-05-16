@@ -40,6 +40,8 @@ module RecreIO {
     private translations: Translations = new Translations();
     private appId: number = 1;
 
+    private achievementInstance: RecreIO.Achievements;
+
     /**
      * Create a new RecreIO client with your API key.
      */
@@ -110,13 +112,23 @@ module RecreIO {
     };
 
     /**
-     * ...
+     * Sign in with your username and password
      */
     public signInWithUsername = (username: string, password: string): any => {
       var payload = {
-        login: username,
-        password: password,
-        isUsername: true
+        username: username,
+        password: password
+      };
+      return this.sendRequest('POST', 'auth/callback/password', payload);
+    };
+
+    /**
+     * Sign in with your email address and password
+     */
+    public signInWithEmail = (email: string, password: string): any => {
+      var payload = {
+        email: email,
+        password: password
       };
       return this.sendRequest('POST', 'auth/callback/password', payload);
     };
@@ -124,10 +136,6 @@ module RecreIO {
     /**
      * ...
      */
-    public getAccount = (): any => {
-
-    };
-
     public getUser = (): Promise<any>  => {
       if (this.currentUser){
         return new Promise((resolve, reject) => {
@@ -198,7 +206,10 @@ module RecreIO {
      *
      */
     public achievements = (): RecreIO.Achievements => {
-        return new RecreIO.Achievements(this);
+      if (!this.achievementInstance) {
+        this.achievementInstance = new RecreIO.Achievements(this);
+      }
+      return this.achievementInstance;
     }
 
   }

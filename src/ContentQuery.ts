@@ -22,38 +22,38 @@ module RecreIO {
     private _timed: boolean = false;
 
     public template = (template: string): RecreIO.ContentQuery => {
-        this._template = template;
-        return this;
+      this._template = template;
+      return this;
     };
 
     public patterns = (patterns: string[]): RecreIO.ContentQuery => {
-        this._patterns = patterns;
-        return this;
+      this._patterns = patterns;
+      return this;
     };
 
     public types = (types: string[]): RecreIO.ContentQuery => {
-        this._types = types;
-          return this;
+      this._types = types;
+      return this;
     };
 
     public grouped = (grouped: boolean = true): RecreIO.ContentQuery => {
-        this._grouped = grouped;
-        return this;
+      this._grouped = grouped;
+      return this;
     };
 
     public limit = (limit: number): RecreIO.ContentQuery => {
-        this._limit = limit;
-        return this;
+      this._limit = limit;
+      return this;
     };
 
     public sound = (sound: boolean): RecreIO.ContentQuery => {
-        this._sound = sound;
-        return this;
+      this._sound = sound;
+      return this;
     };
 
     public timed = (timed: boolean = false): RecreIO.ContentQuery => {
-        this._timed = timed;
-        return this;
+      this._timed = timed;
+      return this;
     }
 
     public get = (): any => {
@@ -76,7 +76,7 @@ module RecreIO {
           for(var i = 0; i < data.length; i++) {
               var currentExercise = new RecreIO.Exercise(this.client, this.client.currentUser, data[i], data[i].template, this._sound, this._timed, this._grouped);
 
-              if(previousExercise) {
+              if (previousExercise) {
                   previousExercise.next = currentExercise;
                   currentExercise.previous = previousExercise;
               }
@@ -88,7 +88,7 @@ module RecreIO {
 
           resolve(exercises);
 
-        }).catch(function(error) {
+        }).catch((error: any) => {
           reject(error);
         });
       });
