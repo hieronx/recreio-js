@@ -294,7 +294,12 @@ var RecreIO;
             this.client.sendRequest('GET', 'achievements').then(function (body) {
                 var achievements = JSON.parse(body);
                 for (var i = 0; i < achievements.length; i++) {
-                    _this.achievements.push(new RecreIO.Achievement(_this.client, achievements[i].achievement, achievements[i].state, achievements[i].completedSteps));
+                    if (achievements[i].completedSteps) {
+                        _this.achievements.push(new RecreIO.Achievement(_this.client, achievements[i].achievement, achievements[i].state, achievements[i].completedSteps));
+                    }
+                    else {
+                        _this.achievements.push(new RecreIO.Achievement(_this.client, achievements[i].achievement, achievements[i].state, 0));
+                    }
                 }
             }).catch(function (error) {
                 console.error('Failed to retrieve the achievements');

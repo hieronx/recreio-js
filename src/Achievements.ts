@@ -18,7 +18,11 @@ module RecreIO {
         var achievements = JSON.parse(body);
 
         for(var i = 0; i < achievements.length; i++) {
+          if (achievements[i].completedSteps) {
             this.achievements.push(new RecreIO.Achievement(this.client, achievements[i].achievement, achievements[i].state, achievements[i].completedSteps));
+          } else {
+            this.achievements.push(new RecreIO.Achievement(this.client, achievements[i].achievement, achievements[i].state, 0));
+          }
         }
       }).catch((error) => {
         console.error('Failed to retrieve the achievements');
