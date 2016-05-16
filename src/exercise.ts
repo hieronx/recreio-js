@@ -87,6 +87,12 @@ module RecreIO {
           return false;
       }
 
+      if (success) {
+        this.client.achievements().incrementStreak();
+      } else {
+        this.client.achievements().clearStreak();
+      }
+
       this.endTime = new Date().getTime();
       this.duration = this.endTime - this.startTime;
 

@@ -63,6 +63,12 @@ var RecreIO;
                     console.log("Results are not saved when in testing mode.");
                     return false;
                 }
+                if (success) {
+                    _this.client.achievements().incrementStreak();
+                }
+                else {
+                    _this.client.achievements().clearStreak();
+                }
                 _this.endTime = new Date().getTime();
                 _this.duration = _this.endTime - _this.startTime;
                 clearInterval(_this.mouseInterval);
@@ -272,14 +278,18 @@ var RecreIO;
                     return null;
             };
             this.incrementStreak = function () {
-                if (_this.get(4).state != 'completed')
-                    _this.get(4).increment(1);
-                else if (_this.get(5).state != 'completed')
-                    _this.get(5).increment(1);
-                else if (_this.get(6).state != 'completed')
-                    _this.get(6).increment(1);
-                else if (_this.get(7).state != 'completed')
-                    _this.get(7).increment(1);
+                _this.currentStreak++;
+                if (_this.get(4).state != 'completed' && _this.currentStreak >= 5)
+                    _this.get(4).complete();
+                else if (_this.get(5).state != 'completed' && _this.currentStreak >= 15)
+                    _this.get(5).complete();
+                else if (_this.get(6).state != 'completed' && _this.currentStreak >= 50)
+                    _this.get(6).complete();
+                else if (_this.get(7).state != 'completed' && _this.currentStreak >= 500)
+                    _this.get(7).complete();
+            };
+            this.clearStreak = function () {
+                _this.currentStreak = 0;
             };
             this.client.sendRequest('GET', 'achievements').then(function (body) {
                 var achievements = JSON.parse(body);

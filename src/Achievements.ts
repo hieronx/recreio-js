@@ -34,10 +34,16 @@ module RecreIO {
     }
 
     public incrementStreak = () => {
-      if (this.get(4).state != 'completed') this.get(4).increment(1);
-      else if (this.get(5).state != 'completed') this.get(5).increment(1);
-      else if (this.get(6).state != 'completed') this.get(6).increment(1);
-      else if (this.get(7).state != 'completed') this.get(7).increment(1);
+      this.currentStreak++;
+
+      if (this.get(4).state != 'completed' && this.currentStreak >= 5) this.get(4).complete();
+      else if (this.get(5).state != 'completed' && this.currentStreak >= 15) this.get(5).complete();
+      else if (this.get(6).state != 'completed' && this.currentStreak >= 50) this.get(6).complete();
+      else if (this.get(7).state != 'completed' && this.currentStreak >= 500) this.get(7).complete();
+    }
+
+    public clearStreak = () => {
+      this.currentStreak = 0;
     }
 
   }
