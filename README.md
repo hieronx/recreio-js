@@ -32,7 +32,8 @@ Now you can use the library to implement authentication, using:
 
 ```js
 client.signInWithUsername(username, password); // sign in using a username and password combination
-client.getAccount(); // return your account profile
+client.signInWithEmail(email, password); // sign in using a username and password combination
+client.getUser(); // return your profile
 ```
 
 Now, you can retrieve the next exercies for this user by specifying the template you wish to receive and whether sound is enabled. Once you have received this exercise, you can begin the exercise and it will start collecting data accordingly. After the user has entered an answer, you can check the result and send a boolean value to recreio.
@@ -51,11 +52,10 @@ Achievements
 ```js
 // Initially, you should retrieve all achievements,
 // to ensure that all relevant data is already loaded.
-client.achievements().bind(this).then((achievements: RecreIO.Achievement[]) => {
+client.achievements().then(function(achievements: RecreIO.Achievement[]) {
   var sampleAchievement = achievements.get(1); // retrieve achievement by id = 1
   sampleAchievement.reveal(); // reveal the achievement
   sampleAchievement.complete(); // complete the achievement
-
   sampleAchievement.increment(1); // increment the completed steps by 1
 });
 ```
