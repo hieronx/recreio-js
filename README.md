@@ -52,7 +52,7 @@ Achievements
 ```js
 // Initially, you should retrieve all achievements,
 // to ensure that all relevant data is already loaded.
-client.achievements().then(function(achievements: RecreIO.Achievement[]) {
+client.achievements().then(function(achievements) {
   var sampleAchievement = achievements.get(1); // retrieve achievement by id = 1
   sampleAchievement.reveal(); // reveal the achievement
   sampleAchievement.complete(); // complete the achievement
@@ -69,17 +69,17 @@ In the Recreio Developer Center, you create leaderboards, specifiying:
 
 ```js
 // Retrieve leaderboard with id = 1 and submit a new highscore of 100
-client.leaderboard(1).submitScore(100).then((report: IScoreReport) => {
+client.leaderboard(1).submitScore(100).then(function(report) {
   if (report.isNewDailyHighscore) console.log('This is your new daily high score!');
   if (report.isNewWeeklyHighscore) console.log('This is your new weekly high score!');
   if (report.isNewMonthlyHighscore) console.log('This is your new monthly high score!');
   if (report.isNewAllTimeHighscore) console.log('This is your new all time high score!');
 });
 
-client.leaderboard(1).daily().then((scores: IUserScore) => {});
-client.leaderboard(1).weekly().then((scores: IUserScore) => {});
-client.leaderboard(1).monthly().then((scores: IUserScore) => {});
-client.leaderboard(1).allTime().then((scores: IUserScore) => {});
+client.leaderboard(1).daily().then(function(scores) {});
+client.leaderboard(1).weekly().then(function(scores) {});
+client.leaderboard(1).monthly().then(function(scores) {});
+client.leaderboard(1).allTime().then(function(scores) {});
 ```
 
 Feedback
