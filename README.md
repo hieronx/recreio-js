@@ -65,6 +65,7 @@ Leaderboards
 
 In the Recreio Developer Center, you create leaderboards, specifiying:
 - Public, Group or Personal leaderboard
+- Numeric, Time or Currency score type
 - Descending or Ascending sorting order
 
 ```js
