@@ -60,6 +60,28 @@ client.achievements().then(function(achievements: RecreIO.Achievement[]) {
 });
 ```
 
+Leaderboards
+--------
+
+In the Recreio Developer Center, you create leaderboards, specifiying:
+- Public or Group leaderboard
+- Descending or Ascending sorting order
+
+```js
+// Retrieve leaderboard with id = 1 and submit a new highscore of 100
+client.leaderboard(1).submitScore(100).then((report: IScoreReport) => {
+  if (report.isNewDailyHighscore) console.log('This is your new daily high score!');
+  if (report.isNewWeeklyHighscore) console.log('This is your new weekly high score!');
+  if (report.isNewMonthlyHighscore) console.log('This is your new monthly high score!');
+  if (report.isNewAllTimeHighscore) console.log('This is your new all time high score!');
+});
+
+client.leaderboard(1).daily().then((scores: IUserScore) => {});
+client.leaderboard(1).weekly().then((scores: IUserScore) => {});
+client.leaderboard(1).monthly().then((scores: IUserScore) => {});
+client.leaderboard(1).allTime().then((scores: IUserScore) => {});
+```
+
 Feedback
 ------
 
