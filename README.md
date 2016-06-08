@@ -43,7 +43,7 @@ Now, you can retrieve the next exercies for this user by specifying the template
 
 ```js
 var content = client.content().template('true-false').get(10); // retrieve 10 true-false exercises
-var content = client.content().template('matching').groupBy('item').groupSize(5).get(3); // retrieve 3 groups of 5 matching exercises
+var content = client.content().template('matching').groupBy('item', 5).get(3); // retrieve 3 groups of 5 matching exercises
 
 content.then(function(exercises) {
   var currentExercise = exercises[0];
