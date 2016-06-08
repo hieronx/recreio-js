@@ -36,13 +36,21 @@ client.signInWithEmail(email, password); // sign in using a username and passwor
 client.getUser(); // return your profile
 ```
 
+Content queries
+----------
+
 Now, you can retrieve the next exercies for this user by specifying the template you wish to receive and whether sound is enabled. Once you have received this exercise, you can begin the exercise and it will start collecting data accordingly. After the user has entered an answer, you can check the result and send a boolean value to recreio.
 
 ```js
-client.getNextExercise(template, soundEnabled).then(function(exercise) {
-  exercise.begin();
+var content = client.content().template('true-false').get(10); // retrieve 10 true-false exercises
+var content = client.content().template('matching').groupBy('item').groupSize(5).get(3); // retrieve 3 groups of 5 matching exercises
+
+content.then(function(exercises) {
+  var currentExercise = exercises[0];
+  currentExercise.begin();
   // wait for user input
-  exercise.save(result);
+  currentExercise.save(result);
+  currentExercise = currentExercise.next;
 });
 ```
 
