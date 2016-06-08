@@ -36,13 +36,21 @@ client.signInWithEmail(email, password); // sign in using a username and passwor
 client.getUser(); // return your profile
 ```
 
+Content queries
+----------
+
 Now, you can retrieve the next exercies for this user by specifying the template you wish to receive and whether sound is enabled. Once you have received this exercise, you can begin the exercise and it will start collecting data accordingly. After the user has entered an answer, you can check the result and send a boolean value to recreio.
 
 ```js
-client.getNextExercise(template, soundEnabled).then(function(exercise) {
-  exercise.begin();
+var content = client.content().template('true-false').get(10); // retrieve 10 true-false exercises
+var content = client.content().template('matching').groupBy('item').groupSize(5).get(3); // retrieve 3 groups of 5 matching exercises
+
+content.then(function(exercises) {
+  var currentExercise = exercises[0];
+  currentExercise.begin();
   // wait for user input
-  exercise.save(result);
+  currentExercise.save(result);
+  currentExercise = currentExercise.next;
 });
 ```
 
@@ -52,12 +60,35 @@ Achievements
 ```js
 // Initially, you should retrieve all achievements,
 // to ensure that all relevant data is already loaded.
-client.achievements().then(function(achievements: RecreIO.Achievement[]) {
+client.achievements().then(function(achievements) {
   var sampleAchievement = achievements.get(1); // retrieve achievement by id = 1
   sampleAchievement.reveal(); // reveal the achievement
   sampleAchievement.complete(); // complete the achievement
   sampleAchievement.increment(1); // increment the completed steps by 1
 });
+```
+
+Leaderboards
+--------
+
+In the Recreio Developer Center, you create leaderboards, specifiying:
+- Public, Group or Personal leaderboard
+- Numeric, Time or Currency score type
+- Descending or Ascending sorting order
+
+```js
+// Retrieve leaderboard with id = 1 and submit a new highscore of 100
+client.leaderboard(1).submitScore(100).then(function(report) {
+  if (report.isNewDailyHighscore) console.log('This is your new daily high score!');
+  if (report.isNewWeeklyHighscore) console.log('This is your new weekly high score!');
+  if (report.isNewMonthlyHighscore) console.log('This is your new monthly high score!');
+  if (report.isNewAllTimeHighscore) console.log('This is your new all time high score!');
+});
+
+client.leaderboard(1).daily().then(function(scores) {});
+client.leaderboard(1).weekly().then(function(scores) {});
+client.leaderboard(1).monthly().then(function(scores) {});
+client.leaderboard(1).allTime().then(function(scores) {});
 ```
 
 Feedback
