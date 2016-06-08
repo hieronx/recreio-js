@@ -16,8 +16,10 @@ module RecreIO {
     private _types: string[] = [];
 
     // settings
-    private _grouped: boolean = false;
-    private _limit: number;
+    private _groupBy: string = 'none';
+    private _groupSize: number = 10;
+
+    private _count: number = 10;
     private _sound: boolean = false;
     private _timed: boolean = false;
 
@@ -36,13 +38,9 @@ module RecreIO {
       return this;
     };
 
-    public grouped = (grouped: boolean = true): RecreIO.ContentQuery => {
-      this._grouped = grouped;
-      return this;
-    };
-
-    public limit = (limit: number): RecreIO.ContentQuery => {
-      this._limit = limit;
+    public groupBy = (groupBy: string = "item", groupSize: number = 10): RecreIO.ContentQuery => {
+      this._groupBy = groupBy;
+      this._groupSize = groupSize;
       return this;
     };
 
@@ -56,7 +54,7 @@ module RecreIO {
       return this;
     }
 
-    public get = (): any => {
+    public get = (count: number = 10): any => {
       return new Promise((resolve, reject) => {
         var exerciseParams: any = {};
 
@@ -64,17 +62,20 @@ module RecreIO {
         if (this._patterns.length > 0) exerciseParams.patterns = this._patterns;
         if (this._types.length > 0) exerciseParams.types = this._types;
 
-        if (this._grouped) exerciseParams.grouped = this._grouped;
-        if (this._limit) exerciseParams.limit = this._limit;
+        if (this._groupBy) exerciseParams.grouped = this._groupBy;
+        if (this._groupSize) exerciseParams.grouped = this._groupSize;
+
+        if (this._count) exerciseParams.count = this._count;
         if (this._sound) exerciseParams.sound = this._sound || (this.client.currentUser.volume > 0);
 
-        this.client.sendRequest('GET', 'users/me/exercises', {}, exerciseParams).then((body: string) => {
+        this.client.sendRequest('GET', 'exercises', {}, exerciseParams).then((body: string) => {
           var data = JSON.parse(body);
           var exercises: RecreIO.Exercise[] = [];
           var previousExercise: RecreIO.Exercise = null;
 
           for(var i = 0; i < data.length; i++) {
-              var currentExercise = new RecreIO.Exercise(this.client, this.client.currentUser, data[i], data[i].template, this._sound, this._timed, this._grouped);
+              let grouped = this._groupBy != 'none';
+              var currentExercise = new RecreIO.Exercise(this.client, this.client.currentUser, data[i], data[i].template, this._sound, this._timed, grouped);
 
               if (previousExercise) {
                   previousExercise.next = currentExercise;

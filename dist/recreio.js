@@ -127,7 +127,7 @@ var RecreIO;
             delete this.exercise;
         }
         return Exercise;
-    })();
+    }());
     RecreIO.Exercise = Exercise;
 })(RecreIO || (RecreIO = {}));
 /**
@@ -146,7 +146,9 @@ var RecreIO;
             this._patterns = [];
             this._types = [];
             // settings
-            this._grouped = false;
+            this._groupBy = 'none';
+            this._groupSize = 10;
+            this._count = 10;
             this._sound = false;
             this._timed = false;
             this.template = function (template) {
@@ -161,13 +163,11 @@ var RecreIO;
                 _this._types = types;
                 return _this;
             };
-            this.grouped = function (grouped) {
-                if (grouped === void 0) { grouped = true; }
-                _this._grouped = grouped;
-                return _this;
-            };
-            this.limit = function (limit) {
-                _this._limit = limit;
+            this.groupBy = function (groupBy, groupSize) {
+                if (groupBy === void 0) { groupBy = "item"; }
+                if (groupSize === void 0) { groupSize = 10; }
+                _this._groupBy = groupBy;
+                _this._groupSize = groupSize;
                 return _this;
             };
             this.sound = function (sound) {
@@ -179,7 +179,8 @@ var RecreIO;
                 _this._timed = timed;
                 return _this;
             };
-            this.get = function () {
+            this.get = function (count) {
+                if (count === void 0) { count = 10; }
                 return new Promise(function (resolve, reject) {
                     var exerciseParams = {};
                     if (_this._template)
@@ -188,18 +189,21 @@ var RecreIO;
                         exerciseParams.patterns = _this._patterns;
                     if (_this._types.length > 0)
                         exerciseParams.types = _this._types;
-                    if (_this._grouped)
-                        exerciseParams.grouped = _this._grouped;
-                    if (_this._limit)
-                        exerciseParams.limit = _this._limit;
+                    if (_this._groupBy)
+                        exerciseParams.grouped = _this._groupBy;
+                    if (_this._groupSize)
+                        exerciseParams.grouped = _this._groupSize;
+                    if (_this._count)
+                        exerciseParams.count = _this._count;
                     if (_this._sound)
                         exerciseParams.sound = _this._sound || (_this.client.currentUser.volume > 0);
-                    _this.client.sendRequest('GET', 'users/me/exercises', {}, exerciseParams).then(function (body) {
+                    _this.client.sendRequest('GET', 'exercises', {}, exerciseParams).then(function (body) {
                         var data = JSON.parse(body);
                         var exercises = [];
                         var previousExercise = null;
                         for (var i = 0; i < data.length; i++) {
-                            var currentExercise = new RecreIO.Exercise(_this.client, _this.client.currentUser, data[i], data[i].template, _this._sound, _this._timed, _this._grouped);
+                            var grouped = _this._groupBy != 'none';
+                            var currentExercise = new RecreIO.Exercise(_this.client, _this.client.currentUser, data[i], data[i].template, _this._sound, _this._timed, grouped);
                             if (previousExercise) {
                                 previousExercise.next = currentExercise;
                                 currentExercise.previous = previousExercise;
@@ -215,7 +219,7 @@ var RecreIO;
             };
         }
         return ContentQuery;
-    })();
+    }());
     RecreIO.ContentQuery = ContentQuery;
 })(RecreIO || (RecreIO = {}));
 var RecreIO;
@@ -229,7 +233,7 @@ var RecreIO;
             this.parentId = parentId;
         }
         return Group;
-    })();
+    }());
     RecreIO.Group = Group;
 })(RecreIO || (RecreIO = {}));
 /// <reference path="Group.ts" />
@@ -254,7 +258,7 @@ var RecreIO;
             this.visualPassword = visualPassword;
         }
         return User;
-    })();
+    }());
     RecreIO.User = User;
 })(RecreIO || (RecreIO = {}));
 /**
@@ -307,7 +311,7 @@ var RecreIO;
             return this;
         }
         return Achievements;
-    })();
+    }());
     RecreIO.Achievements = Achievements;
     var Achievement = (function () {
         function Achievement(client, achievement, state, completedSteps) {
@@ -360,7 +364,7 @@ var RecreIO;
             delete this.achievement;
         }
         return Achievement;
-    })();
+    }());
     RecreIO.Achievement = Achievement;
 })(RecreIO || (RecreIO = {}));
 /**
@@ -389,7 +393,7 @@ var RecreIO;
             }
         };
         return Translations;
-    })();
+    }());
     RecreIO.Translations = Translations;
     var Client = (function () {
         /**
@@ -549,6 +553,6 @@ var RecreIO;
         /** The number of mouse frames tracked per second. */
         Client.MOUSE_TRACKING_RATE = 10;
         return Client;
-    })();
+    }());
     RecreIO.Client = Client;
 })(RecreIO || (RecreIO = {}));
