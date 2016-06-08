@@ -190,9 +190,9 @@ var RecreIO;
                     if (_this._types.length > 0)
                         exerciseParams.types = _this._types;
                     if (_this._groupBy)
-                        exerciseParams.grouped = _this._groupBy;
+                        exerciseParams.group_by = _this._groupBy;
                     if (_this._groupSize)
-                        exerciseParams.grouped = _this._groupSize;
+                        exerciseParams.group_size = _this._groupSize;
                     if (_this._count)
                         exerciseParams.count = _this._count;
                     if (_this._sound)
