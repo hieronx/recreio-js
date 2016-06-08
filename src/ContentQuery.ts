@@ -19,7 +19,6 @@ module RecreIO {
     private _groupBy: string = 'none';
     private _groupSize: number = 10;
 
-    private _count: number = 10;
     private _sound: boolean = false;
     private _timed: boolean = false;
 
@@ -53,21 +52,19 @@ module RecreIO {
       this._timed = timed;
       return this;
     }
-    
 
     public get = (count: number): any => {
       return new Promise((resolve, reject) => {
-        var exerciseParams: any = {};
+        var exerciseParams: any = { template: this._template, count: count };
 
-        if (this._template) exerciseParams.template = this._template;
         if (this._patterns.length > 0) exerciseParams.patterns = this._patterns;
         if (this._types.length > 0) exerciseParams.types = this._types;
 
         if (this._groupBy) exerciseParams.group_by = this._groupBy;
         if (this._groupSize) exerciseParams.group_size = this._groupSize;
 
-        if (this._count) exerciseParams.count = this._count;
         if (this._sound) exerciseParams.sound = this._sound || (this.client.currentUser.volume > 0);
+        if (this._timed) exerciseParams.timed = this._timed;
 
         this.client.sendRequest('GET', 'exercises', {}, exerciseParams).then((body: string) => {
           var data = JSON.parse(body);

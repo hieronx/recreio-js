@@ -148,7 +148,6 @@ var RecreIO;
             // settings
             this._groupBy = 'none';
             this._groupSize = 10;
-            this._count = 10;
             this._sound = false;
             this._timed = false;
             this.template = function (template) {
@@ -180,9 +179,7 @@ var RecreIO;
             };
             this.get = function (count) {
                 return new Promise(function (resolve, reject) {
-                    var exerciseParams = {};
-                    if (_this._template)
-                        exerciseParams.template = _this._template;
+                    var exerciseParams = { template: _this._template, count: count };
                     if (_this._patterns.length > 0)
                         exerciseParams.patterns = _this._patterns;
                     if (_this._types.length > 0)
@@ -191,10 +188,10 @@ var RecreIO;
                         exerciseParams.group_by = _this._groupBy;
                     if (_this._groupSize)
                         exerciseParams.group_size = _this._groupSize;
-                    if (_this._count)
-                        exerciseParams.count = _this._count;
                     if (_this._sound)
                         exerciseParams.sound = _this._sound || (_this.client.currentUser.volume > 0);
+                    if (_this._timed)
+                        exerciseParams.timed = _this._timed;
                     _this.client.sendRequest('GET', 'exercises', {}, exerciseParams).then(function (body) {
                         var data = JSON.parse(body);
                         var exercises = [];
