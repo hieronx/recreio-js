@@ -165,7 +165,6 @@ var RecreIO;
             };
             this.groupBy = function (groupBy, groupSize) {
                 if (groupBy === void 0) { groupBy = "item"; }
-                if (groupSize === void 0) { groupSize = 10; }
                 _this._groupBy = groupBy;
                 _this._groupSize = groupSize;
                 return _this;
@@ -180,7 +179,6 @@ var RecreIO;
                 return _this;
             };
             this.get = function (count) {
-                if (count === void 0) { count = 10; }
                 return new Promise(function (resolve, reject) {
                     var exerciseParams = {};
                     if (_this._template)
