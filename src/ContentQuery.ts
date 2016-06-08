@@ -53,6 +53,7 @@ module RecreIO {
       this._timed = timed;
       return this;
     }
+    
 
     public get = (count: number): any => {
       return new Promise((resolve, reject) => {
