@@ -38,7 +38,7 @@ module RecreIO {
       return this;
     };
 
-    public groupBy = (groupBy: string = "item", groupSize: number = 10): RecreIO.ContentQuery => {
+    public groupBy = (groupBy: string = "item", groupSize: number): RecreIO.ContentQuery => {
       this._groupBy = groupBy;
       this._groupSize = groupSize;
       return this;
@@ -54,7 +54,7 @@ module RecreIO {
       return this;
     }
 
-    public get = (count: number = 10): any => {
+    public get = (count: number): any => {
       return new Promise((resolve, reject) => {
         var exerciseParams: any = {};
 
