@@ -62,8 +62,8 @@ module RecreIO {
         if (this._patterns.length > 0) exerciseParams.patterns = this._patterns;
         if (this._types.length > 0) exerciseParams.types = this._types;
 
-        if (this._groupBy) exerciseParams.grouped = this._groupBy;
-        if (this._groupSize) exerciseParams.grouped = this._groupSize;
+        if (this._groupBy) exerciseParams.group_by = this._groupBy;
+        if (this._groupSize) exerciseParams.group_size = this._groupSize;
 
         if (this._count) exerciseParams.count = this._count;
         if (this._sound) exerciseParams.sound = this._sound || (this.client.currentUser.volume > 0);
