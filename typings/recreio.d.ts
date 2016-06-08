@@ -68,11 +68,10 @@ declare module RecreIO {
         public template(template: string): RecreIO.ContentQuery;
         public patterns(patterns: string): RecreIO.ContentQuery;
         public types(types: string): RecreIO.ContentQuery;
-        public grouped(grouped: boolean): RecreIO.ContentQuery;
-        public limit(limit: number): RecreIO.ContentQuery;
+        public groupBy(by: string, size: number): RecreIO.ContentQuery;
         public sound(sound: boolean): RecreIO.ContentQuery;
 
-        public get(): any;
+        public get(count: number): any;
     }
 
     class User {
