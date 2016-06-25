@@ -375,21 +375,6 @@ var RecreIO;
 /// <reference path="Achievements.ts" />
 var RecreIO;
 (function (RecreIO) {
-    var Translations = (function () {
-        function Translations() {
-            this.data = null;
-        }
-        Translations.prototype.get = function (key) {
-            if (this.data[key]) {
-                return this.data[key];
-            }
-            else {
-                return key;
-            }
-        };
-        return Translations;
-    }());
-    RecreIO.Translations = Translations;
     var Client = (function () {
         /**
          * Create a new RecreIO client with your API key.
@@ -397,7 +382,7 @@ var RecreIO;
         function Client(apiKey) {
             var _this = this;
             this.apiKey = apiKey;
-            this.translations = new Translations();
+            this.translations = new RecreIO.Translations();
             this.appId = 1;
             /**
              * Parse a parameter object to HttpRequest parameters
@@ -527,13 +512,19 @@ var RecreIO;
                 }
             };
             /**
-             *
+             * Content
              */
             this.content = function () {
                 return new RecreIO.ContentQuery(_this);
             };
             /**
-             *
+             * Leaderboards
+             */
+            this.leaderboard = function (leaderboardId) {
+                return new RecreIO.Leaderboard(leaderboardId, _this);
+            };
+            /**
+             * Achievements
              */
             this.achievements = function () {
                 if (!_this.achievementInstance) {
@@ -550,4 +541,49 @@ var RecreIO;
         return Client;
     }());
     RecreIO.Client = Client;
+})(RecreIO || (RecreIO = {}));
+/**
+ * Recreio JavaScript SDK
+ * Copyright 2015-2016, Recreio
+ * Released under the MIT license.
+ */
+var RecreIO;
+(function (RecreIO) {
+    var Translations = (function () {
+        function Translations() {
+            this.data = null;
+        }
+        Translations.prototype.get = function (key) {
+            if (this.data[key]) {
+                return this.data[key];
+            }
+            else {
+                return key;
+            }
+        };
+        return Translations;
+    }());
+    RecreIO.Translations = Translations;
+})(RecreIO || (RecreIO = {}));
+/**
+ * Recreio JavaScript SDK
+ * Copyright 2015-2016, Recreio
+ * Released under the MIT license.
+ */
+var RecreIO;
+(function (RecreIO) {
+    var Leaderboard = (function () {
+        function Leaderboard(id, client) {
+            var _this = this;
+            this.id = id;
+            this.client = client;
+            this.submitResult = function (result) {
+                _this.client.sendRequest('POST', 'leaderboards/' + _this.id + '/results', {}, result).catch(function (exception) {
+                    console.error('Oops, submitting the result did not work..');
+                });
+            };
+        }
+        return Leaderboard;
+    }());
+    RecreIO.Leaderboard = Leaderboard;
 })(RecreIO || (RecreIO = {}));

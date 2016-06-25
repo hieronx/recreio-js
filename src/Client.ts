@@ -15,18 +15,6 @@ declare var bluebird: any;
 
 module RecreIO {
 
-  export class Translations {
-    public data: any = null;
-
-    get(key: string) {
-      if(this.data[key]) {
-        return this.data[key];
-      } else {
-        return key
-      }
-    }
-  }
-
   export class Client {
 
     /** The host of the API. */
@@ -46,7 +34,7 @@ module RecreIO {
      * Create a new RecreIO client with your API key.
      */
     constructor(private apiKey: string) {
-      this.getUser()
+      this.getUser();
     }
 
 
@@ -183,7 +171,7 @@ module RecreIO {
       else {
         return this.getUser().then((user:any) => {
           return new Promise((resolve, reject) => {
-            this.sendRequest('GET', 'translations?lang=' + user.language).then((body:string) => {
+            this.sendRequest('GET', 'translations?lang=' + user.language).then((body: string) => {
               var translations = JSON.parse(body);
               this.translations.data = translations;
               resolve(translations)
@@ -196,14 +184,21 @@ module RecreIO {
     };
 
     /**
-     *
+     * Content
      */
     public content = (): RecreIO.ContentQuery => {
         return new RecreIO.ContentQuery(this);
     }
 
     /**
-     *
+     * Leaderboards
+     */
+    public leaderboard = (leaderboardId: number): RecreIO.Leaderboard => {
+      return new RecreIO.Leaderboard(leaderboardId, this);
+    }
+
+    /**
+     * Achievements
      */
     public achievements = (): RecreIO.Achievements => {
       if (!this.achievementInstance) {

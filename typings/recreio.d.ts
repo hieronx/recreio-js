@@ -28,6 +28,12 @@ declare module RecreIO {
       get(key: String): string;
     }
 
+    class Leaderboard {
+      constructor(id: number, client: RecreIO.Client);
+
+      submitResult(result: string): void;
+    }
+
     class Achievements {
       constructor(client: RecreIO.Client);
 
