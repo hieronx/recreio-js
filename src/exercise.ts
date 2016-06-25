@@ -47,7 +47,7 @@ module RecreIO {
 
       if ((this.soundEnabled || this.currentUser.volume > 0) && this.content.sound) {
 
-        if(this.previous == null) {
+        if (this.previous == null) {
           var instructionUtterance = new SpeechSynthesisUtterance();
           instructionUtterance.text = this.instruction;
           instructionUtterance.lang = this.currentUser.language;

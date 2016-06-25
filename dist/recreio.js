@@ -578,7 +578,7 @@ var RecreIO;
             this.id = id;
             this.client = client;
             this.submitResult = function (result) {
-                _this.client.sendRequest('POST', 'leaderboards/' + _this.id + '/results', {}, result).catch(function (exception) {
+                _this.client.sendRequest('POST', 'leaderboards/' + _this.id + '/results', result, {}, 'text/plain').catch(function (exception) {
                     console.error('Oops, submitting the result did not work..');
                 });
             };
