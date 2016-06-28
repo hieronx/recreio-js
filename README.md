@@ -1,7 +1,9 @@
 recreio-js
 ==============
 
-The Javascript SDK for the [Recreio](https://recre.io) developer platform.
+Javascript SDK for the [Recreio](https://recre.io) developer platform.
+
+---
 
 Recreio enables game developers to easily create games for the K12 education market. We provide content aligned to the school curriculum, user and group management, gamification features such as achievements and leaderboards, and a distribution platform on the web, iOS, Android and Chrome OS. This way, you can focus on creating a beautiful, engaging game that provides the best possible learning experience.
 
