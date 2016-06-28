@@ -1,7 +1,7 @@
 recreio-js
 ==============
 
-Javascript SDK for the [Recreio](https://recre.io) developer platform.
+Javascript SDK for the [Recreio](https://recre.io) Developer platform.
 
 ---
 
@@ -29,13 +29,13 @@ Include recreio.js in your application.
 Then initialize the object with the basic configuration:
 
 ```js
-var client = new RecreIO.Client(apiKey);
+var recreio = new RecreIO.Client(apiKey);
 ```
 
 Currently, the Recreio app handles all authentication, so you should simply be able to retrieve the user profile after loading the app:
 
 ```js
-client.getUser(); // return your profile
+recreio.getUser(); // return your profile
 ```
 
 Content queries
@@ -44,8 +44,11 @@ Content queries
 Now, you can retrieve the next exercies for this user, by using our Content Query Language. This can be as simple as requesting 10 true-false exercises, or can be as precise as requesting 3 groups of matching exercises, consisting of 5 items each, that can make use of sound and are timed.
 
 ```js
-var content = client.content().template('true-false').get(10); // retrieve 10 true-false exercises
-var content = client.content().template('matching').groupBy('item', 5).sound(true).timed(true).get(3); // retrieve 3 groups of 5 matching exercises
+// retrieve 10 true-false exercises
+var content = recreio.content().template('true-false').get(10);
+
+// retrieve 3 groups of 5 matching exercises, each of which can make use of sound and is timed
+var content = recreio.content().template('matching').groupBy('item', 5).sound(true).timed(true).get(3);
 
 content.then(function(exercises) {
   var currentExercise = exercises[0];
@@ -59,12 +62,12 @@ content.then(function(exercises) {
 Achievements
 --------
 
-On preloading the game, you should retrieve the list of achievements, which you have added in the developer center. You can then complete specific achievements or increment them step-by-step.
+On preloading the game, you should retrieve the list of achievements, which you have added in the Developer Center. You can then complete specific achievements or increment them step-by-step.
 
 ```js
 // Initially, you should retrieve all achievements,
 // to ensure that all relevant data is already loaded.
-client.achievements().then(function(achievements) {
+recreio.achievements().then(function(achievements) {
   var sampleAchievement = achievements.get(1); // retrieve achievement by id = 1
   sampleAchievement.complete(); // complete the achievement
   sampleAchievement.increment(1); // increment the completed steps by 1
@@ -74,11 +77,11 @@ client.achievements().then(function(achievements) {
 Leaderboards
 --------
 
-Now, you can set up leaderboards in our developer center and then use these to track highscores. We can then show leaderboards for your game in the Recreio application.
+Now, you can set up leaderboards in our Developer Center and then use these to track highscores. We can then show leaderboards for your game in the Recreio application.
 
 ```js
 // Retrieve leaderboard with id = 1 and submit a new highscore of 100
-client.leaderboard(1).submitScore(100);
+recreio.leaderboard(1).submitScore(100);
 ```
 
 Feedback
