@@ -1,12 +1,14 @@
 recreio-js
 ==============
 
-JS package for the API provided by [recre.io](https://recre.io).
+The Javascript SDK for the [Recreio](https://recre.io) developer platform.
+
+Recreio enables game developers to easily create games for the K12 education market. We provide content aligned to the school curriculum, user and group management, gamification features such as achievements and leaderboards, and a distribution platform on the web, iOS, Android and Chrome OS. This way, you can focus on creating a beautiful, engaging game that provides the best possible learning experience.
 
 Installation
 ------
 
-You can install the package using Bower:
+The SDK is available to install using Bower:
 
 ```shell
 bower install recreio-js --save
@@ -28,22 +30,20 @@ Then initialize the object with the basic configuration:
 var client = new RecreIO.Client(apiKey);
 ```
 
-Now you can use the library to implement authentication, using:
+Currently, the Recreio app handles all authentication, so you should simply be able to retrieve the user profile after loading the app:
 
 ```js
-client.signInWithUsername(username, password); // sign in using a username and password combination
-client.signInWithEmail(email, password); // sign in using a username and password combination
 client.getUser(); // return your profile
 ```
 
 Content queries
 ----------
 
-Now, you can retrieve the next exercies for this user by specifying the template you wish to receive and whether sound is enabled. Once you have received this exercise, you can begin the exercise and it will start collecting data accordingly. After the user has entered an answer, you can check the result and send a boolean value to recreio.
+Now, you can retrieve the next exercies for this user, by using our Content Query Language. This can be as simple as requesting 10 true-false exercises, or can be as precise as requesting 3 groups of matching exercises, consisting of 5 items each, that can make use of sound and are timed.
 
 ```js
 var content = client.content().template('true-false').get(10); // retrieve 10 true-false exercises
-var content = client.content().template('matching').groupBy('item', 5).get(3); // retrieve 3 groups of 5 matching exercises
+var content = client.content().template('matching').groupBy('item', 5).sound(true).timed(true).get(3); // retrieve 3 groups of 5 matching exercises
 
 content.then(function(exercises) {
   var currentExercise = exercises[0];
@@ -57,12 +57,13 @@ content.then(function(exercises) {
 Achievements
 --------
 
+On preloading the game, you should retrieve the list of achievements, which you have added in the developer center. You can then complete specific achievements or increment them step-by-step.
+
 ```js
 // Initially, you should retrieve all achievements,
 // to ensure that all relevant data is already loaded.
 client.achievements().then(function(achievements) {
   var sampleAchievement = achievements.get(1); // retrieve achievement by id = 1
-  sampleAchievement.reveal(); // reveal the achievement
   sampleAchievement.complete(); // complete the achievement
   sampleAchievement.increment(1); // increment the completed steps by 1
 });
@@ -71,24 +72,11 @@ client.achievements().then(function(achievements) {
 Leaderboards
 --------
 
-In the Recreio Developer Center, you create leaderboards, specifiying:
-- Public, Group or Personal leaderboard
-- Numeric, Time or Currency score type
-- Descending or Ascending sorting order
+Now, you can set up leaderboards in our developer center and then use these to track highscores. We can then show leaderboards for your game in the Recreio application.
 
 ```js
 // Retrieve leaderboard with id = 1 and submit a new highscore of 100
-client.leaderboard(1).submitScore(100).then(function(report) {
-  if (report.isNewDailyHighscore) console.log('This is your new daily high score!');
-  if (report.isNewWeeklyHighscore) console.log('This is your new weekly high score!');
-  if (report.isNewMonthlyHighscore) console.log('This is your new monthly high score!');
-  if (report.isNewAllTimeHighscore) console.log('This is your new all time high score!');
-});
-
-client.leaderboard(1).daily().then(function(scores) {});
-client.leaderboard(1).weekly().then(function(scores) {});
-client.leaderboard(1).monthly().then(function(scores) {});
-client.leaderboard(1).allTime().then(function(scores) {});
+client.leaderboard(1).submitScore(100);
 ```
 
 Feedback
