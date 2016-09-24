@@ -582,9 +582,10 @@ var RecreIO;
             this.id = id;
             this.client = client;
             this.submitResult = function (result) {
-                _this.client.sendRequest('POST', 'leaderboards/' + _this.id + '/results', result, {}, 'text/plain').then(function (report) {
-                    if (report.currentBest > report.previousBest) {
-                        var difference = report.currentBest - report.previousBest;
+                _this.client.sendRequest('POST', 'leaderboards/' + _this.id + '/results', result, {}, 'text/plain').then(function (body) {
+                    var report = JSON.parse(body);
+                    if (report.personal.previousBest && report.personal.currentBest > report.personal.previousBest) {
+                        var difference = report.personal.currentBest - report.personal.previousBest;
                         _this.client.notify('Nieuw record', 'Hooray! ' + difference + ' hoger dan eerst.');
                     }
                 }).catch(function (exception) {
