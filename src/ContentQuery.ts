@@ -19,6 +19,8 @@ module RecreIO {
     private _groupBy: string = 'none';
     private _groupSize: number = 10;
 
+    private _contentSize: number = 10;
+
     private _sound: boolean = false;
     private _timed: boolean = false;
 
@@ -43,6 +45,11 @@ module RecreIO {
       return this;
     };
 
+    public contentSize = (contentSize: number): RecreIO.ContentQuery => {
+      this._contentSize = contentSize;
+      return this;
+    };
+
     public sound = (sound: boolean): RecreIO.ContentQuery => {
       this._sound = sound;
       return this;
@@ -62,6 +69,8 @@ module RecreIO {
 
         if (this._groupBy) exerciseParams.group_by = this._groupBy;
         if (this._groupSize) exerciseParams.group_size = this._groupSize;
+
+        if (this._contentSize) exerciseParams.content_size = this._contentSize;
 
         if (this._sound) exerciseParams.sound = this._sound || (this.client.currentUser.volume > 0);
         if (this._timed) exerciseParams.timed = this._timed;

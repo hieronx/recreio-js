@@ -148,6 +148,7 @@ var RecreIO;
             // settings
             this._groupBy = 'none';
             this._groupSize = 10;
+            this._contentSize = 10;
             this._sound = false;
             this._timed = false;
             this.template = function (template) {
@@ -166,6 +167,10 @@ var RecreIO;
                 if (groupBy === void 0) { groupBy = "item"; }
                 _this._groupBy = groupBy;
                 _this._groupSize = groupSize;
+                return _this;
+            };
+            this.contentSize = function (contentSize) {
+                _this._contentSize = contentSize;
                 return _this;
             };
             this.sound = function (sound) {
@@ -188,6 +193,8 @@ var RecreIO;
                         exerciseParams.group_by = _this._groupBy;
                     if (_this._groupSize)
                         exerciseParams.group_size = _this._groupSize;
+                    if (_this._contentSize)
+                        exerciseParams.content_size = _this._contentSize;
                     if (_this._sound)
                         exerciseParams.sound = _this._sound || (_this.client.currentUser.volume > 0);
                     if (_this._timed)
