@@ -75,6 +75,7 @@ declare module RecreIO {
         public patterns(patterns: string): RecreIO.ContentQuery;
         public types(types: string): RecreIO.ContentQuery;
         public groupBy(by: string, size: number): RecreIO.ContentQuery;
+        public contentSize(contentSize: number): RecreIO.ContentQuery;
         public sound(sound: boolean): RecreIO.ContentQuery;
 
         public get(count: number): any;
