@@ -532,6 +532,9 @@ var RecreIO;
                 }
                 return _this.achievementInstance;
             };
+            /**
+             * Send a notification
+             */
             this.notify = function (title, text, icon) {
                 if (icon === void 0) { icon = 'https://recre.io/assets/images/achievement-icon.png'; }
                 // add inline css
@@ -542,6 +545,12 @@ var RecreIO;
                 document.getElementById('last-achievement').style.opacity = '1';
                 setTimeout(function () { document.getElementById('last-achievement').style.opacity = '0'; }, 3000);
                 setTimeout(function () { document.getElementById('last-achievement').outerHTML = ''; }, 4000);
+            };
+            /**
+             * Exit the game and return to Recreio
+             */
+            this.exit = function () {
+                window.history.go(-1);
             };
             this.getUser();
         }
