@@ -231,7 +231,7 @@ module RecreIO {
         // special case for iOS devices
         window.history.go(-2);
       } else {
-        window.history.go(-1);
+        window.history.back();
       }
     }
 

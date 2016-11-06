@@ -555,7 +555,7 @@ var RecreIO;
                     window.history.go(-2);
                 }
                 else {
-                    window.history.go(-1);
+                    window.history.back();
                 }
             };
             this.getUser();
