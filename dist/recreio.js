@@ -550,7 +550,13 @@ var RecreIO;
              * Exit the game and return to Recreio
              */
             this.exit = function () {
-                window.history.go(-1);
+                if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+                    // special case for iOS devices
+                    window.history.go(-2);
+                }
+                else {
+                    window.history.go(-1);
+                }
             };
             this.getUser();
         }
