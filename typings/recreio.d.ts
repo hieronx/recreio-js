@@ -20,6 +20,8 @@ declare module RecreIO {
 
        content(): ContentQuery;
        achievements(): Achievements;
+
+       exit(): void;
     }
 
     class Translations {
